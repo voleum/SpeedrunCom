@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GamesAdapter
+import dev.voleum.speedruncom.databinding.FragmentGamesBinding
 import dev.voleum.speedruncom.enum.States
 
 class GamesFragment : Fragment() {
 
     private lateinit var gamesViewModel: GamesViewModel
-    private val adapter = GamesAdapter()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -23,13 +23,14 @@ class GamesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         gamesViewModel = ViewModelProvider(this).get(GamesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_games, container, false)
+        val binding: FragmentGamesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_games, null, false)
+        binding.viewModel = gamesViewModel
+//        val root = inflater.inflate(R.layout.fragment_games, container, false)
+        val root = binding.root
         val recyclerView: RecyclerView = root.findViewById(R.id.games_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.adapter = gamesViewModel.adapter
         checkData()
-//        gamesViewModel.load()
-//        adapter.addItems(gamesViewModel.data)
 //        gamesViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
 //        })
@@ -52,7 +53,7 @@ class GamesFragment : Fragment() {
                 gamesViewModel.load()
             }
             States.LOADED -> {
-                adapter.addItems(gamesViewModel.data)
+                gamesViewModel.adapter.addItems(gamesViewModel.data)
             }
         }
     }
