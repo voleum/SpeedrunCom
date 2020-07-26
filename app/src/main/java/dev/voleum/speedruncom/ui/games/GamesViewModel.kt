@@ -1,26 +1,37 @@
 package dev.voleum.speedruncom.ui.games
 
 import androidx.databinding.Bindable
-import androidx.lifecycle.ViewModel
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.adapter.GamesAdapter
 import dev.voleum.speedruncom.api.api
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.model.GameList
+import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class GamesViewModel : ViewModel() {
+class GamesViewModel : ViewModelObservable() {
 
-    val adapter = GamesAdapter()
+    companion object {
+        @JvmStatic
+        @BindingAdapter("android:data")
+        fun setData(recyclerView: RecyclerView, list: List<Game>) {
+            if (recyclerView.adapter is GamesAdapter)
+                (recyclerView.adapter as GamesAdapter).addItems(list)
+        }
+    }
+
+    var adapter = GamesAdapter()
         @Bindable get
+        @Bindable set
 
     lateinit var loadListener: () -> Unit
 
-    lateinit var data: List<Game>
+    var data: List<Game> = adapter.items
         @Bindable get
-//    private set
 
     var state = States.CREATED
 
