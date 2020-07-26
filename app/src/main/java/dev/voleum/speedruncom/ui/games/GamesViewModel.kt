@@ -1,6 +1,8 @@
 package dev.voleum.speedruncom.ui.games
 
+import androidx.databinding.Bindable
 import androidx.lifecycle.ViewModel
+import dev.voleum.speedruncom.adapter.GamesAdapter
 import dev.voleum.speedruncom.api.api
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Game
@@ -11,9 +13,13 @@ import retrofit2.Response
 
 class GamesViewModel : ViewModel() {
 
+    val adapter = GamesAdapter()
+        @Bindable get
+
     lateinit var loadListener: () -> Unit
 
     lateinit var data: List<Game>
+        @Bindable get
 //    private set
 
     var state = States.CREATED

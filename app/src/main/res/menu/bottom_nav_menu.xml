@@ -7,12 +7,12 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_games"
         android:icon="@drawable/ic_baseline_videogame_asset_24"
         android:title="@string/title_games" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_more"
         android:icon="@drawable/ic_baseline_more_horiz_24"
         android:title="@string/title_more" />
 
