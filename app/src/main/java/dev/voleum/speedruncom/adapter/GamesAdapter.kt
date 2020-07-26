@@ -10,7 +10,7 @@ import dev.voleum.speedruncom.model.Game
 
 class GamesAdapter : RecyclerView.Adapter<GamesAdapter.GameViewHolder>() {
 
-    private val items = mutableListOf<Game>()
+    val items = mutableListOf<Game>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder =
         GameViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.holder_game, parent, false))
