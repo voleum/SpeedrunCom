@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+<!--        <item name="tabStyle">@style/Widget.MaterialComponents.TabLayout.PrimarySurface</item>-->
+<!--        <item name="tabStyle">@style/Widget.SpeedrunCom.TabLayout</item>-->
+    </style>
+
+<!--    <style name="Widget.SpeedrunCom.TabLayout" parent="Widget.MaterialComponents.TabLayout">-->
+<!--        <item name="android:backgroundTint">?attr/toolbarStyle</item>-->
+<!--    </style>-->
+</resources>

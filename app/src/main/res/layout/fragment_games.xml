@@ -4,26 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.games.GamesFragment">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="dev.voleum.speedruncom.ui.games.GamesViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/games_recycler_view"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/games_tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:data="@{viewModel.data}"
-            app:adapter="@{viewModel.adapter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            app:tabMode="fixed" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/games_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </layout>

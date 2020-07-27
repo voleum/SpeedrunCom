@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="game"
-            type="dev.voleum.speedruncom.ui.games.GamesItemViewModel" />
+            name="series"
+            type="dev.voleum.speedruncom.ui.games.SeriesItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
             android:id="@+id/holder_game_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.id}"
+            android:text="@{series.id}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +25,7 @@
             android:id="@+id/holder_game_abbreviation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.abbreviation}"
+            android:text="@{series.abbreviation}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/holder_game_id" />
 
@@ -33,33 +33,17 @@
             android:id="@+id/holder_game_weblink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.weblink}"
+            android:text="@{series.weblink}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/holder_game_abbreviation" />
-
-        <TextView
-            android:id="@+id/holder_game_released"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{game.released}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_weblink" />
-
-        <TextView
-            android:id="@+id/holder_game_romhack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{game.romhack}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_released" />
 
         <TextView
             android:id="@+id/holder_game_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.created}"
+            android:text="@{series.created}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_romhack" />
+            app:layout_constraintTop_toBottomOf="@id/holder_game_weblink" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
