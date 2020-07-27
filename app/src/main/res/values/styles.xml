@@ -7,7 +7,7 @@
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
-        <item name="tabStyle">@style/Widget.MaterialComponents.TabLayout.PrimarySurface</item>
+        <item name="tabStyle">@style/Widget.SpeedrunCom.TabLayout.PrimarySurface</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,4 +17,7 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.ActionBar.Primary" />
 
+    <style name="Widget.SpeedrunCom.TabLayout.PrimarySurface" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
+        <item name="elevation">@dimen/recycler_view_elevation</item>
+    </style>
 </resources>
