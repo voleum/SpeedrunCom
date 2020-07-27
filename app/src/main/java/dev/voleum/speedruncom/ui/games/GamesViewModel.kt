@@ -17,7 +17,7 @@ class GamesViewModel : ViewModelObservable() {
 
     companion object {
         @JvmStatic
-        @BindingAdapter("android:data")
+        @BindingAdapter("data")
         fun setData(recyclerView: RecyclerView, list: List<Game>) {
             if (recyclerView.adapter is GamesAdapter)
                 (recyclerView.adapter as GamesAdapter).addItems(list)

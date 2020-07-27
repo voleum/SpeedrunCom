@@ -19,7 +19,7 @@
             android:id="@+id/games_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:data="@{viewModel.data}"
+            app:data="@{viewModel.data}"
             app:adapter="@{viewModel.adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
