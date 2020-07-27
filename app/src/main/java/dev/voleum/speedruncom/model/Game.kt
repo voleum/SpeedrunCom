@@ -20,5 +20,5 @@ data class Game(val id: String,
                 val publishers: List<String>,
                 val moderators: Map<String, String>,
                 val created: String,
-                val assets: GameAssets,
+                val assets: Assets,
                 val links: List<Link>) : Serializable

@@ -5,9 +5,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val BASE_URL = "https://www.speedrun.com"
 
-val api: GamesApi =
+val API: SpeedrunComApi =
     Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-        .create(GamesApi::class.java)
+        .create(SpeedrunComApi::class.java)
