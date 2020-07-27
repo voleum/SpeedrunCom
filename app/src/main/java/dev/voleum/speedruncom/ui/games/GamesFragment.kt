@@ -28,7 +28,7 @@ class GamesFragment : Fragment() {
 //        val root = inflater.inflate(R.layout.fragment_games, container, false)
         val root = binding.root
         val recyclerView: RecyclerView = root.findViewById(R.id.games_recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
         recyclerView.adapter = gamesViewModel.adapter
         checkData()
 //        gamesViewModel.text.observe(viewLifecycleOwner, Observer {
