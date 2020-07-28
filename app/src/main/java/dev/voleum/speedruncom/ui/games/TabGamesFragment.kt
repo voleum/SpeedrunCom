@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.ui.games
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
+import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentTabGamesBinding
 import dev.voleum.speedruncom.enum.States
@@ -28,10 +31,25 @@ class TabGamesFragment : Fragment() {
         val binding: FragmentTabGamesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab_games, null, false)
         binding.viewModel = gamesViewModel
         val root = binding.root
-        val recyclerView: RecyclerView = root.findViewById(R.id.games_recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+        val recyclerView: RecyclerView = binding.gamesRecyclerView
+        val layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = gamesViewModel.adapter
-        swipeRefreshLayout = root.findViewById(R.id.games_swipe_refresh_layout)
+        recyclerView.itemAnimator!!.changeDuration = 0
+        swipeRefreshLayout = binding.gamesSwipeRefreshLayout
+        val fab = binding.gamesFab
+        fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
+
+        val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                gamesViewModel.state = States.PROGRESS
+                Log.d("tag", "onScrolled()")
+                gamesViewModel.loadMore()
+            }
+        }
+        recyclerView.addOnScrollListener(onScrollListener)
+
         checkData()
         return root
     }
@@ -49,10 +67,17 @@ class TabGamesFragment : Fragment() {
             }
             States.ERROR -> {
                 gamesViewModel.setListener { checkData() }
-                gamesViewModel.load()
+                swipeRefreshLayout.isRefreshing = false
+                Snackbar.make(swipeRefreshLayout, "Unable to load", Snackbar.LENGTH_LONG)
+                    .setAction("Retry") {
+                        gamesViewModel.state = States.PROGRESS
+                        gamesViewModel.load()
+                    }
+                    .show()
+//                gamesViewModel.load()
             }
             States.LOADED -> {
-                gamesViewModel.adapter.addItems(gamesViewModel.data)
+                gamesViewModel.adapter.replaceItems(gamesViewModel.data)
                 swipeRefreshLayout.isRefreshing = false
             }
         }
