@@ -2,8 +2,11 @@ package dev.voleum.speedruncom.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.HolderGameBinding
 import dev.voleum.speedruncom.model.Game
@@ -20,6 +23,7 @@ class GamesAdapter : RecyclerView.Adapter<GamesAdapter.GameViewHolder>() {
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.binding.game = GamesItemViewModel(items[position])
+        holder.loadImage((holder.binding.game as GamesItemViewModel).imageUrl)
     }
 
     fun addItems(items: List<Game>) {
@@ -27,5 +31,13 @@ class GamesAdapter : RecyclerView.Adapter<GamesAdapter.GameViewHolder>() {
         notifyDataSetChanged()
     }
 
-    inner class GameViewHolder(val binding: HolderGameBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class GameViewHolder(val binding: HolderGameBinding) : RecyclerView.ViewHolder(binding.root) {
+        val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
+        fun loadImage(url: String) =
+            GlideApp.with(itemView)
+                .load(url)
+                .placeholder(R.drawable.ic_baseline_image_24)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(image)
+    }
 }

@@ -18,53 +18,34 @@
         android:outlineProvider="bounds"
         android:padding="10dp">
 
-        <TextView
-            android:id="@+id/holder_game_id"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/holder_game_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.id}"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/holder_game_abbreviation"
+            android:id="@+id/holder_game_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{game.abbreviation}"
+            android:text="@{game.name}"
+            android:textAlignment="center"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_id" />
-
-        <TextView
-            android:id="@+id/holder_game_weblink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{game.weblink}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_abbreviation" />
+            app:layout_constraintTop_toBottomOf="@id/holder_game_image" />
 
         <TextView
             android:id="@+id/holder_game_released"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{game.released}"
+            android:textAlignment="center"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_weblink" />
-
-        <TextView
-            android:id="@+id/holder_game_romhack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{game.romhack}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_released" />
-
-        <TextView
-            android:id="@+id/holder_game_created"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{game.created}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/holder_game_romhack" />
+            app:layout_constraintTop_toBottomOf="@id/holder_game_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
