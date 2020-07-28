@@ -21,7 +21,6 @@
             android:id="@+id/games_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
             app:adapter="@{viewModel.adapter}"
             app:data="@{viewModel.data}" />
 
