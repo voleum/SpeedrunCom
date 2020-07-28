@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
@@ -51,6 +52,9 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .centerCrop()
+//                .onlyRetrieveFromCache(true)
                 .into(image)
     }
 }
