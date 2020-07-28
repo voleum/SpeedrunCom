@@ -35,11 +35,6 @@ class SeriesViewModel : ViewModelObservable() {
 
     var state = States.CREATED
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is games Fragment"
-//    }
-//    val text: LiveData<String> = _text
-
     fun load() {
         API.series().enqueue(object : Callback<SeriesList> {
             override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
@@ -60,5 +55,10 @@ class SeriesViewModel : ViewModelObservable() {
 
     fun setListener(loadListener: () -> Unit) {
         this.loadListener = loadListener
+    }
+
+    fun onRefresh() {
+        state = States.PROGRESS
+        load()
     }
 }

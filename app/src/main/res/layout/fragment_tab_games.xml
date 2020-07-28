@@ -11,20 +11,19 @@
             type="dev.voleum.speedruncom.ui.games.GamesViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/games_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:onRefreshListener="@{() -> viewModel.onRefresh()}">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/games_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:data="@{viewModel.data}"
+            android:padding="8dp"
             app:adapter="@{viewModel.adapter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:data="@{viewModel.data}" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

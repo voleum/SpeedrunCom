@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentTabGamesBinding
 import dev.voleum.speedruncom.enum.States
@@ -16,6 +17,7 @@ import dev.voleum.speedruncom.enum.States
 class TabGamesFragment : Fragment() {
 
     private lateinit var gamesViewModel: GamesViewModel
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -29,6 +31,7 @@ class TabGamesFragment : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.games_recycler_view)
         recyclerView.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
         recyclerView.adapter = gamesViewModel.adapter
+        swipeRefreshLayout = root.findViewById(R.id.games_swipe_refresh_layout)
         checkData()
         return root
     }
@@ -50,6 +53,7 @@ class TabGamesFragment : Fragment() {
             }
             States.LOADED -> {
                 gamesViewModel.adapter.addItems(gamesViewModel.data)
+                swipeRefreshLayout.isRefreshing = false
             }
         }
     }
