@@ -14,6 +14,10 @@ import dev.voleum.speedruncom.ui.games.SeriesItemViewModel
 
 class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     val items = mutableListOf<Series>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesViewHolder =
@@ -26,7 +30,16 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
         holder.loadImage((holder.binding.series as SeriesItemViewModel).imageUrl)
     }
 
-    fun addItems(items: List<Series>) {
+    override fun getItemId(position: Int): Long =
+        items[position].hashCode().toLong()
+
+    fun addItems(items: List<Series>, positionStart: Int, itemCount: Int) {
+        this.items.addAll(items)
+        notifyItemRangeInserted(positionStart, itemCount)
+    }
+
+    fun replaceItems(items: List<Series>) {
+        this.items.clear()
         this.items.addAll(items)
         notifyDataSetChanged()
     }
@@ -36,7 +49,7 @@ class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
         fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
-                .placeholder(R.drawable.ic_baseline_image_24)
+                .placeholder(R.drawable.ic_baseline_image_200)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(image)
     }

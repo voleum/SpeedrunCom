@@ -4,6 +4,7 @@ import dev.voleum.speedruncom.model.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface SpeedrunComApi {
 
@@ -12,6 +13,9 @@ interface SpeedrunComApi {
 
     @GET("games")
     fun games(): Call<GameList>
+
+    @GET("games")
+    fun games(@Query("offset") offset: Int): Call<GameList>
 
 //    @GET("guests")
 //    fun notifications(): Call<Guests>
@@ -36,6 +40,9 @@ interface SpeedrunComApi {
 
     @GET("series")
     fun series(): Call<SeriesList>
+
+    @GET("series")
+    fun series(@Query("offset") offset: Int): Call<SeriesList>
 
     @GET("users")
     fun users(): Call<UserList>

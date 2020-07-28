@@ -1,4 +1,4 @@
 package dev.voleum.speedruncom.model
 
-data class SeriesList(val data: List<Series>) {
-}
+data class SeriesList(val data: List<Series>,
+                      val pagination: Pagination)
