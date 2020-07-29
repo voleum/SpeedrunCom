@@ -18,7 +18,7 @@ import dev.voleum.speedruncom.enum.States
 
 class TabSeriesFragment : Fragment() {
 
-    private lateinit var seriesViewModel: SeriesViewModel
+    private lateinit var tabSeriesViewModel: TabSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -26,14 +26,14 @@ class TabSeriesFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        seriesViewModel = ViewModelProvider(this).get(SeriesViewModel::class.java)
+        tabSeriesViewModel = ViewModelProvider(this).get(TabSeriesViewModel::class.java)
         val binding: FragmentTabSeriesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab_series, null, false)
-        binding.viewModel = seriesViewModel
+        binding.viewModel = tabSeriesViewModel
         val root = binding.root
         val recyclerView: RecyclerView = binding.seriesRecyclerView
         val layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = seriesViewModel.adapter
+        recyclerView.adapter = tabSeriesViewModel.adapter
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.seriesSwipeRefreshLayout
         val fab = binding.gamesFab
@@ -42,9 +42,9 @@ class TabSeriesFragment : Fragment() {
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                seriesViewModel.state = States.PROGRESS
+                tabSeriesViewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
-                seriesViewModel.loadMore()
+                tabSeriesViewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
@@ -55,20 +55,20 @@ class TabSeriesFragment : Fragment() {
     private fun checkData() {
 //        if (view == null) return
 
-        when (seriesViewModel.state) {
+        when (tabSeriesViewModel.state) {
             States.CREATED -> {
-                seriesViewModel.setListener { checkData() }
-                seriesViewModel.load()
+                tabSeriesViewModel.setListener { checkData() }
+                tabSeriesViewModel.load()
             }
             States.PROGRESS -> {
-                seriesViewModel.setListener { checkData() }
+                tabSeriesViewModel.setListener { checkData() }
             }
             States.ERROR -> {
-                seriesViewModel.setListener { checkData() }
-                seriesViewModel.load()
+                tabSeriesViewModel.setListener { checkData() }
+                tabSeriesViewModel.load()
             }
             States.LOADED -> {
-                seriesViewModel.adapter.replaceItems(seriesViewModel.data)
+                tabSeriesViewModel.adapter.replaceItems(tabSeriesViewModel.data)
                 swipeRefreshLayout.isRefreshing = false
             }
         }

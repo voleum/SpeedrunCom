@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class GamesViewModel : ViewModelObservable() {
+class TabGamesViewModel : ViewModelObservable() {
 
     companion object {
         @JvmStatic
@@ -26,18 +26,27 @@ class GamesViewModel : ViewModelObservable() {
         }
     }
 
-    var adapter = GamesAdapter()
-        @Bindable get
-        @Bindable set
-
     lateinit var loadListener: () -> Unit
 
     lateinit var pagination: Pagination
 
+    var state = States.CREATED
+
+    var adapter = GamesAdapter()
+        @Bindable get
+        @Bindable set
+
     var data: List<Game> = adapter.items
         @Bindable get
 
-    var state = States.CREATED
+    fun setListener(loadListener: () -> Unit) {
+        this.loadListener = loadListener
+    }
+
+    fun onRefresh() {
+        state = States.PROGRESS
+        load()
+    }
 
     fun load() {
         API.games().enqueue(object : Callback<GameList> {
@@ -80,14 +89,5 @@ class GamesViewModel : ViewModelObservable() {
             }
 
         })
-    }
-
-    fun setListener(loadListener: () -> Unit) {
-        this.loadListener = loadListener
-    }
-
-    fun onRefresh() {
-        state = States.PROGRESS
-        load()
     }
 }
