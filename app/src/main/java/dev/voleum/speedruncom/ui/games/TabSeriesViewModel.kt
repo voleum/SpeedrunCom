@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SeriesViewModel : ViewModelObservable() {
+class TabSeriesViewModel : ViewModelObservable() {
 
     companion object {
         @JvmStatic
@@ -26,18 +26,27 @@ class SeriesViewModel : ViewModelObservable() {
         }
     }
 
-    var adapter = SeriesAdapter()
-        @Bindable get
-        @Bindable set
-
     lateinit var loadListener: () -> Unit
 
     lateinit var pagination: Pagination
 
+    var state = States.CREATED
+
+    var adapter = SeriesAdapter()
+        @Bindable get
+        @Bindable set
+
     var data: List<Series> = adapter.items
         @Bindable get
 
-    var state = States.CREATED
+    fun setListener(loadListener: () -> Unit) {
+        this.loadListener = loadListener
+    }
+
+    fun onRefresh() {
+        state = States.PROGRESS
+        load()
+    }
 
     fun load() {
         API.series().enqueue(object : Callback<SeriesList> {
@@ -80,14 +89,5 @@ class SeriesViewModel : ViewModelObservable() {
             }
 
         })
-    }
-
-    fun setListener(loadListener: () -> Unit) {
-        this.loadListener = loadListener
-    }
-
-    fun onRefresh() {
-        state = States.PROGRESS
-        load()
     }
 }

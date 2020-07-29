@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="dev.voleum.speedruncom.ui.games.GamesViewModel" />
+            type="dev.voleum.speedruncom.ui.games.TabGamesViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
