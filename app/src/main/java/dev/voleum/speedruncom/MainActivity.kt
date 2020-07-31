@@ -35,9 +35,6 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val toolbar: Toolbar = findViewById(R.id.toolbar)
-//        setSupportActionBar(toolbar)
-
 //        main_pager.registerOnPageChangeCallback(OnPageChangeCallback())
         main_pager.addOnPageChangeListener(this)
         main_pager.adapter = MainViewPagerAdapter()
@@ -48,16 +45,6 @@ class MainActivity : AppCompatActivity(),
         nav_view.setOnNavigationItemReselectedListener(this)
 
         if (backStack.empty()) backStack.push(0)
-
-//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-//
-//        val navController = findNavController(R.id.nav_host_fragment)
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(setOf(
-//                R.id.navigation_home, R.id.navigation_games, R.id.navigation_more))
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
     }
 
     override fun onBackPressed() {
@@ -67,8 +54,8 @@ class MainActivity : AppCompatActivity(),
             if (backStack.size > 1) {
                 backStack.pop()
                 main_pager.currentItem = backStack.peek()
-            }
-        } else super.onBackPressed()
+            } else super.onBackPressed()
+        }
     }
 
     override fun onPageScrollStateChanged(state: Int) {}
