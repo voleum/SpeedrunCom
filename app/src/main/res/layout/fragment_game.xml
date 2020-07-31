@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="dev.voleum.speedruncom.ui.games.GameViewModel" />
+            type="dev.voleum.speedruncom.ui.screen.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

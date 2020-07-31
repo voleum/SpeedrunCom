@@ -2,9 +2,9 @@ package dev.voleum.speedruncom.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import dev.voleum.speedruncom.ui.games.GamesFragment
-import dev.voleum.speedruncom.ui.games.TabGamesFragment
-import dev.voleum.speedruncom.ui.games.TabSeriesFragment
+import dev.voleum.speedruncom.ui.nav.games.GamesFragment
+import dev.voleum.speedruncom.ui.tab.games.TabGamesFragment
+import dev.voleum.speedruncom.ui.tab.series.TabSeriesFragment
 
 class GamesViewPagerAdapter(fragment: GamesFragment, private val itemsCount: Int) : FragmentStateAdapter(fragment) {
 

@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.more
+package dev.voleum.speedruncom.ui.nav.more
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import dev.voleum.speedruncom.R
 
 class MoreFragment : Fragment() {
@@ -20,7 +20,7 @@ class MoreFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         moreViewModel =
-                ViewModelProviders.of(this).get(MoreViewModel::class.java)
+                ViewModelProvider(this).get(MoreViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_more, container, false)
         val textView: TextView = root.findViewById(R.id.text_notifications)
         moreViewModel.text.observe(viewLifecycleOwner, Observer {

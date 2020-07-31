@@ -12,7 +12,7 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.HolderGameBinding
 import dev.voleum.speedruncom.model.Game
-import dev.voleum.speedruncom.ui.games.GamesItemViewModel
+import dev.voleum.speedruncom.ui.tab.games.GamesItemViewModel
 
 class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.GameViewHolder>() {
 
@@ -25,12 +25,20 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
     val items = mutableListOf<Game>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder =
-        GameViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.holder_game, parent, false))
+        GameViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.holder_game,
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        holder.binding.game = GamesItemViewModel(items[position])
+        holder.binding.game =
+            GamesItemViewModel(items[position])
         holder.loadImage((holder.binding.game as GamesItemViewModel).imageUrl)
     }
 
@@ -48,11 +56,17 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
         notifyDataSetChanged()
     }
 
-    inner class GameViewHolder(val binding: HolderGameBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class GameViewHolder(val binding: HolderGameBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         init {
-            binding.root.setOnClickListener { v -> onEntryClickListener.onEntryClick(v, layoutPosition) }
+            binding.root.setOnClickListener { v ->
+                onEntryClickListener.onEntryClick(v, layoutPosition)
+            }
         }
-        val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
+
+        private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
+
         fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
