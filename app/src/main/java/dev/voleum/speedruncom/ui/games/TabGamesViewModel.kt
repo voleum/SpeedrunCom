@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.adapter.GamesAdapter
+import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Game
@@ -21,8 +21,8 @@ class TabGamesViewModel : ViewModelObservable() {
         @JvmStatic
         @BindingAdapter("data")
         fun setData(recyclerView: RecyclerView, list: List<Game>) {
-            if (recyclerView.adapter is GamesAdapter)
-                (recyclerView.adapter as GamesAdapter).replaceItems(list)
+            if (recyclerView.adapter is GamesRecyclerViewAdapter)
+                (recyclerView.adapter as GamesRecyclerViewAdapter).replaceItems(list)
         }
     }
 
@@ -32,7 +32,7 @@ class TabGamesViewModel : ViewModelObservable() {
 
     var state = States.CREATED
 
-    var adapter = GamesAdapter()
+    var adapter = GamesRecyclerViewAdapter()
         @Bindable get
         @Bindable set
 

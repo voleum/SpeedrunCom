@@ -9,44 +9,44 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.databinding.HolderSeriesBinding
-import dev.voleum.speedruncom.model.Series
-import dev.voleum.speedruncom.ui.games.SeriesItemViewModel
+import dev.voleum.speedruncom.databinding.HolderGameBinding
+import dev.voleum.speedruncom.model.Game
+import dev.voleum.speedruncom.ui.games.GamesItemViewModel
 
-class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
+class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.GameViewHolder>() {
 
     init {
         setHasStableIds(true)
     }
 
-    val items = mutableListOf<Series>()
+    val items = mutableListOf<Game>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesViewHolder =
-        SeriesViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.holder_series, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder =
+        GameViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.holder_game, parent, false))
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: SeriesViewHolder, position: Int) {
-        holder.binding.series = SeriesItemViewModel(items[position])
-        holder.loadImage((holder.binding.series as SeriesItemViewModel).imageUrl)
+    override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
+        holder.binding.game = GamesItemViewModel(items[position])
+        holder.loadImage((holder.binding.game as GamesItemViewModel).imageUrl)
     }
 
     override fun getItemId(position: Int): Long =
         items[position].hashCode().toLong()
 
-    fun addItems(items: List<Series>, positionStart: Int, itemCount: Int) {
+    fun addItems(items: List<Game>, positionStart: Int, itemCount: Int) {
         this.items.addAll(items)
         notifyItemRangeInserted(positionStart, itemCount)
     }
 
-    fun replaceItems(items: List<Series>) {
+    fun replaceItems(items: List<Game>) {
         this.items.clear()
         this.items.addAll(items)
         notifyDataSetChanged()
     }
 
-    inner class SeriesViewHolder(val binding: HolderSeriesBinding) : RecyclerView.ViewHolder(binding.root) {
-        val image: AppCompatImageView = binding.root.findViewById(R.id.holder_series_image)
+    inner class GameViewHolder(val binding: HolderGameBinding) : RecyclerView.ViewHolder(binding.root) {
+        val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
         fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
