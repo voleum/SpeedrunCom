@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.home
+package dev.voleum.speedruncom.ui.nav.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

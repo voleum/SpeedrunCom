@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/games_destination"
-        android:name="dev.voleum.speedruncom.ui.games.GamesFragment"
+        android:name="dev.voleum.speedruncom.ui.nav.games.GamesFragment"
         android:label="Games"
         tools:layout="@layout/fragment_games">
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/game_destination"
-        android:name="dev.voleum.speedruncom.ui.games.GameFragment"
+        android:name="dev.voleum.speedruncom.ui.screen.GameFragment"
         android:label="Game"
         tools:layout="@layout/fragment_game">
 

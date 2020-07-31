@@ -6,7 +6,7 @@
 
         <variable
             name="series"
-            type="dev.voleum.speedruncom.ui.games.SeriesItemViewModel" />
+            type="dev.voleum.speedruncom.ui.tab.series.SeriesItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.games.GamesFragment">
+    tools:context=".ui.nav.games.GamesFragment">
 
     <data>
 
         <variable
             name="viewModel"
-            type="dev.voleum.speedruncom.ui.games.TabGamesViewModel" />
+            type="dev.voleum.speedruncom.ui.tab.games.TabGamesViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

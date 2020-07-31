@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/more_destination"
-        android:name="dev.voleum.speedruncom.ui.more.MoreFragment"
+        android:name="dev.voleum.speedruncom.ui.nav.more.MoreFragment"
         android:label="More"
         tools:layout="@layout/fragment_more" />
 

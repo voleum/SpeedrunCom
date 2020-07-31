@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.games
+package dev.voleum.speedruncom.ui.tab.games
 
 import android.os.Bundle
 import android.util.Log
@@ -26,28 +26,30 @@ class TabGamesFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         tabGamesViewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
-        val binding: FragmentTabGamesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab_games, null, false)
+        val binding: FragmentTabGamesBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_tab_games, null, false)
         binding.viewModel = tabGamesViewModel
         val root = binding.root
         val recyclerView: RecyclerView = binding.gamesRecyclerView
-        val layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+        val layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
-        tabGamesViewModel.adapter.onEntryClickListener = object : GamesRecyclerViewAdapter.OnEntryClickListener {
-            override fun onEntryClick(view: View?, position: Int) {
-                val bundle = Bundle().apply {
-                    putString("game", tabGamesViewModel.data[position].names.international)
+        tabGamesViewModel.adapter.onEntryClickListener =
+            object : GamesRecyclerViewAdapter.OnEntryClickListener {
+                override fun onEntryClick(view: View?, position: Int) {
+                    val bundle = Bundle().apply {
+                        putString("game", tabGamesViewModel.data[position].names.international)
+                    }
+                    findNavController().navigate(R.id.action_game, bundle)
                 }
-                findNavController().navigate(R.id.action_game, bundle)
             }
-        }
 
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = tabGamesViewModel.adapter
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.gamesSwipeRefreshLayout
         val fab = binding.gamesFab
@@ -62,7 +64,6 @@ class TabGamesFragment : Fragment() {
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
-
         checkData()
         return root
     }
@@ -90,7 +91,6 @@ class TabGamesFragment : Fragment() {
 //                gamesViewModel.load()
             }
             States.LOADED -> {
-                tabGamesViewModel.adapter.replaceItems(tabGamesViewModel.data)
                 swipeRefreshLayout.isRefreshing = false
             }
         }

@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.games
+package dev.voleum.speedruncom.ui.screen
 
 import android.os.Bundle
 import android.view.LayoutInflater

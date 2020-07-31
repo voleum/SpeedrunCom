@@ -1,28 +1,31 @@
-package dev.voleum.speedruncom.ui.games
+package dev.voleum.speedruncom.ui.tab.series
 
 import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
-import dev.voleum.speedruncom.model.Game
-import dev.voleum.speedruncom.model.GameList
 import dev.voleum.speedruncom.model.Pagination
+import dev.voleum.speedruncom.model.Series
+import dev.voleum.speedruncom.model.SeriesList
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TabGamesViewModel : ViewModelObservable() {
+class TabSeriesViewModel : ViewModelObservable() {
 
     companion object {
         @JvmStatic
         @BindingAdapter("data")
-        fun setData(recyclerView: RecyclerView, list: List<Game>) {
-            if (recyclerView.adapter is GamesRecyclerViewAdapter)
-                (recyclerView.adapter as GamesRecyclerViewAdapter).replaceItems(list)
+        fun setData(recyclerView: RecyclerView, list: List<Series>) {
+            if (recyclerView.adapter is SeriesRecyclerViewAdapter) {
+                val adapter = recyclerView.adapter as SeriesRecyclerViewAdapter
+                if (adapter.items != list)
+                    adapter.replaceItems(list)
+            }
         }
     }
 
@@ -32,11 +35,11 @@ class TabGamesViewModel : ViewModelObservable() {
 
     var state = States.CREATED
 
-    var adapter = GamesRecyclerViewAdapter()
+    var adapter = SeriesRecyclerViewAdapter()
         @Bindable get
         @Bindable set
 
-    var data: List<Game> = adapter.items
+    var data: List<Series> = adapter.items
         @Bindable get
 
     fun setListener(loadListener: () -> Unit) {
@@ -49,16 +52,16 @@ class TabGamesViewModel : ViewModelObservable() {
     }
 
     fun load() {
-        API.games().enqueue(object : Callback<GameList> {
-            override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
-                data = response.body()!!.data
+        API.series().enqueue(object : Callback<SeriesList> {
+            override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
+                adapter.replaceItems(response.body()!!.data)
                 pagination = response.body()!!.pagination
                 state = States.LOADED
                 Log.d("tag", "load onResponse()")
                 loadListener()
             }
 
-            override fun onFailure(call: Call<GameList>, t: Throwable) {
+            override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                 t.stackTrace
                 t.message
                 state = States.ERROR
@@ -70,8 +73,8 @@ class TabGamesViewModel : ViewModelObservable() {
     }
 
     fun loadMore() {
-        API.games(pagination.offset + pagination.size).enqueue(object : Callback<GameList> {
-            override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
+        API.series(pagination.offset + pagination.size).enqueue(object : Callback<SeriesList> {
+            override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
                 pagination = response.body()!!.pagination
                 adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
                 state = States.LOADED
@@ -79,12 +82,12 @@ class TabGamesViewModel : ViewModelObservable() {
 //                loadListener()
             }
 
-            override fun onFailure(call: Call<GameList>, t: Throwable) {
+            override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                 t.stackTrace
                 t.message
                 state = States.ERROR
                 Log.d("tag", "loadMore onError()")
-                //TODO: doing something
+                //TODO: do something
 //                loadListener()
             }
 

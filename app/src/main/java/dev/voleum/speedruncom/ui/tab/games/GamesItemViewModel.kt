@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.games
+package dev.voleum.speedruncom.ui.tab.games
 
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.model.Game
