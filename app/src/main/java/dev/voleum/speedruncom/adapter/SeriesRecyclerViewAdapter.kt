@@ -13,7 +13,7 @@ import dev.voleum.speedruncom.databinding.HolderSeriesBinding
 import dev.voleum.speedruncom.model.Series
 import dev.voleum.speedruncom.ui.games.SeriesItemViewModel
 
-class SeriesAdapter : RecyclerView.Adapter<SeriesAdapter.SeriesViewHolder>() {
+class SeriesRecyclerViewAdapter : RecyclerView.Adapter<SeriesRecyclerViewAdapter.SeriesViewHolder>() {
 
     init {
         setHasStableIds(true)
