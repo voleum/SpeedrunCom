@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabGamesBinding
 import dev.voleum.speedruncom.enum.States
+import kotlinx.android.synthetic.main.fragment_tab_games.*
 
 class TabGamesFragment : Fragment() {
 
@@ -33,6 +36,16 @@ class TabGamesFragment : Fragment() {
         val root = binding.root
         val recyclerView: RecyclerView = binding.gamesRecyclerView
         val layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+
+        tabGamesViewModel.adapter.onEntryClickListener = object : GamesRecyclerViewAdapter.OnEntryClickListener {
+            override fun onEntryClick(view: View?, position: Int) {
+                val bundle = Bundle().apply {
+                    putString("game", tabGamesViewModel.data[position].names.international)
+                }
+                findNavController().navigate(R.id.action_game, bundle)
+            }
+        }
+
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = tabGamesViewModel.adapter
         recyclerView.itemAnimator!!.changeDuration = 0
@@ -68,7 +81,7 @@ class TabGamesFragment : Fragment() {
             States.ERROR -> {
                 tabGamesViewModel.setListener { checkData() }
                 swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(swipeRefreshLayout, "Unable to load", Snackbar.LENGTH_LONG)
+                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
                         tabGamesViewModel.state = States.PROGRESS
                         tabGamesViewModel.load()

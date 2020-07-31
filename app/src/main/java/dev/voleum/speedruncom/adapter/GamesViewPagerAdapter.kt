@@ -6,7 +6,7 @@ import dev.voleum.speedruncom.ui.games.GamesFragment
 import dev.voleum.speedruncom.ui.games.TabGamesFragment
 import dev.voleum.speedruncom.ui.games.TabSeriesFragment
 
-class GamesTabAdapter(fragment: GamesFragment, private val itemsCount: Int) : FragmentStateAdapter(fragment) {
+class GamesViewPagerAdapter(fragment: GamesFragment, private val itemsCount: Int) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
         return itemsCount
