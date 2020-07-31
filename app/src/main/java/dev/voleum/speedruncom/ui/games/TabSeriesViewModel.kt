@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.adapter.SeriesAdapter
+import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Pagination
@@ -21,8 +21,8 @@ class TabSeriesViewModel : ViewModelObservable() {
         @JvmStatic
         @BindingAdapter("data")
         fun setData(recyclerView: RecyclerView, list: List<Series>) {
-            if (recyclerView.adapter is SeriesAdapter)
-                (recyclerView.adapter as SeriesAdapter).replaceItems(list)
+            if (recyclerView.adapter is SeriesRecyclerViewAdapter)
+                (recyclerView.adapter as SeriesRecyclerViewAdapter).replaceItems(list)
         }
     }
 
@@ -32,7 +32,7 @@ class TabSeriesViewModel : ViewModelObservable() {
 
     var state = States.CREATED
 
-    var adapter = SeriesAdapter()
+    var adapter = SeriesRecyclerViewAdapter()
         @Bindable get
         @Bindable set
 
