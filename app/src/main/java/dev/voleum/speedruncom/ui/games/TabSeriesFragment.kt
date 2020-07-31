@@ -64,6 +64,7 @@ class TabSeriesFragment : Fragment() {
                 tabSeriesViewModel.setListener { checkData() }
             }
             States.ERROR -> {
+                swipeRefreshLayout.isRefreshing = false
                 tabSeriesViewModel.setListener { checkData() }
                 tabSeriesViewModel.load()
             }

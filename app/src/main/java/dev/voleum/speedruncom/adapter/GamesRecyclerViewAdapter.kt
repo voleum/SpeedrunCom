@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -18,6 +19,8 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
     init {
         setHasStableIds(true)
     }
+
+    lateinit var onEntryClickListener: OnEntryClickListener
 
     val items = mutableListOf<Game>()
 
@@ -46,6 +49,9 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
     }
 
     inner class GameViewHolder(val binding: HolderGameBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener { v -> onEntryClickListener.onEntryClick(v, layoutPosition) }
+        }
         val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
         fun loadImage(url: String) =
             GlideApp.with(itemView)
@@ -56,5 +62,9 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
                 .centerCrop()
 //                .onlyRetrieveFromCache(true)
                 .into(image)
+    }
+
+    interface OnEntryClickListener {
+        fun onEntryClick(view: View?, position: Int)
     }
 }

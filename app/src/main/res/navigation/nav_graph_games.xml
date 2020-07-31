@@ -20,6 +20,13 @@
     <fragment
         android:id="@+id/game_destination"
         android:name="dev.voleum.speedruncom.ui.games.GameFragment"
-        android:label="Game" />
+        android:label="Game"
+        tools:layout="@layout/fragment_game">
+
+        <deepLink
+            android:id="@+id/game_deeplink"
+            app:uri="www.speedrun.com/{id}" />
+
+    </fragment>
 
 </navigation>
