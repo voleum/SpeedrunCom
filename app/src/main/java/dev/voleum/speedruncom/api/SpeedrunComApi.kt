@@ -17,6 +17,9 @@ interface SpeedrunComApi {
     @GET("games")
     fun games(@Query("offset") offset: Int): Call<GameList>
 
+    @GET("games/{id}")
+    fun games(@Path("id") id: String): Call<DataGame>
+
 //    @GET("guests")
 //    fun notifications(): Call<Guests>
 
