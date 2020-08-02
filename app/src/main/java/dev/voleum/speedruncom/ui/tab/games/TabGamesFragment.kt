@@ -43,7 +43,7 @@ class TabGamesFragment : Fragment() {
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("game", tabGamesViewModel.data[position].names.international)
+                        putString("game", tabGamesViewModel.data[position].id)
                     }
                     findNavController().navigate(R.id.action_game, bundle)
                 }
