@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_tab_games.*
 
 class TabSeriesFragment : Fragment() {
 
-    private lateinit var tabSeriesViewModel: TabSeriesViewModel
+    private lateinit var viewModel: TabSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -28,10 +28,10 @@ class TabSeriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        tabSeriesViewModel = ViewModelProvider(this).get(TabSeriesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(TabSeriesViewModel::class.java)
         val binding: FragmentTabSeriesBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_tab_series, null, false)
-        binding.viewModel = tabSeriesViewModel
+        binding.viewModel = viewModel
         val root = binding.root
         val recyclerView: RecyclerView = binding.seriesRecyclerView
         val layoutManager =
@@ -45,9 +45,9 @@ class TabSeriesFragment : Fragment() {
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                tabSeriesViewModel.state = States.PROGRESS
+                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
-                tabSeriesViewModel.loadMore()
+                viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
@@ -58,21 +58,21 @@ class TabSeriesFragment : Fragment() {
     private fun checkData() {
 //        if (view == null) return
 
-        when (tabSeriesViewModel.state) {
+        when (viewModel.state) {
             States.CREATED -> {
-                tabSeriesViewModel.setListener { checkData() }
-                tabSeriesViewModel.load()
+                viewModel.setListener { checkData() }
+                viewModel.load()
             }
             States.PROGRESS -> {
-                tabSeriesViewModel.setListener { checkData() }
+                viewModel.setListener { checkData() }
             }
             States.ERROR -> {
                 swipeRefreshLayout.isRefreshing = false
-                tabSeriesViewModel.setListener { checkData() }
+                viewModel.setListener { checkData() }
                 Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
-                        tabSeriesViewModel.state = States.PROGRESS
-                        tabSeriesViewModel.load()
+                        viewModel.state = States.PROGRESS
+                        viewModel.load()
                     }
                     .show()
 //                tabSeriesViewModel.load()

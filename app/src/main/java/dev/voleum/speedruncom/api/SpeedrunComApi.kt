@@ -9,7 +9,10 @@ import retrofit2.http.Query
 interface SpeedrunComApi {
 
     @GET("categories/{id}")
-    fun categories(@Path("id") id: String): Call<Category>
+    fun category(@Path("id") id: String): Call<Category>
+
+    @GET("games/{id}/categories")
+    fun categories(@Path("id") id: String): Call<CategoryList>
 
     @GET("games")
     fun games(): Call<GameList>
@@ -21,13 +24,13 @@ interface SpeedrunComApi {
     fun games(@Path("id") id: String): Call<DataGame>
 
 //    @GET("guests")
-//    fun notifications(): Call<Guests>
+//    fun guests(): Call<Guests>
 
 //    @GET("levels")
-//    fun notifications(): Call<Levels>
+//    fun levels(): Call<Levels>
 
 //    @GET("leaderboards")
-//    fun notifications(): Call<Leaderboards>
+//    fun leaderboards(): Call<Leaderboards>
 
     @GET("platform")
     fun platform(): Call<Platform>
