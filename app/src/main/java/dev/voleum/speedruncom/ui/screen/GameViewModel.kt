@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
+import dev.voleum.speedruncom.model.Category
+import dev.voleum.speedruncom.model.CategoryList
 import dev.voleum.speedruncom.model.DataGame
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.ui.ViewModelObservable
@@ -15,9 +17,11 @@ class GameViewModel : ViewModelObservable() {
 
     lateinit var id: String
 
-    lateinit var loadListener: () -> Unit
+    lateinit var loadInfoListener: () -> Unit
+    lateinit var loadCategoriesListener: () -> Unit
 
-    var state = States.CREATED
+    var stateInfo = States.CREATED
+    var stateCategories = States.CREATED
 
     var backgroundUrl: String = ""
         get() = game?.assets?.background?.uri ?: ""
@@ -44,32 +48,57 @@ class GameViewModel : ViewModelObservable() {
         }
         @Bindable set
 
-    fun setListener(loadListener: () -> Unit) {
-        this.loadListener = loadListener
+    var categories: List<Category> = mutableListOf()
+        @Bindable get
+        @Bindable set
+
+    fun setInfoListener(loadListener: () -> Unit) {
+        this.loadInfoListener = loadListener
     }
 
-    fun load() {
+    fun setCategoriesListener(loadListener: () -> Unit) {
+        this.loadCategoriesListener = loadListener
+    }
+
+    fun loadInfo() {
         API.games(id).enqueue(object : Callback<DataGame> {
             override fun onResponse(call: Call<DataGame>, response: Response<DataGame>) {
-//                adapter.replaceItems(response.body()!!.data)
-//                pagination = response.body()!!.pagination
                 game = response.body()!!.data
                 notifyChange()
                 //TODO: exception if game not founded
-                state = States.LOADED
+                stateInfo = States.LOADED
                 Log.d("tag", "load onResponse()")
-                loadListener()
+                loadInfoListener()
             }
 
             override fun onFailure(call: Call<DataGame>, t: Throwable) {
                 t.stackTrace
                 t.message
-                state = States.ERROR
+                stateInfo = States.ERROR
                 Log.d("tag", "load onError()")
-                loadListener()
+                loadInfoListener()
             }
-
         })
     }
 
+    fun loadCategories() {
+        API.categories(id).enqueue(object : Callback<CategoryList> {
+            override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
+                categories = response.body()!!.data
+                notifyChange()
+                //TODO: exception if game not founded
+                stateCategories = States.LOADED
+                Log.d("tag", "load onResponse()")
+                loadCategoriesListener()
+            }
+
+            override fun onFailure(call: Call<CategoryList>, t: Throwable) {
+                t.stackTrace
+                t.message
+                stateCategories = States.ERROR
+                Log.d("tag", "load onError()")
+                loadCategoriesListener()
+            }
+        })
+    }
 }

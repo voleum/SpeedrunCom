@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.releaseDate}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/game_name"/>
+                app:layout_constraintTop_toBottomOf="@id/game_name" />
 
             <TextView
                 android:id="@+id/game_platforms"
@@ -46,6 +46,24 @@
                 android:text="@{viewModel.platforms}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/game_release_date" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/game_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/game_platforms"
+                app:tabMode="scrollable" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/game_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/game_tab_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

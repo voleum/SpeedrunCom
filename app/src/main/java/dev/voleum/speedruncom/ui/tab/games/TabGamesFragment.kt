@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_tab_games.*
 
 class TabGamesFragment : Fragment() {
 
-    private lateinit var tabGamesViewModel: TabGamesViewModel
+    private lateinit var viewModel: TabGamesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -30,20 +30,20 @@ class TabGamesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        tabGamesViewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
         val binding: FragmentTabGamesBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_tab_games, null, false)
-        binding.viewModel = tabGamesViewModel
+        binding.viewModel = viewModel
         val root = binding.root
         val recyclerView: RecyclerView = binding.gamesRecyclerView
         val layoutManager =
             GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
-        tabGamesViewModel.adapter.onEntryClickListener =
+        viewModel.adapter.onEntryClickListener =
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("game", tabGamesViewModel.data[position].id)
+                        putString("game", viewModel.data[position].id)
                     }
                     findNavController().navigate(R.id.action_game, bundle)
                 }
@@ -58,9 +58,9 @@ class TabGamesFragment : Fragment() {
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                tabGamesViewModel.state = States.PROGRESS
+                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
-                tabGamesViewModel.loadMore()
+                viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
@@ -71,21 +71,21 @@ class TabGamesFragment : Fragment() {
     private fun checkData() {
 //        if (view == null) return
 
-        when (tabGamesViewModel.state) {
+        when (viewModel.state) {
             States.CREATED -> {
-                tabGamesViewModel.setListener { checkData() }
-                tabGamesViewModel.load()
+                viewModel.setListener { checkData() }
+                viewModel.load()
             }
             States.PROGRESS -> {
-                tabGamesViewModel.setListener { checkData() }
+                viewModel.setListener { checkData() }
             }
             States.ERROR -> {
-                tabGamesViewModel.setListener { checkData() }
+                viewModel.setListener { checkData() }
                 swipeRefreshLayout.isRefreshing = false
                 Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
-                        tabGamesViewModel.state = States.PROGRESS
-                        tabGamesViewModel.load()
+                        viewModel.state = States.PROGRESS
+                        viewModel.load()
                     }
                     .show()
 //                gamesViewModel.load()
