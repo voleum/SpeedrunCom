@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
-import dev.voleum.speedruncom.model.Category
-import dev.voleum.speedruncom.model.CategoryList
-import dev.voleum.speedruncom.model.DataGame
-import dev.voleum.speedruncom.model.Game
+import dev.voleum.speedruncom.model.*
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,8 +20,27 @@ class GameViewModel : ViewModelObservable() {
     var stateInfo = States.CREATED
     var stateCategories = States.CREATED
 
-    var backgroundUrl: String = ""
+    val backgroundUrl: String
         get() = game?.assets?.background?.uri ?: ""
+
+    val trophyAssets: Assets
+        get() = game!!.assets
+//        get() = listOf(game?.assets?.trophyFirst?.uri ?: "",
+//            game?.assets?.trophySecond?.uri ?: "",
+//            game?.assets?.trophyThird?.uri ?: "",
+//            game?.assets?.trophyForth?.uri ?: "")
+
+//    var trophy1: String = ""
+//        get() = game?.assets?.trophyFirst?.uri ?: ""
+//
+//    var trophy2: String = ""
+//        get() = game?.assets?.trophySecond?.uri ?: ""
+//
+//    var trophy3: String = ""
+//        get() = game?.assets?.trophyThird?.uri ?: ""
+//
+//    var trophy4: String = ""
+//        get() = game?.assets?.trophyForth?.uri ?: ""
 
     var game: Game? = null
         @Bindable get

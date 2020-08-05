@@ -9,10 +9,10 @@
             type="dev.voleum.speedruncom.ui.screen.GameViewModel" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/game_swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/game_swipe_refresh_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -21,7 +21,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/game_background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:alpha="0.2"/>
 
             <TextView
                 android:id="@+id/game_name"
@@ -67,6 +68,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
 </layout>

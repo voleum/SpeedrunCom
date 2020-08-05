@@ -32,10 +32,13 @@ class TabGamesFragment : Fragment() {
     ): View? {
         viewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
         val binding: FragmentTabGamesBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_tab_games, null, false)
+            DataBindingUtil.inflate(inflater,
+                R.layout.fragment_tab_games,
+                null,
+                false)
         binding.viewModel = viewModel
         val root = binding.root
-        val recyclerView: RecyclerView = binding.gamesRecyclerView
+        val recyclerView = binding.gamesRecyclerView
         val layoutManager =
             GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 

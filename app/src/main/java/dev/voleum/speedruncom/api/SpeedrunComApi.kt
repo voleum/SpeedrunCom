@@ -11,8 +11,8 @@ interface SpeedrunComApi {
     @GET("categories/{id}")
     fun category(@Path("id") id: String): Call<Category>
 
-    @GET("games/{id}/categories")
-    fun categories(@Path("id") id: String): Call<CategoryList>
+    @GET("games/{game}/categories")
+    fun categories(@Path("game") gameId: String): Call<CategoryList>
 
     @GET("games")
     fun games(): Call<GameList>
@@ -29,8 +29,9 @@ interface SpeedrunComApi {
 //    @GET("levels")
 //    fun levels(): Call<Levels>
 
-//    @GET("leaderboards")
-//    fun leaderboards(): Call<Leaderboards>
+    @GET("leaderboards/{game}/category/{category}")
+    fun leaderboardsCategory(@Path("game") gameId: String,
+                             @Path("category") categoryId: String): Call<LeaderboardList>
 
     @GET("platform")
     fun platform(): Call<Platform>

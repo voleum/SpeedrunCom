@@ -33,7 +33,7 @@ class TabSeriesFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_tab_series, null, false)
         binding.viewModel = viewModel
         val root = binding.root
-        val recyclerView: RecyclerView = binding.seriesRecyclerView
+        val recyclerView = binding.seriesRecyclerView
         val layoutManager =
             GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
         recyclerView.layoutManager = layoutManager
