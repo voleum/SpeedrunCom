@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Assets(val logo: Asset,
                   @SerializedName("cover-tiny") val coverTiny: Asset,
@@ -13,4 +14,4 @@ data class Assets(val logo: Asset,
                   @SerializedName("trophy-3rd") val trophyThird: Asset,
                   @SerializedName("trophy-4th") val trophyForth: Asset,
                   val background: Asset,
-                  val foreground: Asset)
+                  val foreground: Asset) : Serializable

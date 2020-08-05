@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +23,8 @@ import kotlinx.android.synthetic.main.fragment_tab_games.*
 class GameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
+    //    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var backgroundImageView: AppCompatImageView
 
     override fun onCreateView(
@@ -37,15 +37,17 @@ class GameFragment : Fragment() {
             viewModel.id = getString("game", "")
         }
         val binding: FragmentGameBinding =
-            DataBindingUtil.inflate(inflater,
+            DataBindingUtil.inflate(
+                inflater,
                 R.layout.fragment_game,
                 container,
-                false)
+                false
+            )
         binding.viewModel = viewModel
-        swipeRefreshLayout = binding.gameSwipeRefreshLayout
+//        swipeRefreshLayout = binding.gameSwipeRefreshLayout
         backgroundImageView = binding.gameBackground
         checkData()
-        checkCategories()
+//        checkCategories()
         return binding.root
     }
 
@@ -62,7 +64,7 @@ class GameFragment : Fragment() {
             }
             States.ERROR -> {
                 viewModel.setInfoListener { checkData() }
-                swipeRefreshLayout.isRefreshing = false
+//                swipeRefreshLayout.isRefreshing = false
                 Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
                         viewModel.stateInfo = States.PROGRESS
@@ -78,7 +80,8 @@ class GameFragment : Fragment() {
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
                     .into(backgroundImageView)
-                swipeRefreshLayout.isRefreshing = false
+//                swipeRefreshLayout.isRefreshing = false
+                checkCategories()
             }
         }
     }
@@ -96,17 +99,23 @@ class GameFragment : Fragment() {
             }
             States.ERROR -> {
                 viewModel.setCategoriesListener { checkCategories() }
-                swipeRefreshLayout.isRefreshing = false
+//                swipeRefreshLayout.isRefreshing = false
                 Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
                         viewModel.stateCategories = States.PROGRESS
                         viewModel.loadCategories()
                     }
                     .show()
-//                gamesViewModel.load()
+//                viewModel.load()
             }
             States.LOADED -> {
-                val adapter = GameCategoriesViewPagerAdapter(this, viewModel.categories.size)
+                //FIXME: FIX. THIS. FREAKING. SHIT.
+                val adapter = GameCategoriesViewPagerAdapter(
+                    this,
+                    viewModel.categories,
+                    viewModel.id,
+                    viewModel.trophyAssets
+                )
                 game_view_pager.adapter = adapter
                 TabLayoutMediator(game_tab_layout, game_view_pager) { tab, position ->
                     tab.text = viewModel.categories[position].name

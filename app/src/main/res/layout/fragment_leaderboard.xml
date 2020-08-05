@@ -5,8 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.nav.games.LeaderboardFragment">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="dev.voleum.speedruncom.ui.screen.LeaderboardViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/leaderboard_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:adapter="@{viewModel.adapter}"
+            app:data="@{viewModel.data}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
