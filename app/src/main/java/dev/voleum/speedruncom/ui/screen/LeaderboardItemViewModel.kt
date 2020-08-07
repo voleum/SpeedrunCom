@@ -16,4 +16,16 @@ class LeaderboardItemViewModel(record: RunLeaderboard) : ViewModelObservable() {
     var place: String = record.place.toString()
         @Bindable get
         @Bindable set
+
+    var player: String = if (record.run.players[0].rel == "user") record.run.players[0].id else record.run.players[0].name //TODO: multiply players
+        @Bindable get
+        @Bindable set
+
+    var time: String = record.run.times.primary_t.toString() //TODO: multiply times maybe
+        @Bindable get
+        @Bindable set
+
+    var date: String = record.run.date
+        @Bindable get
+        @Bindable set
 }
