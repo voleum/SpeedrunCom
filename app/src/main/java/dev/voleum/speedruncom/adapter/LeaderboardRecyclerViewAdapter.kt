@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.SpeedrunCom
 import dev.voleum.speedruncom.databinding.HolderLeaderboardBinding
 import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Assets
@@ -17,6 +18,11 @@ import dev.voleum.speedruncom.trophyAssetsPlaces
 import dev.voleum.speedruncom.ui.screen.LeaderboardItemViewModel
 
 class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.LeaderboardViewHolder>() {
+
+    init {
+        //FIXME: doesn't work
+        setHasStableIds(true)
+    }
 
     val items = mutableListOf<RunLeaderboard>()
     lateinit var trophyAssets: Assets
@@ -44,7 +50,14 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
                 3 -> trophyAssets.trophyThird
                 else -> trophyAssets.trophyForth
             })
+        holder.binding.holderLeaderboardConstraint.setBackgroundColor(
+            if (position%2 == 0) SpeedrunCom.instance.resources.getColor(android.R.color.transparent)
+            else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
+        )
     }
+
+    override fun getItemId(position: Int): Long =
+        items[position].hashCode().toLong()
 
     fun replaceItems(items: List<RunLeaderboard>) {
         this.items.clear()
