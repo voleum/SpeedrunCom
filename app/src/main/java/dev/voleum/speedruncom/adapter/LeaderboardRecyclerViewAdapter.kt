@@ -36,11 +36,12 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
     override fun onBindViewHolder(holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder, position: Int) {
         holder.binding.viewModel =
             LeaderboardItemViewModel(items[position])
-        if (position < trophyAssetsPlaces)
-            holder.loadImage(when (position) {
-                0 -> trophyAssets.trophyFirst
-                1 -> trophyAssets.trophySecond
-                2 -> trophyAssets.trophyThird
+        val place = (holder.binding.viewModel as LeaderboardItemViewModel).place.toInt()
+        if (place <= trophyAssetsPlaces)
+            holder.loadImage(when (place) {
+                1 -> trophyAssets.trophyFirst
+                2 -> trophyAssets.trophySecond
+                3 -> trophyAssets.trophyThird
                 else -> trophyAssets.trophyForth
             })
     }
