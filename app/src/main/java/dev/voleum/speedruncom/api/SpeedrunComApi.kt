@@ -45,6 +45,9 @@ interface SpeedrunComApi {
     @GET("runs")
     fun runs(): Call<RunList>
 
+    @GET("runs/{id}")
+    fun runs(@Path("id") id: String): Call<DataRun>
+
     @GET("series")
     fun series(): Call<SeriesList>
 

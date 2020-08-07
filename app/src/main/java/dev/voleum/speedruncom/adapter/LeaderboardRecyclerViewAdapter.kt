@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -23,6 +24,8 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
         //FIXME: doesn't work
         setHasStableIds(true)
     }
+
+    lateinit var onEntryClickListener: LeaderboardRecyclerViewAdapter.OnEntryClickListener
 
     val items = mutableListOf<RunLeaderboard>()
     lateinit var trophyAssets: Assets
@@ -67,6 +70,12 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
 
     inner class LeaderboardViewHolder(val binding: HolderLeaderboardBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener { v ->
+                onEntryClickListener.onEntryClick(v, layoutPosition)
+            }
+        }
+
         private val image: AppCompatImageView =
             binding.root.findViewById(R.id.holder_leaderboard_image)
 
@@ -74,15 +83,17 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
             if (asset != null) {
                 GlideApp.with(itemView)
                     .load(asset.uri)
-//                .placeholder(R.drawable.ic_baseline_image_200)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
-//                .onlyRetrieveFromCache(true)
                     .into(image)
 //                binding.viewModel.imageWidth = asset.width
 //                binding.viewModel.imageHeight = asset.height
             }
         }
+    }
+
+    interface OnEntryClickListener {
+        fun onEntryClick(view: View?, position: Int)
     }
 }
