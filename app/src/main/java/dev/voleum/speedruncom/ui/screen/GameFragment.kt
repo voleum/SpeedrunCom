@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_tab_games.*
 class GameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
+    private lateinit var binding: FragmentGameBinding
 
     //    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var backgroundImageView: AppCompatImageView
@@ -36,7 +37,7 @@ class GameFragment : Fragment() {
         arguments?.apply {
             viewModel.id = getString("game", "")
         }
-        val binding: FragmentGameBinding =
+        binding =
             DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_game,
@@ -116,8 +117,8 @@ class GameFragment : Fragment() {
                     viewModel.id,
                     viewModel.trophyAssets
                 )
-                game_view_pager.adapter = adapter
-                TabLayoutMediator(game_tab_layout, game_view_pager) { tab, position ->
+                binding.gameViewPager.adapter = adapter
+                TabLayoutMediator(binding.gameTabLayout, binding.gameViewPager) { tab, position ->
                     tab.text = viewModel.categories[position].name
                 }.attach()
             }
