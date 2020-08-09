@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.ui.tab.series
+package dev.voleum.speedruncom.ui.screen
 
 import android.os.Bundle
 import android.util.Log
@@ -15,14 +15,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
-import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
+import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
+import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
 import dev.voleum.speedruncom.enum.States
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class TabSeriesFragment : Fragment() {
+class GamesSeriesFragment : Fragment() {
 
-    private lateinit var viewModel: TabSeriesViewModel
+    private lateinit var viewModel: GamesSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -30,33 +30,34 @@ class TabSeriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(TabSeriesViewModel::class.java)
-        val binding: FragmentTabSeriesBinding =
-            DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_tab_series,
+        viewModel = ViewModelProvider(this).get(GamesSeriesViewModel::class.java)
+        arguments?.apply {
+            viewModel.seriesId = getString("series", "")
+        }
+        val binding: FragmentGamesSeriesBinding =
+            DataBindingUtil.inflate(inflater,
+                R.layout.fragment_games_series,
                 null,
-                false
-            )
+                false)
         binding.viewModel = viewModel
         val root = binding.root
-        val recyclerView = binding.seriesRecyclerView
+        val recyclerView = binding.gamesRecyclerView
         val layoutManager =
             GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         viewModel.adapter.onEntryClickListener =
-            object : SeriesRecyclerViewAdapter.OnEntryClickListener {
+            object : GamesRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("series", viewModel.data[position].id)
+                        putString("game", viewModel.data[position].id)
                     }
-                    findNavController().navigate(R.id.action_games_series, bundle)
+                    findNavController().navigate(R.id.action_game, bundle)
                 }
             }
 
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
-        swipeRefreshLayout = binding.seriesSwipeRefreshLayout
+        swipeRefreshLayout = binding.gamesSwipeRefreshLayout
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
@@ -85,15 +86,15 @@ class TabSeriesFragment : Fragment() {
                 viewModel.setListener { checkData() }
             }
             States.ERROR -> {
-                swipeRefreshLayout.isRefreshing = false
                 viewModel.setListener { checkData() }
+                swipeRefreshLayout.isRefreshing = false
                 Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
                     .setAction("Retry") {
                         viewModel.state = States.PROGRESS
                         viewModel.load()
                     }
                     .show()
-//                viewModel.load()
+//                gamesViewModel.load()
             }
             States.LOADED -> {
                 swipeRefreshLayout.isRefreshing = false
