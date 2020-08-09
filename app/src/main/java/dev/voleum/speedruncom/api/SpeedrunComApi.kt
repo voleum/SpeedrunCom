@@ -51,6 +51,12 @@ interface SpeedrunComApi {
     @GET("series")
     fun series(): Call<SeriesList>
 
+    @GET("series/{id}/games")
+    fun gamesSeries(@Path("id") id: String): Call<GameList>
+
+    @GET("series/{id}/games")
+    fun gamesSeries(@Path("id") id: String, @Query("offset") offset: Int): Call<GameList>
+
     @GET("series")
     fun series(@Query("offset") offset: Int): Call<SeriesList>
 

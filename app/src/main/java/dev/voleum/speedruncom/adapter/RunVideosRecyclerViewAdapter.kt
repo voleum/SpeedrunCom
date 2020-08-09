@@ -21,10 +21,9 @@ class RunVideosRecyclerViewAdapter : RecyclerView.Adapter<RunVideosRecyclerViewA
 
     override fun onBindViewHolder(holder: RunVideoViewHolder, position: Int) {
         //TODO: add all sources (now only youtube)
-        val videoIdIndex = items[position].uri.indexOf("v=") + 2
-        val videoId = items[position].uri.substring(videoIdIndex, videoIdIndex + 11)
+        val videoId = getYouTubeVideoId(items[position].uri)
         holder.videoWeb.loadData(
-            "<body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${videoId}\" frameborder=\"0\" allowfullscreen></iframe>",
+            "/*<body style='margin:0;padding:0;'>*/<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${videoId}\" frameborder=\"0\" allowfullscreen></iframe>",
             "text/html",
             "utf-8"
         )
@@ -36,6 +35,13 @@ class RunVideosRecyclerViewAdapter : RecyclerView.Adapter<RunVideosRecyclerViewA
         this.items.clear()
         this.items.addAll(items)
 //        notifyDataSetChanged()
+    }
+
+    fun getYouTubeVideoId(link: String): String {
+        val videoIdIndex =
+            if (link.indexOf("youtube.com") != -1) link.indexOf("v=") + 2
+            else link.indexOf("youtu.be/") + 9
+        return link.substring(videoIdIndex, videoIdIndex + 11)
     }
 
     inner class RunVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

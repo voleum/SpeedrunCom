@@ -15,6 +15,26 @@
             android:id="@+id/action_game"
             app:destination="@id/game_destination" />
 
+        <action
+            android:id="@+id/action_games_series"
+            app:destination="@id/games_series_destination" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/games_series_destination"
+        android:name="dev.voleum.speedruncom.ui.screen.GamesSeriesFragment"
+        android:label="Games"
+        tools:layout="@layout/fragment_games_series">
+
+        <action
+            android:id="@+id/action_game"
+            app:destination="@id/game_destination" />
+
+        <deepLink
+            android:id="@+id/games_series_deeplink"
+            app:uri="www.speedrun.com/{id}" />
+
     </fragment>
 
     <fragment
