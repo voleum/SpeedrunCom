@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentRunBinding
@@ -34,6 +35,10 @@ class RunFragment : Fragment() {
                 false
             )
         binding.viewModel = viewModel
+        val recyclerView = binding.runRecyclerView
+        recyclerView.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
         checkData()
         return binding.root
     }

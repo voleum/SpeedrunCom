@@ -1,3 +1,4 @@
 package dev.voleum.speedruncom.model
 
-data class Videos(val links: List<Link>)
+data class Videos(val text: String,
+                  val links: List<Link>)
