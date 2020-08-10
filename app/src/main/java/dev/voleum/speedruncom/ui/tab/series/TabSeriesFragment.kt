@@ -1,5 +1,6 @@
 package dev.voleum.speedruncom.ui.tab.series
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,13 @@ class TabSeriesFragment : Fragment() {
 
     private lateinit var viewModel: TabSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var layoutManager: GridLayoutManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,8 +49,6 @@ class TabSeriesFragment : Fragment() {
         binding.viewModel = viewModel
         val root = binding.root
         val recyclerView = binding.seriesRecyclerView
-        val layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         viewModel.adapter.onEntryClickListener =
             object : SeriesRecyclerViewAdapter.OnEntryClickListener {
@@ -71,6 +77,11 @@ class TabSeriesFragment : Fragment() {
         recyclerView.addOnScrollListener(onScrollListener)
         checkData()
         return root
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        layoutManager.spanCount = resources.getInteger(R.integer.games_columns)
     }
 
     private fun checkData() {

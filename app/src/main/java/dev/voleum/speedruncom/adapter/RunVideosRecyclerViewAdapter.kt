@@ -12,24 +12,39 @@ import kotlinx.android.synthetic.main.holder_run_video.view.*
 
 class RunVideosRecyclerViewAdapter : RecyclerView.Adapter<RunVideosRecyclerViewAdapter.RunVideoViewHolder>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     var items = mutableListOf<Link>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunVideoViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.holder_run_video, parent, false)
+//        RunVideoViewHolder(
+//            DataBindingUtil.inflate(
+//                LayoutInflater.from(parent.context),
+//                R.layout.holder_run_video,
+//                parent,
+//                false
+//            )
+//        )
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.holder_run_video,
+                parent,
+                false)
         return RunVideoViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RunVideoViewHolder, position: Int) {
         //TODO: add all sources (now only youtube)
+//        holder.binding.viewModel = RunVideoItemViewModel()
         val videoId = getYouTubeVideoId(items[position].uri)
-        holder.videoWeb.loadData(
-            "/*<body style='margin:0;padding:0;'>*/<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${videoId}\" frameborder=\"0\" allowfullscreen></iframe>",
-            "text/html",
-            "utf-8"
-        )
+        holder.loadData(videoId)
     }
 
     override fun getItemCount(): Int = items.size
+
+    override fun getItemId(position: Int): Long =
+        items[position].hashCode().toLong()
 
     fun replaceItems(items: List<Link>) {
         this.items.clear()
@@ -44,13 +59,22 @@ class RunVideosRecyclerViewAdapter : RecyclerView.Adapter<RunVideosRecyclerViewA
         return link.substring(videoIdIndex, videoIdIndex + 11)
     }
 
-    inner class RunVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//    inner class RunVideoViewHolder(val binding: HolderRunVideoBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RunVideoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val videoWeb: WebView = itemView.holder_run_web_view
+        val videoWeb: WebView = view.holder_run_web_view
 
         init {
             videoWeb.settings.javaScriptEnabled = true
             videoWeb.webChromeClient = WebChromeClient()
+        }
+
+        fun loadData(videoId: String) {
+            videoWeb.loadData(
+                "<body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${videoId}\" frameborder=\"0\" allowfullscreen></iframe>",
+                "text/html",
+                "utf-8"
+            )
         }
     }
 }
