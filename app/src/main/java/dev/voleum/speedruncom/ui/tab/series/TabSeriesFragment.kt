@@ -25,13 +25,13 @@ class TabSeriesFragment : Fragment() {
 
     private lateinit var viewModel: TabSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var layoutManager: GridLayoutManager
+    private lateinit var binding: FragmentTabSeriesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        layoutManager =
+//            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +39,7 @@ class TabSeriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(TabSeriesViewModel::class.java)
-        val binding: FragmentTabSeriesBinding =
+        binding =
             DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_tab_series,
@@ -59,6 +59,9 @@ class TabSeriesFragment : Fragment() {
                     findNavController().navigate(R.id.action_games_series, bundle)
                 }
             }
+
+        val layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
@@ -81,7 +84,7 @@ class TabSeriesFragment : Fragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        layoutManager.spanCount = resources.getInteger(R.integer.games_columns)
+        (binding.seriesRecyclerView.layoutManager as GridLayoutManager).spanCount = resources.getInteger(R.integer.games_columns)
     }
 
     private fun checkData() {
