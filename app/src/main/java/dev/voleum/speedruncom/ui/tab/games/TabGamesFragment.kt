@@ -25,13 +25,13 @@ class TabGamesFragment : Fragment() {
 
     private lateinit var viewModel: TabGamesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var layoutManager: GridLayoutManager
+    private lateinit var binding: FragmentTabGamesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        layoutManager =
+//            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +39,7 @@ class TabGamesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
-        val binding: FragmentTabGamesBinding =
+        binding =
             DataBindingUtil.inflate(inflater,
                 R.layout.fragment_tab_games,
                 null,
@@ -57,6 +57,9 @@ class TabGamesFragment : Fragment() {
                     findNavController().navigate(R.id.action_game, bundle)
                 }
             }
+
+        val layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
@@ -79,7 +82,8 @@ class TabGamesFragment : Fragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        layoutManager.spanCount = resources.getInteger(R.integer.games_columns)
+        newConfig.screenLayout = R.layout.fragment_tab_games
+        (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount = resources.getInteger(R.integer.games_columns)
     }
 
     private fun checkData() {
