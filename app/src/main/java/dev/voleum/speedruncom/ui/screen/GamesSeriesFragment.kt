@@ -18,11 +18,11 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
 import dev.voleum.speedruncom.enum.States
+import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class GamesSeriesFragment : Fragment() {
+class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGamesSeriesBinding>() {
 
-    private lateinit var viewModel: GamesSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -34,7 +34,7 @@ class GamesSeriesFragment : Fragment() {
         arguments?.apply {
             viewModel.seriesId = getString("series", "")
         }
-        val binding: FragmentGamesSeriesBinding =
+        binding =
             DataBindingUtil.inflate(inflater,
                 R.layout.fragment_games_series,
                 null,
@@ -94,7 +94,6 @@ class GamesSeriesFragment : Fragment() {
                         viewModel.load()
                     }
                     .show()
-//                gamesViewModel.load()
             }
             States.LOADED -> {
                 swipeRefreshLayout.isRefreshing = false

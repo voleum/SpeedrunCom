@@ -19,19 +19,12 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
 import dev.voleum.speedruncom.enum.States
+import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class TabSeriesFragment : Fragment() {
+class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeriesBinding>() {
 
-    private lateinit var viewModel: TabSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var binding: FragmentTabSeriesBinding
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        layoutManager =
-//            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,7 +100,6 @@ class TabSeriesFragment : Fragment() {
                         viewModel.load()
                     }
                     .show()
-//                viewModel.load()
             }
             States.LOADED -> {
                 swipeRefreshLayout.isRefreshing = false
