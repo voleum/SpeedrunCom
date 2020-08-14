@@ -31,6 +31,8 @@ class LeaderboardViewModel : ViewModelObservable() {
 
     lateinit var gameId: String
     lateinit var categoryId: String
+    lateinit var variableId: String
+    lateinit var subcategoryId: String
     lateinit var trophyAssets: Assets
 
     lateinit var loadListener: () -> Unit
@@ -49,7 +51,7 @@ class LeaderboardViewModel : ViewModelObservable() {
     }
 
     fun load() {
-        API.leaderboardsCategory(gameId, categoryId).enqueue(object : Callback<LeaderboardList> {
+        API.leaderboardsCategory(gameId, categoryId, mapOf(Pair("var-$variableId", subcategoryId))).enqueue(object : Callback<LeaderboardList> {
             override fun onResponse(call: Call<LeaderboardList>, response: Response<LeaderboardList>) {
                 adapter.replaceItems(response.body()!!.data.runs)
                 adapter.trophyAssets = trophyAssets

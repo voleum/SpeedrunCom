@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface SpeedrunComApi {
 
@@ -12,7 +13,10 @@ interface SpeedrunComApi {
     fun category(@Path("id") id: String): Call<Category>
 
     @GET("games/{game}/categories")
-    fun categories(@Path("game") gameId: String): Call<CategoryList>
+    fun categoriesGame(@Path("game") gameId: String): Call<CategoryList>
+
+    @GET("games/{level}/categories")
+    fun categoriesLevel(@Path("level") levelId: String): Call<CategoryList>
 
     @GET("games")
     fun games(): Call<GameList>
@@ -26,12 +30,17 @@ interface SpeedrunComApi {
 //    @GET("guests")
 //    fun guests(): Call<Guests>
 
-//    @GET("levels")
-//    fun levels(): Call<Levels>
+    @GET("{game}/levels")
+    fun levels(@Path("game") gameId: String): Call<LevelList>
 
     @GET("leaderboards/{game}/category/{category}")
     fun leaderboardsCategory(@Path("game") gameId: String,
                              @Path("category") categoryId: String): Call<LeaderboardList>
+
+    @GET("leaderboards/{game}/category/{category}")
+    fun leaderboardsCategory(@Path("game") gameId: String,
+                             @Path("category") categoryId: String,
+                             @QueryMap variable: Map<String, String>): Call<LeaderboardList>
 
     @GET("platform")
     fun platform(): Call<Platform>
@@ -65,4 +74,7 @@ interface SpeedrunComApi {
 
     @GET("variables/{id}")
     fun variables(@Path("id") id: String): Call<Variable>
+
+    @GET("categories/{category}/variables")
+    fun variablesCategory(@Path("category") categoryId: String): Call<VariableList>
 }

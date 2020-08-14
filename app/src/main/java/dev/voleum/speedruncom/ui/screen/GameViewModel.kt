@@ -25,22 +25,6 @@ class GameViewModel : ViewModelObservable() {
 
     val trophyAssets: Assets
         get() = game!!.assets
-//        get() = listOf(game?.assets?.trophyFirst?.uri ?: "",
-//            game?.assets?.trophySecond?.uri ?: "",
-//            game?.assets?.trophyThird?.uri ?: "",
-//            game?.assets?.trophyForth?.uri ?: "")
-
-//    var trophy1: String = ""
-//        get() = game?.assets?.trophyFirst?.uri ?: ""
-//
-//    var trophy2: String = ""
-//        get() = game?.assets?.trophySecond?.uri ?: ""
-//
-//    var trophy3: String = ""
-//        get() = game?.assets?.trophyThird?.uri ?: ""
-//
-//    var trophy4: String = ""
-//        get() = game?.assets?.trophyForth?.uri ?: ""
 
     var game: Game? = null
         @Bindable get
@@ -98,7 +82,7 @@ class GameViewModel : ViewModelObservable() {
     }
 
     fun loadCategories() {
-        API.categories(id).enqueue(object : Callback<CategoryList> {
+        API.categoriesGame(id).enqueue(object : Callback<CategoryList> {
             override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
                 categories = response.body()!!.data
                 notifyChange()

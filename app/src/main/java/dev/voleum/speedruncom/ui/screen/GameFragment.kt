@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -17,13 +16,10 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GameCategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentGameBinding
 import dev.voleum.speedruncom.enum.States
-import kotlinx.android.synthetic.main.fragment_game.*
+import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class GameFragment : Fragment() {
-
-    private lateinit var viewModel: GameViewModel
-    private lateinit var binding: FragmentGameBinding
+class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
 
     //    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var backgroundImageView: AppCompatImageView
@@ -72,7 +68,6 @@ class GameFragment : Fragment() {
                         viewModel.loadInfo()
                     }
                     .show()
-//                gamesViewModel.load()
             }
             States.LOADED -> {
                 GlideApp.with(this)

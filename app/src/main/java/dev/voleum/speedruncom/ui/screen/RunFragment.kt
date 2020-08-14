@@ -12,11 +12,10 @@ import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentRunBinding
 import dev.voleum.speedruncom.enum.States
+import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class RunFragment : Fragment() {
-
-    private lateinit var viewModel: RunViewModel
+class RunFragment : AbstractFragment<RunViewModel, FragmentRunBinding>() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +26,7 @@ class RunFragment : Fragment() {
         arguments?.apply {
             viewModel.id = getString("run", "")
         }
-        val binding: FragmentRunBinding =
+        binding =
             DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_run,
@@ -63,7 +62,6 @@ class RunFragment : Fragment() {
                         viewModel.load()
                     }
                     .show()
-//                gamesViewModel.load()
             }
             States.LOADED -> {
 
