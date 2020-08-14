@@ -50,8 +50,12 @@ class LeaderboardViewModel : ViewModelObservable() {
         this.loadListener = loadListener
     }
 
+    private fun getSubcategoryQueryMap(): Map<String, String>? =
+        if (subcategoryId != "") mapOf(Pair("var-$variableId", subcategoryId))
+        else mapOf()
+
     fun load() {
-        API.leaderboardsCategory(gameId, categoryId, mapOf(Pair("var-$variableId", subcategoryId))).enqueue(object : Callback<LeaderboardList> {
+        API.leaderboardsCategory(gameId, categoryId, getSubcategoryQueryMap()).enqueue(object : Callback<LeaderboardList> {
             override fun onResponse(call: Call<LeaderboardList>, response: Response<LeaderboardList>) {
                 adapter.replaceItems(response.body()!!.data.runs)
                 adapter.trophyAssets = trophyAssets

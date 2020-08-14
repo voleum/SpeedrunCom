@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.ui.screen
 
 import android.util.Log
+import android.view.View
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.enum.States
@@ -25,9 +26,16 @@ class GameSubategoriesViewModel : ViewModelObservable() {
     var subcategories: Map<String, CategoryValues> = mapOf()
         @Bindable get
 
+    var tabsVisibility: Int = View.GONE
+        @Bindable get() =
+            if (subcategories.isEmpty()) View.GONE
+            else View.VISIBLE
+
     fun getTabsText(): List<String> = subcategories.map { it.value.label }
 
-    fun getSubcategoriesIds(): List<String> = subcategories.map { it.key }
+    fun getSubcategoriesIds(): List<String> =
+        if (subcategories.isNotEmpty()) subcategories.map { it.key }
+        else listOf("")
 
     fun setListener(loadListener: () -> Unit) {
         this.loadListener = loadListener
@@ -36,7 +44,9 @@ class GameSubategoriesViewModel : ViewModelObservable() {
     fun load() {
         API.variablesCategory(categoryId).enqueue(object : Callback<VariableList> {
             override fun onResponse(call: Call<VariableList>, response: Response<VariableList>) {
-                subcategories = response.body()!!.data.filter { it.isSubcategory }[0].values.values
+                val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
+                if (subcategoriesResponse.isNotEmpty())
+                    subcategories = subcategoriesResponse[0].values.values
                 notifyChange()
                 //TODO: exception if game not founded
                 state = States.LOADED

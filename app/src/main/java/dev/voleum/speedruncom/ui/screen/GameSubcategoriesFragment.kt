@@ -16,7 +16,8 @@ import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
 
-class GameSubcategoriesFragment : AbstractFragment<GameSubategoriesViewModel, FragmentSubcategoriesBinding>() {
+class GameSubcategoriesFragment :
+    AbstractFragment<GameSubategoriesViewModel, FragmentSubcategoriesBinding>() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,14 +66,19 @@ class GameSubcategoriesFragment : AbstractFragment<GameSubategoriesViewModel, Fr
                 val adapter = GameSubcategoriesViewPagerAdapter(
                     this,
                     viewModel.getSubcategoriesIds(),
-                    viewModel.subcategories,
                     viewModel.categoryId,
                     viewModel.gameId,
                     viewModel.trophyAssets
                 )
                 binding.subcategoriesViewPager.adapter = adapter
-                TabLayoutMediator(binding.subcategoriesTabLayout, binding.subcategoriesViewPager) { tab, position ->
-                    tab.text = viewModel.getTabsText()[position]
+                TabLayoutMediator(
+                    binding.subcategoriesTabLayout,
+                    binding.subcategoriesViewPager
+                ) { tab, position ->
+                    val tabsText = viewModel.getTabsText()
+                    tab.text =
+                        if (tabsText.isNotEmpty()) tabsText[position]
+                        else ""
                 }.attach()
             }
         }
