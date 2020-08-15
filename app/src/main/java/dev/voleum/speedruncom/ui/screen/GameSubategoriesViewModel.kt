@@ -47,11 +47,12 @@ class GameSubategoriesViewModel : ViewModelObservable() {
         API.variablesCategory(categoryId).enqueue(object : Callback<VariableList> {
             override fun onResponse(call: Call<VariableList>, response: Response<VariableList>) {
                 val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
-                if (subcategoriesResponse.isNotEmpty())
+                if (subcategoriesResponse.isNotEmpty()) {
                     subcategories = subcategoriesResponse[0].values.values
                     variableId = subcategoriesResponse[0].id
+                }
                 notifyChange()
-                //TODO: exception if game not founded
+                //TODO exception if game not founded
                 state = States.LOADED
                 Log.d("tag", "load onResponse()")
                 loadListener()

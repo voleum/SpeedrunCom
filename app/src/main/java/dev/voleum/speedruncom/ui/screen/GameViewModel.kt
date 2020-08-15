@@ -84,9 +84,9 @@ class GameViewModel : ViewModelObservable() {
     fun loadCategories() {
         API.categoriesGame(id).enqueue(object : Callback<CategoryList> {
             override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
-                categories = response.body()!!.data
+                categories = response.body()!!.data.filter { it.type == "per-game" } //TODO add for levels
                 notifyChange()
-                //TODO: exception if game not founded
+                //TODO exception if game not founded
                 stateCategories = States.LOADED
                 Log.d("tag", "load onResponse()")
                 loadCategoriesListener()
