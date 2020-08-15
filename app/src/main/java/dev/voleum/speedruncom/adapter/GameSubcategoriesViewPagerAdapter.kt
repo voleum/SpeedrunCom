@@ -8,6 +8,7 @@ import dev.voleum.speedruncom.ui.screen.GameSubcategoriesFragment
 import dev.voleum.speedruncom.ui.screen.LeaderboardFragment
 
 class GameSubcategoriesViewPagerAdapter(fragment: GameSubcategoriesFragment,
+                                        val variableId: String,
                                         val subcategoriesIds: List<String>,
                                         val categoryId: String,
                                         val gameId: String,
@@ -20,6 +21,7 @@ class GameSubcategoriesViewPagerAdapter(fragment: GameSubcategoriesFragment,
             arguments = Bundle().apply {
                 putString("game", gameId)
                 putString("category", categoryId)
+                putString("variable", variableId)
                 putString("subcategory", subcategoriesIds[position])
                 putSerializable("trophyAssets", trophyAssets)
             }

@@ -65,6 +65,7 @@ class GameSubcategoriesFragment :
             States.LOADED -> {
                 val adapter = GameSubcategoriesViewPagerAdapter(
                     this,
+                    viewModel.variableId,
                     viewModel.getSubcategoriesIds(),
                     viewModel.categoryId,
                     viewModel.gameId,
