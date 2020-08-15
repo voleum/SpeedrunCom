@@ -26,6 +26,8 @@ class GameSubategoriesViewModel : ViewModelObservable() {
     var subcategories: Map<String, CategoryValues> = mapOf()
         @Bindable get
 
+    var variableId: String = ""
+
     var tabsVisibility: Int = View.GONE
         @Bindable get() =
             if (subcategories.isEmpty()) View.GONE
@@ -47,6 +49,7 @@ class GameSubategoriesViewModel : ViewModelObservable() {
                 val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
                 if (subcategoriesResponse.isNotEmpty())
                     subcategories = subcategoriesResponse[0].values.values
+                    variableId = subcategoriesResponse[0].id
                 notifyChange()
                 //TODO: exception if game not founded
                 state = States.LOADED
