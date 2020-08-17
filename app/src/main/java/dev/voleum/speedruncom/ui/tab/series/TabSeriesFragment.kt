@@ -7,24 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.android.synthetic.main.fragment_tab_games.*
+import kotlinx.android.synthetic.main.fragment_tab_series.*
+import kotlinx.coroutines.*
 
 class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeriesBinding>() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,45 +65,69 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                viewModel.state = States.PROGRESS
+//                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
                 viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
-        checkData()
+
+        scope.launch {
+            viewModel.load()
+            series_progress_bar?.visibility = View.GONE
+        }
+
+//        checkData()
         return root
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        (binding.seriesRecyclerView.layoutManager as GridLayoutManager).spanCount = resources.getInteger(R.integer.games_columns)
+        (binding.seriesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+            resources.getInteger(R.integer.games_columns)
     }
 
-    private fun checkData() {
-//        if (view == null) return
-
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                swipeRefreshLayout.isRefreshing = false
-                viewModel.setListener { checkData() }
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-            }
-            States.LOADED -> {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
+    override fun onPause() {
+        super.onPause()
+        Log.d("tag", "onPause")
     }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("tag", "onStop")
+        job.cancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("tag", "onDestroy")
+        scope.cancel()
+    }
+
+    //    private fun checkData() {
+////        if (view == null) return
+//
+//        when (viewModel.state) {
+//            States.CREATED -> {
+//                viewModel.setListener { checkData() }
+//                viewModel.load()
+//            }
+//            States.PROGRESS -> {
+//                viewModel.setListener { checkData() }
+//            }
+//            States.ERROR -> {
+//                swipeRefreshLayout.isRefreshing = false
+//                viewModel.setListener { checkData() }
+//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
+//                    .setAction("Retry") {
+//                        viewModel.state = States.PROGRESS
+//                        viewModel.load()
+//                    }
+//                    .show()
+//            }
+//            States.LOADED -> {
+//                swipeRefreshLayout.isRefreshing = false
+//            }
+//        }
+//    }
 }
