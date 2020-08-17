@@ -42,8 +42,8 @@ interface SpeedrunComApi {
                              @Path("category") categoryId: String,
                              @QueryMap variable: Map<String, String>?): Call<LeaderboardList>
 
-    @GET("platform")
-    fun platform(): Call<Platform>
+    @GET("platforms/{id}")
+    fun platform(@Path("id") id: String): Call<DataPlatform>
 
 //    @GET("profile")
 //    fun profile(): Call<User>
