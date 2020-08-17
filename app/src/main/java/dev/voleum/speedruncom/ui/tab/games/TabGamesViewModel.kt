@@ -14,6 +14,9 @@ import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class TabGamesViewModel : ViewModelObservable() {
 
@@ -29,7 +32,7 @@ class TabGamesViewModel : ViewModelObservable() {
         }
     }
 
-    lateinit var loadListener: () -> Unit
+//    lateinit var loadListener: () -> Unit
 
     lateinit var pagination: Pagination
 
@@ -42,34 +45,37 @@ class TabGamesViewModel : ViewModelObservable() {
     var data: List<Game> = adapter.items
         @Bindable get
 
-    fun setListener(loadListener: () -> Unit) {
-        this.loadListener = loadListener
-    }
+//    fun setListener(loadListener: () -> Unit) {
+//        this.loadListener = loadListener
+//    }
 
-    fun onRefresh() {
-        state = States.PROGRESS
+    suspend fun onRefresh() {
+//        state = States.PROGRESS
         load()
     }
 
-    fun load() {
-        API.games().enqueue(object : Callback<GameList> {
-            override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
-                adapter.replaceItems(response.body()!!.data)
-                pagination = response.body()!!.pagination
-                state = States.LOADED
-                Log.d("tag", "load onResponse()")
-                loadListener()
-            }
+    suspend fun load() {
+        suspendCoroutine<Unit> {
+            API.games().enqueue(object : Callback<GameList> {
+                override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
+                    adapter.replaceItems(response.body()!!.data)
+                    pagination = response.body()!!.pagination
+                    state = States.LOADED
+                    Log.d("tag", "load onResponse()")
+//                    loadListener()
+                    it.resume(Unit)
+                }
 
-            override fun onFailure(call: Call<GameList>, t: Throwable) {
-                t.stackTrace
-                t.message
-                state = States.ERROR
-                Log.d("tag", "load onError()")
-                loadListener()
-            }
-
-        })
+                override fun onFailure(call: Call<GameList>, t: Throwable) {
+                    t.stackTrace
+                    t.message
+                    state = States.ERROR
+                    Log.d("tag", "load onError()")
+//                    loadListener()
+                    it.resumeWithException(t)
+                }
+            })
+        }
     }
 
     fun loadMore() {
@@ -90,7 +96,6 @@ class TabGamesViewModel : ViewModelObservable() {
                 //TODO: do something
 //                loadListener()
             }
-
         })
     }
 }

@@ -21,10 +21,12 @@ import dev.voleum.speedruncom.databinding.FragmentTabGamesBinding
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
+import kotlinx.coroutines.*
 
 class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBinding>() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,10 +35,12 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
     ): View? {
         viewModel = ViewModelProvider(this).get(TabGamesViewModel::class.java)
         binding =
-            DataBindingUtil.inflate(inflater,
+            DataBindingUtil.inflate(
+                inflater,
                 R.layout.fragment_tab_games,
                 null,
-                false)
+                false
+            )
         binding.viewModel = viewModel
         val root = binding.root
         val recyclerView = binding.gamesRecyclerView
@@ -57,6 +61,12 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.gamesSwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            scope.launch {
+                viewModel.onRefresh()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
@@ -69,7 +79,13 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
-        checkData()
+
+        scope.launch {
+            viewModel.load()
+            games_progress_bar?.visibility = View.GONE
+        }
+
+//        checkData()
         return root
     }
 
@@ -79,30 +95,35 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
         (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount = resources.getInteger(R.integer.games_columns)
     }
 
-    private fun checkData() {
-//        if (view == null) return
-
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setListener { checkData() }
-                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-            }
-            States.LOADED -> {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
+
+    //    private fun checkData() {
+////        if (view == null) return
+//
+//        when (viewModel.state) {
+//            States.CREATED -> {
+//                viewModel.setListener { checkData() }
+//                viewModel.load()
+//            }
+//            States.PROGRESS -> {
+//                viewModel.setListener { checkData() }
+//            }
+//            States.ERROR -> {
+//                viewModel.setListener { checkData() }
+//                swipeRefreshLayout.isRefreshing = false
+//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
+//                    .setAction("Retry") {
+//                        viewModel.state = States.PROGRESS
+//                        viewModel.load()
+//                    }
+//                    .show()
+//            }
+//            States.LOADED -> {
+//                swipeRefreshLayout.isRefreshing = false
+//            }
+//        }
+//    }
 }
