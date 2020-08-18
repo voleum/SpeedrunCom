@@ -15,10 +15,7 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GameCategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentGameBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
 
@@ -50,13 +47,20 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
 //        checkCategories()
 
         scope.launch {
-            val jobInfo = launch { viewModel.loadInfo() }
-            jobInfo.join()
-            val jobCategories = launch { viewModel.loadCategories() }
-            viewModel.loadPlatforms()
+            if (!viewModel.isInfoLoaded) {
+                val jobInfo = launch { viewModel.loadInfo() }
+                jobInfo.join()
+            }
+            val jobCategories = launch(start = CoroutineStart.LAZY) { viewModel.loadCategories() }
+            if (!viewModel.isCategoriesLoaded)
+                jobCategories.start()
+            if (!viewModel.isPlatformsLoaded)
+                viewModel.loadPlatforms()
             setBackgroundImage()
-            jobCategories.join()
-            createAdapter()
+            if (jobCategories.isActive)
+                jobCategories.join()
+            if (binding.gameViewPager.adapter == null)
+                createAdapter()
         }
 
         return binding.root

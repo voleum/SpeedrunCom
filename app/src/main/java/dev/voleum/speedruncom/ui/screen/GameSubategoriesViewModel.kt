@@ -4,7 +4,6 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.CategoryValues
 import dev.voleum.speedruncom.model.VariableList
@@ -12,6 +11,9 @@ import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class GameSubategoriesViewModel : ViewModelObservable() {
 
@@ -19,9 +21,11 @@ class GameSubategoriesViewModel : ViewModelObservable() {
     lateinit var categoryId: String
     lateinit var trophyAssets: Assets
 
-    lateinit var loadListener: () -> Unit
+    var isSubcategoriesLoaded = false
 
-    var state = States.CREATED
+//    lateinit var loadListener: () -> Unit
+
+//    var state = States.CREATED
 
     var subcategories: Map<String, CategoryValues> = mapOf()
         @Bindable get
@@ -39,32 +43,38 @@ class GameSubategoriesViewModel : ViewModelObservable() {
         if (subcategories.isNotEmpty()) subcategories.map { it.key }
         else listOf("")
 
-    fun setListener(loadListener: () -> Unit) {
-        this.loadListener = loadListener
-    }
+//    fun setListener(loadListener: () -> Unit) {
+//        this.loadListener = loadListener
+//    }
 
-    fun load() {
-        API.variablesCategory(categoryId).enqueue(object : Callback<VariableList> {
-            override fun onResponse(call: Call<VariableList>, response: Response<VariableList>) {
-                val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
-                if (subcategoriesResponse.isNotEmpty()) {
-                    subcategories = subcategoriesResponse[0].values.values
-                    variableId = subcategoriesResponse[0].id
+    suspend fun load() {
+        suspendCoroutine<Unit> {
+            API.variablesCategory(categoryId).enqueue(object : Callback<VariableList> {
+                override fun onResponse(call: Call<VariableList>, response: Response<VariableList>) {
+                    if (response.body() == null) onFailure(call, NullPointerException())
+                    val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
+                    if (subcategoriesResponse.isNotEmpty()) {
+                        subcategories = subcategoriesResponse[0].values.values
+                        variableId = subcategoriesResponse[0].id
+                    }
+                    notifyChange()
+                    //TODO exception if game not founded
+//                    state = States.LOADED
+                    Log.d("tag", "load onResponse()")
+//                    loadListener()
+                    isSubcategoriesLoaded = true
+                    it.resume(Unit)
                 }
-                notifyChange()
-                //TODO exception if game not founded
-                state = States.LOADED
-                Log.d("tag", "load onResponse()")
-                loadListener()
-            }
 
-            override fun onFailure(call: Call<VariableList>, t: Throwable) {
-                t.stackTrace
-                t.message
-                state = States.ERROR
-                Log.d("tag", "load onError()")
-                loadListener()
-            }
-        })
+                override fun onFailure(call: Call<VariableList>, t: Throwable) {
+                    t.stackTrace
+                    t.message
+//                    state = States.ERROR
+                    Log.d("tag", "load onError()")
+//                    loadListener()
+                    it.resumeWithException(t)
+                }
+            })
+        }
     }
 }

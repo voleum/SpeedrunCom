@@ -72,6 +72,9 @@ interface SpeedrunComApi {
     @GET("users")
     fun users(): Call<UserList>
 
+    @GET("users/{id}")
+    fun users(@Path("id") id: String): Call<DataUser>
+
     @GET("variables/{id}")
     fun variables(@Path("id") id: String): Call<Variable>
 
