@@ -21,6 +21,10 @@ class GameViewModel : ViewModelObservable() {
     lateinit var id: String
     val platformList: MutableList<Platform> = mutableListOf()
 
+    var isInfoLoaded = false
+    var isCategoriesLoaded = false
+    var isPlatformsLoaded = false
+
 //    lateinit var loadInfoListener: () -> Unit
 //    lateinit var loadCategoriesListener: () -> Unit
 
@@ -51,7 +55,7 @@ class GameViewModel : ViewModelObservable() {
             platformList.forEach { platforms += "${it.name}, " }
             return platforms.removeSuffix(", ")
         } //{
-//            return if (game != null) {
+        //            return if (game != null) {
 //                var platforms = ""
 //                game?.platforms?.forEach { platforms += "$it, " }
 //                platforms.removeSuffix(", ")
@@ -79,6 +83,7 @@ class GameViewModel : ViewModelObservable() {
                 }
                 job.await()
                 notifyPropertyChanged(BR.platforms)
+                isPlatformsLoaded = true
                 it.resume(Unit)
             }
         }
@@ -94,6 +99,7 @@ class GameViewModel : ViewModelObservable() {
 //                stateInfo = States.LOADED
                     Log.d("tag", "load onResponse()")
 //                loadInfoListener()
+                    isInfoLoaded = true
                     it.resume(Unit)
                 }
 
@@ -123,6 +129,7 @@ class GameViewModel : ViewModelObservable() {
 //                stateCategories = States.LOADED
                     Log.d("tag", "load onResponse()")
 //                loadCategoriesListener()
+                    isCategoriesLoaded = true
                     it.resume(Unit)
                 }
 
@@ -142,7 +149,10 @@ class GameViewModel : ViewModelObservable() {
         suspendCoroutine<Unit> {
             API.platform(id).enqueue(object : Callback<DataPlatform> {
 
-                override fun onResponse(call: Call<DataPlatform>, response: Response<DataPlatform>) {
+                override fun onResponse(
+                    call: Call<DataPlatform>,
+                    response: Response<DataPlatform>
+                ) {
                     platformList.add(response.body()!!.data)
                     it.resume(Unit)
                 }
