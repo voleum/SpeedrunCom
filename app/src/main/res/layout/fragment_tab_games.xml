@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="dev.voleum.speedruncom.ui.tab.games.TabGamesViewModel" />
@@ -19,10 +21,11 @@
             android:id="@+id/games_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{viewModel.isGamesLoaded ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

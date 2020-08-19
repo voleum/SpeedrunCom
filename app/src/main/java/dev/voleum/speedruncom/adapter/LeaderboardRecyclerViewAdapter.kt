@@ -15,11 +15,11 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.SpeedrunCom
 import dev.voleum.speedruncom.databinding.HolderLeaderboardBinding
+import dev.voleum.speedruncom.enum.PlayerTypes
 import dev.voleum.speedruncom.enum.UserNameStyles
 import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.RunLeaderboard
-import dev.voleum.speedruncom.model.User
 import dev.voleum.speedruncom.trophyAssetsPlaces
 import dev.voleum.speedruncom.ui.screen.LeaderboardItemViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.LeaderboardViewHolder>() {
 
     init {
-        //FIXME: doesn't work
         setHasStableIds(true)
     }
 
@@ -62,7 +61,7 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
                 viewModel.loadUser(viewModel.record.run.players[0].id)
             }
 
-            if (viewModel.record.run.players[0].rel == "user")
+            if (viewModel.record.run.players[0].rel == PlayerTypes.USER.type)
                 jobUser.start()
 
             val place = viewModel.place.toInt()
@@ -87,27 +86,22 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
                         Color.parseColor(viewModel.user!!.nameStyle.color.light)
                     )
                     UserNameStyles.GRADIENT.style -> {
-//                        val colors = arrayOf(
-//                            Color.parseColor(viewModel.user!!.nameStyle.colorFrom.light),
-//                            Color.parseColor(viewModel.user!!.nameStyle.colorTo.light)
-//                        )
-//                        val positions = arrayOf(0.0F, 1.0F)
                         val tileMode = Shader.TileMode.CLAMP
                         val linearGradient = LinearGradient(
                             0.0F,
                             0.0F,
                             holder.binding.holderLeaderboardPlayer.width.toFloat(),
                             holder.binding.holderLeaderboardPlayer.textSize,
-//                            colors,
-//                            positions,
                             Color.parseColor(viewModel.user!!.nameStyle.colorFrom.light),
                             Color.parseColor(viewModel.user!!.nameStyle.colorTo.light),
                             tileMode
                         )
-//                        val shader: Shader = linearGradient
                         holder.binding.holderLeaderboardPlayer.paint.shader = linearGradient
                     }
                 }
+                val countryCode = viewModel.user!!.location?.country?.code ?: ""
+                if (countryCode.isNotEmpty())
+                    holder.setFlag(countryCode)
             }
         }
     }
@@ -132,6 +126,9 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
         private val image: AppCompatImageView =
             binding.root.findViewById(R.id.holder_leaderboard_image)
 
+        private val flag: AppCompatImageView =
+            binding.root.findViewById(R.id.holder_leaderboard_flag)
+
         fun loadImage(asset: Asset?) {
             if (asset != null) {
                 GlideApp.with(itemView)
@@ -140,9 +137,17 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
                     .into(image)
-//                binding.viewModel.imageWidth = asset.width
-//                binding.viewModel.imageHeight = asset.height
             }
+        }
+
+        fun setFlag(code: String) {
+            GlideApp.with(itemView)
+                .load(SpeedrunCom.instance.resources.getIdentifier(
+                    "flag_round_$code",
+                    "drawable",
+                    SpeedrunCom.instance.packageName
+                ))
+                .into(flag)
         }
     }
 

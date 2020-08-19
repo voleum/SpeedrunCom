@@ -17,7 +17,6 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.android.synthetic.main.fragment_tab_series.*
 import kotlinx.coroutines.*
 
 class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeriesBinding>() {
@@ -59,25 +58,29 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.seriesSwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            scope.launch {
+                viewModel.load()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-//                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
                 viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
 
-        scope.launch {
-            viewModel.load()
-            series_progress_bar?.visibility = View.GONE
-        }
+        if (!viewModel.isSeriesLoaded)
+            scope.launch {
+                viewModel.load()
+            }
 
-//        checkData()
         return root
     }
 
@@ -103,31 +106,4 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
         Log.d("tag", "onDestroy")
         scope.cancel()
     }
-
-    //    private fun checkData() {
-////        if (view == null) return
-//
-//        when (viewModel.state) {
-//            States.CREATED -> {
-//                viewModel.setListener { checkData() }
-//                viewModel.load()
-//            }
-//            States.PROGRESS -> {
-//                viewModel.setListener { checkData() }
-//            }
-//            States.ERROR -> {
-//                swipeRefreshLayout.isRefreshing = false
-//                viewModel.setListener { checkData() }
-//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-//                    .setAction("Retry") {
-//                        viewModel.state = States.PROGRESS
-//                        viewModel.load()
-//                    }
-//                    .show()
-//            }
-//            States.LOADED -> {
-//                swipeRefreshLayout.isRefreshing = false
-//            }
-//        }
-//    }
 }

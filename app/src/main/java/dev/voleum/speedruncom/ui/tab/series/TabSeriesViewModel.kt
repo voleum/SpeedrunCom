@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dev.voleum.speedruncom.BR
 import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Pagination
 import dev.voleum.speedruncom.model.Series
 import dev.voleum.speedruncom.model.SeriesList
@@ -32,11 +32,10 @@ class TabSeriesViewModel : ViewModelObservable() {
         }
     }
 
-//    lateinit var loadListener: () -> Unit
+    var isSeriesLoaded = false
+        @Bindable get
 
     lateinit var pagination: Pagination
-
-//    var state = States.CREATED
 
     var adapter = SeriesRecyclerViewAdapter()
         @Bindable get
@@ -45,33 +44,22 @@ class TabSeriesViewModel : ViewModelObservable() {
     var data: List<Series> = adapter.items
         @Bindable get
 
-//    fun setListener(loadListener: () -> Unit) {
-//        this.loadListener = loadListener
-//    }
-
-    suspend fun onRefresh() {
-//        state = States.PROGRESS
-        load()
-    }
-
     suspend fun load() {
         suspendCoroutine<Unit> {
             API.series().enqueue(object : Callback<SeriesList> {
                 override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
                     adapter.replaceItems(response.body()!!.data)
                     pagination = response.body()!!.pagination
-//                state = States.LOADED
                     Log.d("tag", "load onResponse()")
-//                loadListener()
+                    isSeriesLoaded = true
+                    notifyPropertyChanged(BR.seriesLoaded)
                     it.resume(Unit)
                 }
 
                 override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                     t.stackTrace
                     t.message
-//                state = States.ERROR
                     Log.d("tag", "load onError()")
-//                loadListener()
                     it.resumeWithException(t)
                 }
             })
@@ -83,18 +71,14 @@ class TabSeriesViewModel : ViewModelObservable() {
             override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
                 pagination = response.body()!!.pagination
                 adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
-//                state = States.LOADED
                 Log.d("tag", "loadMore onResponse(); data.size: ${data.size}; adapter.items.size: ${adapter.items.size}")
-//                loadListener()
             }
 
             override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                 t.stackTrace
                 t.message
-//                state = States.ERROR
                 Log.d("tag", "loadMore onError()")
                 //TODO: do something
-//                loadListener()
             }
         })
     }
