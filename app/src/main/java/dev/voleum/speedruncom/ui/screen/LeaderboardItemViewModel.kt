@@ -11,18 +11,12 @@ import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class LeaderboardItemViewModel(val record: RunLeaderboard) : ViewModelObservable() {
-
-//    var imageWidth: Int = 0
-//        @Bindable get
-//        set(value) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, value.toFloat(), )
-//
-//    var imageHeight: Int = 0
-//        @Bindable get
 
     var user: User? = null
 
@@ -38,7 +32,15 @@ class LeaderboardItemViewModel(val record: RunLeaderboard) : ViewModelObservable
             else record.run.players[0].name //TODO: multiply players
         @Bindable set
 
-    var time: String = record.run.times.primary_t.toString() //TODO: multiply times maybe
+    var time: String =
+        String.format(
+            "%02d:%02d:%02d",
+            TimeUnit.MILLISECONDS.toHours(record.run.times.primary_t.toLong()*1000),
+            TimeUnit.MILLISECONDS.toMinutes(record.run.times.primary_t.toLong()*1000) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(record.run.times.primary_t.toLong()*1000)),
+            TimeUnit.MILLISECONDS.toSeconds(record.run.times.primary_t.toLong()*1000) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(record.run.times.primary_t.toLong()*1000))
+        ) //TODO: multiply times maybe
         @Bindable get
         @Bindable set
 
@@ -53,7 +55,6 @@ class LeaderboardItemViewModel(val record: RunLeaderboard) : ViewModelObservable
                 override fun onResponse(call: Call<DataUser>, response: Response<DataUser>) {
                     user = response.body()!!.data
                     notifyPropertyChanged(BR.player)
-//                    notifyChange()
                     Log.d("tag", "onResponse, id: $id, name: ${user!!.names.international}")
                     it.resume(Unit)
                 }
