@@ -15,30 +15,30 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.SpeedrunCom
 import dev.voleum.speedruncom.databinding.HolderLeaderboardBinding
-import dev.voleum.speedruncom.enum.PlayerTypes
 import dev.voleum.speedruncom.enum.UserNameStyles
 import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.RunLeaderboard
-import dev.voleum.speedruncom.trophyAssetsPlaces
+import dev.voleum.speedruncom.model.User
 import dev.voleum.speedruncom.ui.screen.LeaderboardItemViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.LeaderboardViewHolder>() {
+class LeaderboardRecyclerViewAdapter :
+    RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.LeaderboardViewHolder>() {
 
     init {
         setHasStableIds(true)
     }
 
-    lateinit var onEntryClickListener: LeaderboardRecyclerViewAdapter.OnEntryClickListener
+    lateinit var onEntryClickListener: OnEntryClickListener
 
     val items = mutableListOf<RunLeaderboard>()
+    val users = mutableMapOf<String, User>()
     lateinit var trophyAssets: Assets
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeaderboardRecyclerViewAdapter.LeaderboardViewHolder =
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LeaderboardRecyclerViewAdapter.LeaderboardViewHolder =
         LeaderboardViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -50,60 +50,51 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder,
+        position: Int
+    ) {
         val viewModel =
-            LeaderboardItemViewModel(items[position])
+            LeaderboardItemViewModel(items[position], users[items[position].run.players[0].id])
         holder.binding.viewModel = viewModel
 
-        CoroutineScope(Dispatchers.Main).launch {
-
-            val jobUser = launch(start = CoroutineStart.LAZY) {
-                viewModel.loadUser(viewModel.record.run.players[0].id)
-            }
-
-            if (viewModel.record.run.players[0].rel == PlayerTypes.USER.type)
-                jobUser.start()
-
-            val place = viewModel.place.toInt()
-            if (place <= trophyAssetsPlaces)
-                holder.loadImage(
-                    when (place) {
-                        1 -> trophyAssets.trophyFirst
-                        2 -> trophyAssets.trophySecond
-                        3 -> trophyAssets.trophyThird
-                        else -> trophyAssets.trophyForth
-                    }
-                )
-            holder.binding.holderLeaderboardConstraint.setBackgroundColor(
-                if (position % 2 == 0) SpeedrunCom.instance.resources.getColor(android.R.color.transparent)
-                else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
-            )
-
-            if (jobUser.isActive) {
-                jobUser.join()
-                when (viewModel.user!!.nameStyle.style) {
-                    UserNameStyles.SOLID.style -> holder.binding.holderLeaderboardPlayer.setTextColor(
-                        Color.parseColor(viewModel.user!!.nameStyle.color.light)
-                    )
-                    UserNameStyles.GRADIENT.style -> {
-                        val tileMode = Shader.TileMode.CLAMP
-                        val linearGradient = LinearGradient(
-                            0.0F,
-                            0.0F,
-                            holder.binding.holderLeaderboardPlayer.width.toFloat(),
-                            holder.binding.holderLeaderboardPlayer.textSize,
-                            Color.parseColor(viewModel.user!!.nameStyle.colorFrom.light),
-                            Color.parseColor(viewModel.user!!.nameStyle.colorTo.light),
-                            tileMode
-                        )
-                        holder.binding.holderLeaderboardPlayer.paint.shader = linearGradient
-                    }
+        val place = viewModel.place.toInt()
+        if (place in 1..4) {
+            holder.loadImage(
+                when (place) {
+                    1 -> trophyAssets.trophyFirst
+                    2 -> trophyAssets.trophySecond
+                    3 -> trophyAssets.trophyThird
+                    else -> trophyAssets.trophyForth
                 }
-                val countryCode = viewModel.user!!.location?.country?.code ?: ""
-                if (countryCode.isNotEmpty())
-                    holder.setFlag(countryCode)
+            )
+        }
+        else holder.clearImage()
+        holder.binding.holderLeaderboardConstraint.setBackgroundColor(
+            if (position % 2 == 0) SpeedrunCom.instance.resources.getColor(android.R.color.transparent)
+            else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
+        )
+        when (viewModel.user?.nameStyle?.style) {
+            UserNameStyles.SOLID.style -> holder.binding.holderLeaderboardPlayer.setTextColor(
+                Color.parseColor(viewModel.user.nameStyle.color.light)
+            )
+            UserNameStyles.GRADIENT.style -> {
+                val tileMode = Shader.TileMode.CLAMP
+                val linearGradient = LinearGradient(
+                    0.0F,
+                    0.0F,
+                    holder.binding.holderLeaderboardPlayer.width.toFloat(),
+                    holder.binding.holderLeaderboardPlayer.textSize,
+                    Color.parseColor(viewModel.user.nameStyle.colorFrom.light),
+                    Color.parseColor(viewModel.user.nameStyle.colorTo.light),
+                    tileMode
+                )
+                holder.binding.holderLeaderboardPlayer.paint.shader = linearGradient
             }
         }
+        val countryCode = viewModel.user?.location?.country?.code ?: ""
+        if (countryCode.isNotEmpty())
+            holder.setFlag(countryCode)
     }
 
     override fun getItemId(position: Int): Long =
@@ -112,10 +103,10 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
     fun replaceItems(items: List<RunLeaderboard>) {
         this.items.clear()
         this.items.addAll(items)
-        notifyDataSetChanged()
     }
 
-    inner class LeaderboardViewHolder(val binding: HolderLeaderboardBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class LeaderboardViewHolder(val binding: HolderLeaderboardBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener { v ->
@@ -140,13 +131,20 @@ class LeaderboardRecyclerViewAdapter() : RecyclerView.Adapter<LeaderboardRecycle
             }
         }
 
+        fun clearImage() {
+            GlideApp.with(itemView)
+                .clear(image)
+        }
+
         fun setFlag(code: String) {
             GlideApp.with(itemView)
-                .load(SpeedrunCom.instance.resources.getIdentifier(
-                    "flag_round_$code",
-                    "drawable",
-                    SpeedrunCom.instance.packageName
-                ))
+                .load(
+                    SpeedrunCom.instance.resources.getIdentifier(
+                        "flag_round_$code",
+                        "drawable",
+                        SpeedrunCom.instance.packageName
+                    )
+                )
                 .into(flag)
         }
     }

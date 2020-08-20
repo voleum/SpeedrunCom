@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.BR
 import dev.voleum.speedruncom.api.API
+import dev.voleum.speedruncom.enum.RunTypes
 import dev.voleum.speedruncom.model.*
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import kotlinx.coroutines.GlobalScope
@@ -24,12 +25,6 @@ class GameViewModel : ViewModelObservable() {
     var isInfoLoaded = false
     var isCategoriesLoaded = false
     var isPlatformsLoaded = false
-
-//    lateinit var loadInfoListener: () -> Unit
-//    lateinit var loadCategoriesListener: () -> Unit
-
-//    var stateInfo = States.CREATED
-//    var stateCategories = States.CREATED
 
     val backgroundUrl: String
         get() = game?.assets?.background?.uri ?: ""
@@ -54,26 +49,12 @@ class GameViewModel : ViewModelObservable() {
             var platforms = ""
             platformList.forEach { platforms += "${it.name}, " }
             return platforms.removeSuffix(", ")
-        } //{
-        //            return if (game != null) {
-//                var platforms = ""
-//                game?.platforms?.forEach { platforms += "$it, " }
-//                platforms.removeSuffix(", ")
-//            } else ""
-//        }
+        }
         @Bindable set
 
     var categories: List<Category> = mutableListOf()
         @Bindable get
         @Bindable set
-
-//    fun setInfoListener(loadListener: () -> Unit) {
-//        this.loadInfoListener = loadListener
-//    }
-//
-//    fun setCategoriesListener(loadListener: () -> Unit) {
-//        this.loadCategoriesListener = loadListener
-//    }
 
     suspend fun loadPlatforms() {
         suspendCoroutine<Unit> {
@@ -92,13 +73,12 @@ class GameViewModel : ViewModelObservable() {
     suspend fun loadInfo() {
         suspendCoroutine<Unit> {
             API.games(id).enqueue(object : Callback<DataGame> {
+
                 override fun onResponse(call: Call<DataGame>, response: Response<DataGame>) {
                     game = response.body()!!.data
                     notifyChange()
                     //TODO: exception if game not founded
-//                stateInfo = States.LOADED
                     Log.d("tag", "load onResponse()")
-//                loadInfoListener()
                     isInfoLoaded = true
                     it.resume(Unit)
                 }
@@ -106,9 +86,7 @@ class GameViewModel : ViewModelObservable() {
                 override fun onFailure(call: Call<DataGame>, t: Throwable) {
                     t.stackTrace
                     t.message
-//                stateInfo = States.ERROR
                     Log.d("tag", "load onError()")
-//                loadInfoListener()
                     it.resumeWithException(t)
                 }
             })
@@ -118,17 +96,16 @@ class GameViewModel : ViewModelObservable() {
     suspend fun loadCategories() {
         suspendCoroutine<Unit> {
             API.categoriesGame(id).enqueue(object : Callback<CategoryList> {
+
                 override fun onResponse(
                     call: Call<CategoryList>,
                     response: Response<CategoryList>
                 ) {
                     categories =
-                        response.body()!!.data.filter { it.type == "per-game" } //TODO add for levels
+                        response.body()!!.data.filter { it.type == RunTypes.PER_GAME.type } //TODO add for levels
                     notifyChange()
                     //TODO exception if game not founded
-//                stateCategories = States.LOADED
                     Log.d("tag", "load onResponse()")
-//                loadCategoriesListener()
                     isCategoriesLoaded = true
                     it.resume(Unit)
                 }
@@ -136,9 +113,7 @@ class GameViewModel : ViewModelObservable() {
                 override fun onFailure(call: Call<CategoryList>, t: Throwable) {
                     t.stackTrace
                     t.message
-//                stateCategories = States.ERROR
                     Log.d("tag", "load onError()")
-//                loadCategoriesListener()
                     it.resumeWithException(t)
                 }
             })

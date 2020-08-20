@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.HolderGameBinding
@@ -71,10 +72,14 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
             GlideApp.with(itemView)
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
-                .transition(DrawableTransitionOptions.withCrossFade())
+//                .transition(DrawableTransitionOptions.withCrossFade())
+                .transition(DrawableTransitionOptions.withCrossFade(
+                    DrawableCrossFadeFactory.Builder()
+                        .setCrossFadeEnabled(true)
+                        .build())
+                )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
-//                .onlyRetrieveFromCache(true)
                 .into(image)
     }
 

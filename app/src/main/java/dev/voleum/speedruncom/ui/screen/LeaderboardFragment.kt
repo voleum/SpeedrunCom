@@ -58,36 +58,15 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
 
         recyclerView.layoutManager = layoutManager
 
-        if (!viewModel.isLeaderboardLoaded)
-            scope.launch { viewModel.load() }
+        scope.launch {
+            if (!viewModel.isLeaderboardLoaded) {
+                val jobLeaderboard = launch { viewModel.load() }
+                jobLeaderboard.join()
+            }
+            if (!viewModel.isUsersLoaded)
+                launch { viewModel.loadUsers() }
+        }
 
-//        checkData()
         return root
     }
-
-//    private fun checkData() {
-////        if (view == null) return
-//
-//        when (viewModel.state) {
-//            States.CREATED -> {
-//                viewModel.setListener { checkData() }
-//                viewModel.load()
-//            }
-//            States.PROGRESS -> {
-//                viewModel.setListener { checkData() }
-//            }
-//            States.ERROR -> {
-//                viewModel.setListener { checkData() }
-//                Snackbar.make(leaderboard_recycler_view, "Unable to load", Snackbar.LENGTH_LONG)
-//                    .setAction("Retry") {
-//                        viewModel.state = States.PROGRESS
-//                        viewModel.load()
-//                    }
-//                    .show()
-//            }
-//            States.LOADED -> {
-//
-//            }
-//        }
-//    }
 }
