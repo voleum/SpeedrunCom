@@ -6,10 +6,15 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.adapter.LeaderboardRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
+import dev.voleum.speedruncom.enum.PlayerTypes
 import dev.voleum.speedruncom.model.Assets
+import dev.voleum.speedruncom.model.DataUser
 import dev.voleum.speedruncom.model.LeaderboardList
 import dev.voleum.speedruncom.model.RunLeaderboard
 import dev.voleum.speedruncom.ui.ViewModelObservable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,10 +43,7 @@ class LeaderboardViewModel : ViewModelObservable() {
     lateinit var trophyAssets: Assets
 
     var isLeaderboardLoaded = false
-
-//    lateinit var loadListener: () -> Unit
-
-//    var state = States.CREATED
+    var isUsersLoaded = false
 
     var adapter = LeaderboardRecyclerViewAdapter()
         @Bindable get
@@ -50,24 +52,36 @@ class LeaderboardViewModel : ViewModelObservable() {
     var data: List<RunLeaderboard> = adapter.items
         @Bindable get
 
-//    fun setListener(loadListener: () -> Unit) {
-//        this.loadListener = loadListener
-//    }
-
     private fun getSubcategoryQueryMap(): Map<String, String>? =
         if (subcategoryId != "") mapOf(Pair("var-$variableId", subcategoryId))
         else mapOf()
 
+    suspend fun loadUsers() {
+        suspendCoroutine<Unit> {
+            GlobalScope.launch {
+                val jobs = mutableListOf<Job>()
+                    data.forEach {
+                        if (it.run.players[0].rel == PlayerTypes.USER.type) {
+                            val job = launch { loadUser(it.run.players[0].id) }
+                            jobs.add(job)
+                        }
+                    }
+                jobs.forEach { it.join() }
+                isUsersLoaded = true
+                notifyChange()
+            }
+            it.resume(Unit)
+        }
+    }
+
     suspend fun load() {
         suspendCoroutine<Unit> {
             API.leaderboardsCategory(gameId, categoryId, getSubcategoryQueryMap()).enqueue(object : Callback<LeaderboardList> {
+
                 override fun onResponse(call: Call<LeaderboardList>, response: Response<LeaderboardList>) {
                     adapter.replaceItems(response.body()!!.data.runs)
                     adapter.trophyAssets = trophyAssets
-//                pagination = response.body()!!.pagination
-//                state = States.LOADED
                     Log.d("tag", "load onResponse()")
-//                loadListener()
                     isLeaderboardLoaded = true
                     it.resume(Unit)
                 }
@@ -75,9 +89,26 @@ class LeaderboardViewModel : ViewModelObservable() {
                 override fun onFailure(call: Call<LeaderboardList>, t: Throwable) {
                     t.stackTrace
                     t.message
-//                state = States.ERROR
                     Log.d("tag", "load onError(): ${t.message}")
-//                loadListener()
+                    it.resumeWithException(t)
+                }
+            })
+        }
+    }
+
+    suspend fun loadUser(id: String) {
+        suspendCoroutine<Unit> {
+            API.users(id).enqueue(object : Callback<DataUser> {
+
+                override fun onResponse(call: Call<DataUser>, response: Response<DataUser>) {
+                    adapter.users[id] = response.body()!!.data
+                    it.resume(Unit)
+                }
+
+                override fun onFailure(call: Call<DataUser>, t: Throwable) {
+                    t.stackTrace
+                    t.message
+                    Log.d("tag", "onFailure, id: $id")
                     it.resumeWithException(t)
                 }
             })
