@@ -39,12 +39,18 @@ interface SpeedrunComApi {
 
     @GET("leaderboards/{game}/category/{category}")
     fun leaderboardsCategory(@Path("game") gameId: String,
-                             @Path("category") categoryId: String): Call<LeaderboardList>
+                             @Path("category") categoryId: String): Call<DataLeaderboard>
 
     @GET("leaderboards/{game}/category/{category}")
     fun leaderboardsCategory(@Path("game") gameId: String,
                              @Path("category") categoryId: String,
-                             @QueryMap variable: Map<String, String>?): Call<LeaderboardList>
+                             @QueryMap variable: Map<String, String>?): Call<DataLeaderboard>
+
+    @GET("leaderboards/{game}/category/{category}")
+    fun leaderboardsCategoryEmbed(@Path("game") gameId: String,
+                                  @Path("category") categoryId: String,
+                                  @QueryMap variable: Map<String, String>?,
+                                  @Query("embed") embed: String): Call<DataLeaderboardEmbed>
 
     @GET("platforms/{id}")
     fun platform(@Path("id") id: String): Call<DataPlatform>

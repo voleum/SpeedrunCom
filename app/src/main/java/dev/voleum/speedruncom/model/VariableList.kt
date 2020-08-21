@@ -1,3 +1,5 @@
 package dev.voleum.speedruncom.model
 
-data class VariableList(val data: List<Variable>)
+import java.io.Serializable
+
+data class VariableList(val data: List<Variable>) : Serializable

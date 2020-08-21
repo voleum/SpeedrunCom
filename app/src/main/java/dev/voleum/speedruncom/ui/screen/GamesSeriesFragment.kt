@@ -1,5 +1,6 @@
 package dev.voleum.speedruncom.ui.screen
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,10 +21,15 @@ import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
 import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.fragment_tab_games.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGamesSeriesBinding>() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,15 +41,15 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
             viewModel.seriesId = getString("series", "")
         }
         binding =
-            DataBindingUtil.inflate(inflater,
+            DataBindingUtil.inflate(
+                inflater,
                 R.layout.fragment_games_series,
                 null,
-                false)
+                false
+            )
         binding.viewModel = viewModel
         val root = binding.root
         val recyclerView = binding.gamesRecyclerView
-        val layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         viewModel.adapter.onEntryClickListener =
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
@@ -55,49 +61,45 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
                 }
             }
 
+        val layoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.gamesSwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            scope.launch {
+                viewModel.load()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
                 viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
-        checkData()
+
+        if (!viewModel.isLoaded)
+            scope.launch { viewModel.load() }
+
         return root
     }
 
-    private fun checkData() {
-//        if (view == null) return
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        newConfig.screenLayout = R.layout.fragment_tab_games
+        (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+            resources.getInteger(R.integer.games_columns)
+    }
 
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setListener { checkData() }
-                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-            }
-            States.LOADED -> {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 }

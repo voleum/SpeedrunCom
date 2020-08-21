@@ -18,8 +18,7 @@ import dev.voleum.speedruncom.databinding.HolderLeaderboardBinding
 import dev.voleum.speedruncom.enum.UserNameStyles
 import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Assets
-import dev.voleum.speedruncom.model.RunLeaderboard
-import dev.voleum.speedruncom.model.User
+import dev.voleum.speedruncom.model.LeaderboardEmbed
 import dev.voleum.speedruncom.ui.screen.LeaderboardItemViewModel
 
 class LeaderboardRecyclerViewAdapter :
@@ -30,10 +29,8 @@ class LeaderboardRecyclerViewAdapter :
     }
 
     lateinit var onEntryClickListener: OnEntryClickListener
-
-    val items = mutableListOf<RunLeaderboard>()
-    val users = mutableMapOf<String, User>()
     lateinit var trophyAssets: Assets
+    var leaderboard: LeaderboardEmbed? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -48,17 +45,22 @@ class LeaderboardRecyclerViewAdapter :
             )
         )
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = leaderboard?.runs?.size ?: 0
 
     override fun onBindViewHolder(
         holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder,
         position: Int
     ) {
         val viewModel =
-            LeaderboardItemViewModel(items[position], users[items[position].run.players[0].id])
+            LeaderboardItemViewModel(
+                leaderboard!!.runs[position],
+                leaderboard!!.players.data.find {
+                    it.id == leaderboard!!.runs[position].run.players[0].id
+                }
+            )
         holder.binding.viewModel = viewModel
 
-        val place = viewModel.place.toInt()
+        val place = viewModel.placeValue
         if (place in 1..4) {
             holder.loadImage(
                 when (place) {
@@ -98,12 +100,7 @@ class LeaderboardRecyclerViewAdapter :
     }
 
     override fun getItemId(position: Int): Long =
-        items[position].hashCode().toLong()
-
-    fun replaceItems(items: List<RunLeaderboard>) {
-        this.items.clear()
-        this.items.addAll(items)
-    }
+        leaderboard!!.runs[position].hashCode().toLong()
 
     inner class LeaderboardViewHolder(val binding: HolderLeaderboardBinding) :
         RecyclerView.ViewHolder(binding.root) {

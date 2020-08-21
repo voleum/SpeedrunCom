@@ -1,3 +1,5 @@
 package dev.voleum.speedruncom.model
 
-data class Flags(val miscellaneous: Boolean)
+import java.io.Serializable
+
+data class Flags(val miscellaneous: Boolean) : Serializable
