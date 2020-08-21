@@ -1,80 +1,44 @@
 package dev.voleum.speedruncom.ui.screen
 
-import android.util.Log
 import android.view.View
 import androidx.databinding.Bindable
-import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Assets
+import dev.voleum.speedruncom.model.CategoryEmbed
 import dev.voleum.speedruncom.model.CategoryValues
-import dev.voleum.speedruncom.model.VariableList
+import dev.voleum.speedruncom.model.Variable
 import dev.voleum.speedruncom.ui.ViewModelObservable
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class GameSubategoriesViewModel : ViewModelObservable() {
 
     lateinit var gameId: String
-    lateinit var categoryId: String
+    lateinit var category: CategoryEmbed
     lateinit var trophyAssets: Assets
 
-    var isSubcategoriesLoaded = false
+    private val subcategories: Map<String, CategoryValues>
+        @Bindable get() {
+            val subcategories = category.variables.data.filter { it.isSubcategory }
+            return if (subcategories.isNotEmpty()) subcategories[0].values.values
+            else mapOf()
+        }
 
-//    lateinit var loadListener: () -> Unit
+    val subcategoriesVariable: List<Variable>
+        get() = category.variables.data.filter { it.isSubcategory }
 
-//    var state = States.CREATED
+    val variableId: String
+        get() =
+            if (subcategoriesVariable.isNotEmpty()) subcategoriesVariable[0].id
+            else ""
 
-    var subcategories: Map<String, CategoryValues> = mapOf()
-        @Bindable get
-
-    var variableId: String = ""
-
-    var tabsVisibility: Int = View.GONE
+    val tabsVisibility: Int
         @Bindable get() =
             if (subcategories.isEmpty()) View.GONE
             else View.VISIBLE
 
-    fun getTabsText(): List<String> = subcategories.map { it.value.label }
+    val tabsText: List<String>
+        get() = subcategories.map { it.value.label }
 
-    fun getSubcategoriesIds(): List<String> =
-        if (subcategories.isNotEmpty()) subcategories.map { it.key }
-        else listOf("")
-
-//    fun setListener(loadListener: () -> Unit) {
-//        this.loadListener = loadListener
-//    }
-
-    suspend fun load() {
-        suspendCoroutine<Unit> {
-            API.variablesCategory(categoryId).enqueue(object : Callback<VariableList> {
-                override fun onResponse(call: Call<VariableList>, response: Response<VariableList>) {
-                    if (response.body() == null) onFailure(call, NullPointerException())
-                    val subcategoriesResponse = response.body()!!.data.filter { it.isSubcategory }
-                    if (subcategoriesResponse.isNotEmpty()) {
-                        subcategories = subcategoriesResponse[0].values.values
-                        variableId = subcategoriesResponse[0].id
-                    }
-                    notifyChange()
-                    //TODO exception if game not founded
-//                    state = States.LOADED
-                    Log.d("tag", "load onResponse()")
-//                    loadListener()
-                    isSubcategoriesLoaded = true
-                    it.resume(Unit)
-                }
-
-                override fun onFailure(call: Call<VariableList>, t: Throwable) {
-                    t.stackTrace
-                    t.message
-//                    state = States.ERROR
-                    Log.d("tag", "load onError()")
-//                    loadListener()
-                    it.resumeWithException(t)
-                }
-            })
-        }
-    }
+    val subcategoriesIds: List<String>
+            get() =
+                if (subcategories.isNotEmpty()) subcategories.map { it.key }
+                else listOf("")
 }

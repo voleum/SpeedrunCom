@@ -11,17 +11,11 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GameSubcategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentSubcategoriesBinding
 import dev.voleum.speedruncom.model.Assets
+import dev.voleum.speedruncom.model.CategoryEmbed
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class GameSubcategoriesFragment :
     AbstractFragment<GameSubategoriesViewModel, FragmentSubcategoriesBinding>() {
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +25,7 @@ class GameSubcategoriesFragment :
         viewModel = ViewModelProvider(this).get(GameSubategoriesViewModel::class.java)
         arguments?.apply {
             viewModel.gameId = getString("game", "")
-            viewModel.categoryId = getString("category", "")
+            viewModel.category = getSerializable("category") as CategoryEmbed
             viewModel.trophyAssets = getSerializable("trophyAssets") as Assets
         }
         binding =
@@ -42,17 +36,7 @@ class GameSubcategoriesFragment :
                 false
             )
         binding.viewModel = viewModel
-
-        scope.launch {
-            if (!viewModel.isSubcategoriesLoaded) {
-                val jobSubcategories = launch { viewModel.load() }
-                jobSubcategories.join()
-            }
-            if (binding.subcategoriesViewPager.adapter == null)
-                createAdapter()
-        }
-
-//        checkData()
+        createAdapter()
         return binding.root
     }
 
@@ -60,8 +44,8 @@ class GameSubcategoriesFragment :
         val adapter = GameSubcategoriesViewPagerAdapter(
             this,
             viewModel.variableId,
-            viewModel.getSubcategoriesIds(),
-            viewModel.categoryId,
+            viewModel.subcategoriesIds,
+            viewModel.category.id,
             viewModel.gameId,
             viewModel.trophyAssets
         )
@@ -70,53 +54,10 @@ class GameSubcategoriesFragment :
             binding.subcategoriesTabLayout,
             binding.subcategoriesViewPager
         ) { tab, position ->
-            val tabsText = viewModel.getTabsText()
+            val tabsText = viewModel.tabsText
             tab.text =
                 if (tabsText.isNotEmpty()) tabsText[position]
                 else ""
         }.attach()
     }
-
-//    private fun checkData() {
-////        if (view == null) return
-//
-//        when (viewModel.state) {
-//            States.CREATED -> {
-//                viewModel.setListener { checkData() }
-//                viewModel.load()
-//            }
-//            States.PROGRESS -> {
-//                viewModel.setListener { checkData() }
-//            }
-//            States.ERROR -> {
-//                viewModel.setListener { checkData() }
-//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-//                    .setAction("Retry") {
-//                        viewModel.state = States.PROGRESS
-//                        viewModel.load()
-//                    }
-//                    .show()
-//            }
-//            States.LOADED -> {
-//                val adapter = GameSubcategoriesViewPagerAdapter(
-//                    this,
-//                    viewModel.variableId,
-//                    viewModel.getSubcategoriesIds(),
-//                    viewModel.categoryId,
-//                    viewModel.gameId,
-//                    viewModel.trophyAssets
-//                )
-//                binding.subcategoriesViewPager.adapter = adapter
-//                TabLayoutMediator(
-//                    binding.subcategoriesTabLayout,
-//                    binding.subcategoriesViewPager
-//                ) { tab, position ->
-//                    val tabsText = viewModel.getTabsText()
-//                    tab.text =
-//                        if (tabsText.isNotEmpty()) tabsText[position]
-//                        else ""
-//                }.attach()
-//            }
-//        }
-//    }
 }
