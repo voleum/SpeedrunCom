@@ -78,7 +78,7 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
         }
         recyclerView.addOnScrollListener(onScrollListener)
 
-        if (!viewModel.isGamesLoaded)
+        if (!viewModel.isLoaded)
             scope.launch { viewModel.load() }
 
         return root

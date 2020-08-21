@@ -10,4 +10,4 @@ data class CategoryEmbed(val id: String,
                          val players: CategoryPlayers,
                          val miscellaneous: Boolean,
                          val list: List<Link>,
-                         val variables: VariableList): Serializable
+                         val variables: VariableList) : Serializable

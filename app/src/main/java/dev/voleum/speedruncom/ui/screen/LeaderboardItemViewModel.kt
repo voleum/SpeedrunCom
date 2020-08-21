@@ -9,7 +9,11 @@ import java.util.concurrent.TimeUnit
 
 class LeaderboardItemViewModel(record: RunLeaderboard, val user: User?) : ViewModelObservable() {
 
-    var place: String = record.place.toString()
+    val placeValue = record.place
+
+    var place: String =
+        if (placeValue == 0) "-"
+        else placeValue.toString()
         @Bindable get
         @Bindable set
 

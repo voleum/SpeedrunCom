@@ -15,19 +15,14 @@ class GameSubategoriesViewModel : ViewModelObservable() {
     lateinit var trophyAssets: Assets
 
     private val subcategories: Map<String, CategoryValues>
-        @Bindable get() {
-            val subcategories = category.variables.data.filter { it.isSubcategory }
-            return if (subcategories.isNotEmpty()) subcategories[0].values.values
-            else mapOf()
-        }
+        @Bindable get() =
+            category.variables.data.find { it.isSubcategory } ?.values?.values ?: mapOf()
 
-    val subcategoriesVariable: List<Variable>
-        get() = category.variables.data.filter { it.isSubcategory }
+    private val subcategoriesVariable: Variable?
+        get() = category.variables.data.find { it.isSubcategory }
 
     val variableId: String
-        get() =
-            if (subcategoriesVariable.isNotEmpty()) subcategoriesVariable[0].id
-            else ""
+        get() = subcategoriesVariable?.id ?: ""
 
     val tabsVisibility: Int
         @Bindable get() =

@@ -52,7 +52,9 @@ class GameSubcategoriesFragment :
         binding.subcategoriesViewPager.adapter = adapter
         TabLayoutMediator(
             binding.subcategoriesTabLayout,
-            binding.subcategoriesViewPager
+            binding.subcategoriesViewPager,
+            true,
+            false
         ) { tab, position ->
             val tabsText = viewModel.tabsText
             tab.text =

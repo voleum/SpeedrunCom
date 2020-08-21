@@ -9,10 +9,10 @@ import dev.voleum.speedruncom.ui.screen.LeaderboardFragment
 
 class GameSubcategoriesViewPagerAdapter(fragment: GameSubcategoriesFragment,
                                         val variableId: String,
-                                        val subcategoriesIds: List<String>,
-                                        val categoryId: String,
-                                        val gameId: String,
-                                        val trophyAssets: Assets) : FragmentStateAdapter(fragment) {
+                                        private val subcategoriesIds: List<String>,
+                                        private val categoryId: String,
+                                        private val gameId: String,
+                                        private val trophyAssets: Assets) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int = subcategoriesIds.size
 

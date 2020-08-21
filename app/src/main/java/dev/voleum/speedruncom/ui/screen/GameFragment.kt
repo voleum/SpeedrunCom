@@ -14,6 +14,7 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GameCategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentGameBinding
+import dev.voleum.speedruncom.enum.RunTypes
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.coroutines.*
 
@@ -67,7 +68,7 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
     private fun createAdapter() {
         val adapter = GameCategoriesViewPagerAdapter(
             this,
-            viewModel.categories,
+            viewModel.categories.filter { it.type == RunTypes.PER_GAME.type },
             viewModel.id,
             viewModel.trophyAssets
         )

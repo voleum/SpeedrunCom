@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class TabGamesViewModel : ViewModelObservable() {
+open class TabGamesViewModel : ViewModelObservable() {
 
     companion object {
         @JvmStatic
@@ -32,7 +32,7 @@ class TabGamesViewModel : ViewModelObservable() {
         }
     }
 
-    var isGamesLoaded = false
+    var isLoaded = false
         @Bindable get
 
     lateinit var pagination: Pagination
@@ -51,8 +51,8 @@ class TabGamesViewModel : ViewModelObservable() {
                     adapter.replaceItems(response.body()!!.data)
                     pagination = response.body()!!.pagination
                     Log.d("tag", "load onResponse()")
-                    isGamesLoaded = true
-                    notifyPropertyChanged(BR.gamesLoaded)
+                    isLoaded = true
+                    notifyPropertyChanged(BR.loaded)
                     it.resume(Unit)
                 }
 

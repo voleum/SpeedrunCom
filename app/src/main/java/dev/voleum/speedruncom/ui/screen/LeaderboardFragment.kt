@@ -59,12 +59,10 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
         recyclerView.layoutManager = layoutManager
 
         scope.launch {
-            if (!viewModel.isLeaderboardLoaded) {
+            if (!viewModel.isLoaded) {
                 val jobLeaderboard = launch { viewModel.load() }
                 jobLeaderboard.join()
             }
-            if (!viewModel.isUsersLoaded)
-                launch { viewModel.loadUsers() }
         }
 
         return root
