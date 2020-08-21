@@ -23,11 +23,11 @@ class LeaderboardItemViewModel(record: RunLeaderboard, val user: User?) : ViewMo
     var time: String =
         String.format(
             "%02d:%02d:%02d",
-            TimeUnit.MILLISECONDS.toHours(record.run.times.primary_t.toLong()*1000),
-            TimeUnit.MILLISECONDS.toMinutes(record.run.times.primary_t.toLong()*1000) -
-                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(record.run.times.primary_t.toLong()*1000)),
-            TimeUnit.MILLISECONDS.toSeconds(record.run.times.primary_t.toLong()*1000) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(record.run.times.primary_t.toLong()*1000))
+            TimeUnit.SECONDS.toHours(record.run.times.primary_t.toLong()),
+            TimeUnit.SECONDS.toMinutes(record.run.times.primary_t.toLong()) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(record.run.times.primary_t.toLong())),
+            TimeUnit.SECONDS.toSeconds(record.run.times.primary_t.toLong()) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(record.run.times.primary_t.toLong()))
         ) //TODO: multiply times maybe
         @Bindable get
         @Bindable set
