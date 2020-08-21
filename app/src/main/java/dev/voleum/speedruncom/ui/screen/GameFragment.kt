@@ -19,7 +19,6 @@ import kotlinx.coroutines.*
 
 class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
 
-    //    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var backgroundImageView: AppCompatImageView
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
@@ -41,24 +40,14 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
                 false
             )
         binding.viewModel = viewModel
-//        swipeRefreshLayout = binding.gameSwipeRefreshLayout
         backgroundImageView = binding.gameBackground
-//        checkData()
-//        checkCategories()
 
         scope.launch {
-            if (!viewModel.isInfoLoaded) {
-                val jobInfo = launch { viewModel.loadInfo() }
+            if (!viewModel.isLoaded) {
+                val jobInfo = launch { viewModel.load() }
                 jobInfo.join()
             }
-            val jobCategories = launch(start = CoroutineStart.LAZY) { viewModel.loadCategories() }
-            if (!viewModel.isCategoriesLoaded)
-                jobCategories.start()
-            if (!viewModel.isPlatformsLoaded)
-                viewModel.loadPlatforms()
             setBackgroundImage()
-            if (jobCategories.isActive)
-                jobCategories.join()
             if (binding.gameViewPager.adapter == null)
                 createAdapter()
         }
@@ -73,7 +62,6 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
                     .into(backgroundImageView)
-//                swipeRefreshLayout.isRefreshing = false
     }
 
     private fun createAdapter() {
@@ -88,76 +76,4 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
             tab.text = viewModel.categories[position].name
         }.attach()
     }
-
-//    private fun checkData() {
-////        if (view == null) return
-//
-//        when (viewModel.stateInfo) {
-//            States.CREATED -> {
-//                viewModel.setInfoListener { checkData() }
-//                viewModel.loadInfo()
-//            }
-//            States.PROGRESS -> {
-//                viewModel.setInfoListener { checkData() }
-//            }
-//            States.ERROR -> {
-//                viewModel.setInfoListener { checkData() }
-////                swipeRefreshLayout.isRefreshing = false
-//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-//                    .setAction("Retry") {
-//                        viewModel.stateInfo = States.PROGRESS
-//                        viewModel.loadInfo()
-//                    }
-//                    .show()
-//            }
-//            States.LOADED -> {
-//                GlideApp.with(this)
-//                    .load(viewModel.backgroundUrl)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-//                    .centerCrop()
-//                    .into(backgroundImageView)
-////                swipeRefreshLayout.isRefreshing = false
-//                checkCategories()
-//            }
-//        }
-//    }
-//
-//    private fun checkCategories() {
-////        if (view == null) return
-//
-//        when (viewModel.stateCategories) {
-//            States.CREATED -> {
-//                viewModel.setCategoriesListener { checkCategories() }
-//                viewModel.loadCategories()
-//            }
-//            States.PROGRESS -> {
-//                viewModel.setCategoriesListener { checkCategories() }
-//            }
-//            States.ERROR -> {
-//                viewModel.setCategoriesListener { checkCategories() }
-////                swipeRefreshLayout.isRefreshing = false
-//                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-//                    .setAction("Retry") {
-//                        viewModel.stateCategories = States.PROGRESS
-//                        viewModel.loadCategories()
-//                    }
-//                    .show()
-////                viewModel.load()
-//            }
-//            States.LOADED -> {
-//                //FIXME: FIX. THIS. FREAKING. SHIT.
-//                val adapter = GameCategoriesViewPagerAdapter(
-//                    this,
-//                    viewModel.categories,
-//                    viewModel.id,
-//                    viewModel.trophyAssets
-//                )
-//                binding.gameViewPager.adapter = adapter
-//                TabLayoutMediator(binding.gameTabLayout, binding.gameViewPager) { tab, position ->
-//                    tab.text = viewModel.categories[position].name
-//                }.attach()
-//            }
-//        }
-//    }
 }
