@@ -44,13 +44,13 @@ class GameViewModel : ViewModelObservable() {
         }
         @Bindable set
 
-    var categories: List<Category> = mutableListOf()
+    var categories: List<CategoryEmbed> = mutableListOf()
         @Bindable get() = game!!.categories.data
         @Bindable set
 
     suspend fun load() {
         suspendCoroutine<Unit> {
-            API.gameEmbed(id, "platforms,categories").enqueue(object : Callback<DataGameEmbed> {
+            API.gameEmbed(id, "platforms,categories,categories.variables").enqueue(object : Callback<DataGameEmbed> {
 
                 override fun onResponse(call: Call<DataGameEmbed>, response: Response<DataGameEmbed>) {
                     game = response.body()!!.data

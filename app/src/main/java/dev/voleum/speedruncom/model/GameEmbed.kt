@@ -22,4 +22,4 @@ data class GameEmbed(val id: String,
                      val created: String,
                      val assets: Assets,
                      val links: List<Link>,
-                     val categories: CategoryList) : Serializable
+                     val categories: CategoryListEmbed) : Serializable
