@@ -1,9 +1,11 @@
 package dev.voleum.speedruncom.ui.screen
 
-import android.util.Log
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
-import dev.voleum.speedruncom.model.*
+import dev.voleum.speedruncom.model.Assets
+import dev.voleum.speedruncom.model.CategoryEmbed
+import dev.voleum.speedruncom.model.DataGameEmbed
+import dev.voleum.speedruncom.model.GameEmbed
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,18 +55,19 @@ class GameViewModel : ViewModelObservable() {
             API.gameEmbed(id, "platforms,categories,categories.variables").enqueue(object : Callback<DataGameEmbed> {
 
                 override fun onResponse(call: Call<DataGameEmbed>, response: Response<DataGameEmbed>) {
-                    game = response.body()!!.data
-                    notifyChange()
-                    //TODO: exception if game not founded
-                    Log.d("tag", "load onResponse()")
-                    isLoaded = true
-                    it.resume(Unit)
+                    try {
+                        game = response.body()!!.data
+                        notifyChange()
+                        isLoaded = true
+                        it.resume(Unit)
+                    } catch (e: Exception) {
+                        onFailure(call, e)
+                    }
                 }
 
                 override fun onFailure(call: Call<DataGameEmbed>, t: Throwable) {
                     t.stackTrace
                     t.message
-                    Log.d("tag", "load onError()")
                     it.resumeWithException(t)
                 }
             })

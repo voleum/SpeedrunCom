@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,18 +17,22 @@ import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.android.synthetic.main.fragment_tab_games.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGamesSeriesBinding>() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private val scope = CoroutineScope(Dispatchers.Main)
+
+    private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Snackbar
+            .make(binding.gamesRecyclerView, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
+            .setAction(R.string.snackbar_action_retry) { load() }
+            .show()
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,12 +70,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.gamesSwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener {
-            scope.launch {
-                viewModel.load()
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
+        swipeRefreshLayout.setOnRefreshListener { load() }
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
@@ -85,8 +83,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
         }
         recyclerView.addOnScrollListener(onScrollListener)
 
-        if (!viewModel.isLoaded)
-            scope.launch { viewModel.load() }
+        if (!viewModel.isLoaded) load()
 
         return root
     }
@@ -101,5 +98,12 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
+    }
+
+    fun load() {
+        scope.launch {
+            viewModel.load()
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 }

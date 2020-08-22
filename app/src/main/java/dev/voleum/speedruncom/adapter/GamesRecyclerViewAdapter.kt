@@ -79,7 +79,8 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
                         .build())
                 )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
+//                .centerCrop()
+                .dontTransform()
                 .into(image)
     }
 
