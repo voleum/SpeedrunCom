@@ -50,19 +50,21 @@ class LeaderboardViewModel : ViewModelObservable() {
             API.leaderboardsCategoryEmbed(gameId, categoryId, getSubcategoryQueryMap(), "players").enqueue(object : Callback<DataLeaderboardEmbed> {
 
                 override fun onResponse(call: Call<DataLeaderboardEmbed>, response: Response<DataLeaderboardEmbed>) {
-                    adapter.leaderboard = response.body()!!.data
-                    adapter.trophyAssets = trophyAssets
-                    data = adapter.leaderboard!!.runs
-                    notifyChange()
-                    Log.d("tag", "load onResponse()")
-                    isLoaded = true
-                    it.resume(Unit)
+                    try {
+                        adapter.leaderboard = response.body()!!.data
+                        adapter.trophyAssets = trophyAssets
+                        data = adapter.leaderboard!!.runs
+                        notifyChange()
+                        isLoaded = true
+                        it.resume(Unit)
+                    } catch (e: Exception) {
+                        onFailure(call, e)
+                    }
                 }
 
                 override fun onFailure(call: Call<DataLeaderboardEmbed>, t: Throwable) {
                     t.stackTrace
                     t.message
-                    Log.d("tag", "load onError(): ${t.message}")
                     it.resumeWithException(t)
                 }
             })

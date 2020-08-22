@@ -48,18 +48,20 @@ open class TabGamesViewModel : ViewModelObservable() {
         suspendCoroutine<Unit> {
             API.games().enqueue(object : Callback<GameList> {
                 override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
-                    adapter.replaceItems(response.body()!!.data)
-                    pagination = response.body()!!.pagination
-                    Log.d("tag", "load onResponse()")
-                    isLoaded = true
-                    notifyPropertyChanged(BR.loaded)
-                    it.resume(Unit)
+                    try {
+                        adapter.replaceItems(response.body()!!.data)
+                        pagination = response.body()!!.pagination
+                        isLoaded = true
+                        notifyPropertyChanged(BR.loaded)
+                        it.resume(Unit)
+                    } catch (e: Exception) {
+                        onFailure(call, e)
+                    }
                 }
 
                 override fun onFailure(call: Call<GameList>, t: Throwable) {
                     t.stackTrace
                     t.message
-                    Log.d("tag", "load onError()")
                     it.resumeWithException(t)
                 }
             })
@@ -69,15 +71,17 @@ open class TabGamesViewModel : ViewModelObservable() {
     fun loadMore() {
         API.games(pagination.offset + pagination.size).enqueue(object : Callback<GameList> {
             override fun onResponse(call: Call<GameList>, response: Response<GameList>) {
-                pagination = response.body()!!.pagination
-                adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
-                Log.d("tag", "loadMore onResponse(); data.size: ${data.size}; adapter.items.size: ${adapter.items.size}")
+                try {
+                    pagination = response.body()!!.pagination
+                    adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
+                } catch (e: Exception) {
+                    onFailure(call, e)
+                }
             }
 
             override fun onFailure(call: Call<GameList>, t: Throwable) {
                 t.stackTrace
                 t.message
-                Log.d("tag", "loadMore onError()")
                 //TODO: do something
             }
         })

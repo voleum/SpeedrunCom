@@ -8,20 +8,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.LeaderboardRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentLeaderboardBinding
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeaderboardBinding>() {
 
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
+    val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Snackbar
+            .make(binding.leaderboardRecyclerView, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
+            .setAction(R.string.snackbar_action_retry) { load() }
+            .show()
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,13 +62,12 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
 
         recyclerView.layoutManager = layoutManager
 
-        scope.launch {
-            if (!viewModel.isLoaded) {
-                val jobLeaderboard = launch { viewModel.load() }
-                jobLeaderboard.join()
-            }
-        }
+        if (!viewModel.isLoaded) load()
 
         return root
+    }
+
+    fun load() {
+        scope.launch { viewModel.load() }
     }
 }

@@ -48,18 +48,20 @@ class TabSeriesViewModel : ViewModelObservable() {
         suspendCoroutine<Unit> {
             API.series().enqueue(object : Callback<SeriesList> {
                 override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
-                    adapter.replaceItems(response.body()!!.data)
-                    pagination = response.body()!!.pagination
-                    Log.d("tag", "load onResponse()")
-                    isSeriesLoaded = true
-                    notifyPropertyChanged(BR.seriesLoaded)
-                    it.resume(Unit)
+                    try {
+                        adapter.replaceItems(response.body()!!.data)
+                        pagination = response.body()!!.pagination
+                        isSeriesLoaded = true
+                        notifyPropertyChanged(BR.seriesLoaded)
+                        it.resume(Unit)
+                    } catch (e: Exception) {
+                        onFailure(call, e)
+                    }
                 }
 
                 override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                     t.stackTrace
                     t.message
-                    Log.d("tag", "load onError()")
                     it.resumeWithException(t)
                 }
             })
@@ -69,15 +71,17 @@ class TabSeriesViewModel : ViewModelObservable() {
     fun loadMore() {
         API.series(pagination.offset + pagination.size).enqueue(object : Callback<SeriesList> {
             override fun onResponse(call: Call<SeriesList>, response: Response<SeriesList>) {
-                pagination = response.body()!!.pagination
-                adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
-                Log.d("tag", "loadMore onResponse(); data.size: ${data.size}; adapter.items.size: ${adapter.items.size}")
+                try {
+                    pagination = response.body()!!.pagination
+                    adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
+                } catch (e: Exception) {
+                    onFailure(call, e)
+                }
             }
 
             override fun onFailure(call: Call<SeriesList>, t: Throwable) {
                 t.stackTrace
                 t.message
-                Log.d("tag", "loadMore onError()")
                 //TODO: do something
             }
         })
