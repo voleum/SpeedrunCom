@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
@@ -64,8 +64,14 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
                 }
             }
 
+//        val layoutManager =
+//            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+
         val layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+            StaggeredGridLayoutManager(
+                resources.getInteger(R.integer.games_columns),
+                StaggeredGridLayoutManager.VERTICAL
+            )
 
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
@@ -91,7 +97,8 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         newConfig.screenLayout = R.layout.fragment_tab_games
-        (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+//        (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+        (binding.gamesRecyclerView.layoutManager as StaggeredGridLayoutManager).spanCount =
             resources.getInteger(R.integer.games_columns)
     }
 

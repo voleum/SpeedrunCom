@@ -39,9 +39,7 @@ class SeriesRecyclerViewAdapter :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: SeriesViewHolder, position: Int) {
-        holder.binding.series =
-            SeriesItemViewModel(items[position])
-        holder.loadImage((holder.binding.series as SeriesItemViewModel).imageUrl)
+        holder.bind(position)
     }
 
     override fun getItemId(position: Int): Long =
@@ -68,6 +66,12 @@ class SeriesRecyclerViewAdapter :
         }
 
         private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_series_image)
+
+        fun bind(position: Int) {
+            binding.series =
+                SeriesItemViewModel(items[position])
+            loadImage((binding.series as SeriesItemViewModel).imageUrl)
+        }
 
         fun loadImage(url: String) =
             GlideApp.with(itemView)
