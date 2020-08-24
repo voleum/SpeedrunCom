@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.HolderGameBinding
@@ -37,9 +38,7 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        holder.binding.game =
-            GamesItemViewModel(items[position])
-        holder.loadImage((holder.binding.game as GamesItemViewModel).imageUrl)
+        holder.bind(position)
     }
 
     override fun getItemId(position: Int): Long =
@@ -67,14 +66,25 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
 
         private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
 
+        fun bind(position: Int) {
+            binding.game =
+                GamesItemViewModel(items[position])
+            loadImage((binding.game as GamesItemViewModel).imageUrl)
+        }
+
         fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
-                .transition(DrawableTransitionOptions.withCrossFade())
+//                .transition(DrawableTransitionOptions.withCrossFade())
+                .transition(DrawableTransitionOptions.withCrossFade(
+                    DrawableCrossFadeFactory.Builder()
+                        .setCrossFadeEnabled(true)
+                        .build())
+                )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-//                .onlyRetrieveFromCache(true)
+//                .centerCrop()
+                .dontTransform()
                 .into(image)
     }
 

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
@@ -16,17 +16,22 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GameCategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentGameBinding
-import dev.voleum.speedruncom.enum.States
-import kotlinx.android.synthetic.main.fragment_game.*
-import kotlinx.android.synthetic.main.fragment_tab_games.*
+import dev.voleum.speedruncom.enum.RunTypes
+import dev.voleum.speedruncom.ui.AbstractFragment
+import kotlinx.coroutines.*
 
-class GameFragment : Fragment() {
+class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
 
-    private lateinit var viewModel: GameViewModel
-    private lateinit var binding: FragmentGameBinding
-
-    //    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var backgroundImageView: AppCompatImageView
+
+    private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Snackbar
+            .make(binding.gameViewPager, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
+            .setAction(R.string.snackbar_action_retry) { load() }
+            .show()
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,83 +50,45 @@ class GameFragment : Fragment() {
                 false
             )
         binding.viewModel = viewModel
-//        swipeRefreshLayout = binding.gameSwipeRefreshLayout
         backgroundImageView = binding.gameBackground
-        checkData()
-//        checkCategories()
+
+        load()
+
         return binding.root
     }
 
-    private fun checkData() {
-//        if (view == null) return
-
-        when (viewModel.stateInfo) {
-            States.CREATED -> {
-                viewModel.setInfoListener { checkData() }
-                viewModel.loadInfo()
-            }
-            States.PROGRESS -> {
-                viewModel.setInfoListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setInfoListener { checkData() }
-//                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.stateInfo = States.PROGRESS
-                        viewModel.loadInfo()
-                    }
-                    .show()
-//                gamesViewModel.load()
-            }
-            States.LOADED -> {
-                GlideApp.with(this)
+    private fun setBackgroundImage() {
+        GlideApp.with(this)
                     .load(viewModel.backgroundUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .centerCrop()
                     .into(backgroundImageView)
-//                swipeRefreshLayout.isRefreshing = false
-                checkCategories()
-            }
-        }
     }
 
-    private fun checkCategories() {
-//        if (view == null) return
+    private fun createAdapter() {
+        val adapter = GameCategoriesViewPagerAdapter(
+            this,
+            viewModel.categories.filter { it.type == RunTypes.PER_GAME.type },
+            viewModel.id,
+            viewModel.trophyAssets
+        )
+        binding.gameViewPager.adapter = adapter
+        TabLayoutMediator(binding.gameTabLayout, binding.gameViewPager) { tab, position ->
+            tab.text = viewModel.categories[position].name
+        }.attach()
+    }
 
-        when (viewModel.stateCategories) {
-            States.CREATED -> {
-                viewModel.setCategoriesListener { checkCategories() }
-                viewModel.loadCategories()
+    private fun load() {
+        scope.launch {
+            if (!viewModel.isLoaded) {
+                val jobInfo = launch { viewModel.load() }
+                jobInfo.join()
             }
-            States.PROGRESS -> {
-                viewModel.setCategoriesListener { checkCategories() }
-            }
-            States.ERROR -> {
-                viewModel.setCategoriesListener { checkCategories() }
-//                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.stateCategories = States.PROGRESS
-                        viewModel.loadCategories()
-                    }
-                    .show()
-//                viewModel.load()
-            }
-            States.LOADED -> {
-                //FIXME: FIX. THIS. FREAKING. SHIT.
-                val adapter = GameCategoriesViewPagerAdapter(
-                    this,
-                    viewModel.categories,
-                    viewModel.id,
-                    viewModel.trophyAssets
-                )
-                binding.gameViewPager.adapter = adapter
-                TabLayoutMediator(binding.gameTabLayout, binding.gameViewPager) { tab, position ->
-                    tab.text = viewModel.categories[position].name
-                }.attach()
-            }
+            findNavController().currentDestination?.label = viewModel.name
+            setBackgroundImage()
+            if (binding.gameViewPager.adapter == null)
+                createAdapter()
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.HolderSeriesBinding
@@ -38,9 +39,7 @@ class SeriesRecyclerViewAdapter :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: SeriesViewHolder, position: Int) {
-        holder.binding.series =
-            SeriesItemViewModel(items[position])
-        holder.loadImage((holder.binding.series as SeriesItemViewModel).imageUrl)
+        holder.bind(position)
     }
 
     override fun getItemId(position: Int): Long =
@@ -68,14 +67,25 @@ class SeriesRecyclerViewAdapter :
 
         private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_series_image)
 
+        fun bind(position: Int) {
+            binding.series =
+                SeriesItemViewModel(items[position])
+            loadImage((binding.series as SeriesItemViewModel).imageUrl)
+        }
+
         fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
-                .transition(DrawableTransitionOptions.withCrossFade())
+//                .transition(DrawableTransitionOptions.withCrossFade())
+                .transition(DrawableTransitionOptions.withCrossFade(
+                    DrawableCrossFadeFactory.Builder()
+                        .setCrossFadeEnabled(true)
+                        .build())
+                )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .centerCrop()
-//                .onlyRetrieveFromCache(true)
+//                .centerCrop()
+                .dontTransform()
                 .into(image)
     }
 

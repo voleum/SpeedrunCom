@@ -5,6 +5,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface SpeedrunComApi {
 
@@ -12,7 +13,10 @@ interface SpeedrunComApi {
     fun category(@Path("id") id: String): Call<Category>
 
     @GET("games/{game}/categories")
-    fun categories(@Path("game") gameId: String): Call<CategoryList>
+    fun categoriesGame(@Path("game") gameId: String): Call<CategoryList>
+
+    @GET("games/{level}/categories")
+    fun categoriesLevel(@Path("level") levelId: String): Call<CategoryList>
 
     @GET("games")
     fun games(): Call<GameList>
@@ -21,20 +25,35 @@ interface SpeedrunComApi {
     fun games(@Query("offset") offset: Int): Call<GameList>
 
     @GET("games/{id}")
-    fun games(@Path("id") id: String): Call<DataGame>
+    fun game(@Path("id") id: String): Call<DataGame>
+
+    @GET("games/{id}")
+    fun gameEmbed(@Path("id") id: String,
+                  @Query("embed") embed: String): Call<DataGameEmbed>
 
 //    @GET("guests")
 //    fun guests(): Call<Guests>
 
-//    @GET("levels")
-//    fun levels(): Call<Levels>
+    @GET("{game}/levels")
+    fun levels(@Path("game") gameId: String): Call<LevelList>
 
     @GET("leaderboards/{game}/category/{category}")
     fun leaderboardsCategory(@Path("game") gameId: String,
-                             @Path("category") categoryId: String): Call<LeaderboardList>
+                             @Path("category") categoryId: String): Call<DataLeaderboard>
 
-    @GET("platform")
-    fun platform(): Call<Platform>
+    @GET("leaderboards/{game}/category/{category}")
+    fun leaderboardsCategory(@Path("game") gameId: String,
+                             @Path("category") categoryId: String,
+                             @QueryMap variable: Map<String, String>?): Call<DataLeaderboard>
+
+    @GET("leaderboards/{game}/category/{category}")
+    fun leaderboardsCategoryEmbed(@Path("game") gameId: String,
+                                  @Path("category") categoryId: String,
+                                  @QueryMap variable: Map<String, String>?,
+                                  @Query("embed") embed: String): Call<DataLeaderboardEmbed>
+
+    @GET("platforms/{id}")
+    fun platform(@Path("id") id: String): Call<DataPlatform>
 
 //    @GET("profile")
 //    fun profile(): Call<User>
@@ -63,6 +82,12 @@ interface SpeedrunComApi {
     @GET("users")
     fun users(): Call<UserList>
 
+    @GET("users/{id}")
+    fun users(@Path("id") id: String): Call<DataUser>
+
     @GET("variables/{id}")
     fun variables(@Path("id") id: String): Call<Variable>
+
+    @GET("categories/{category}/variables")
+    fun variablesCategory(@Path("category") categoryId: String): Call<VariableList>
 }

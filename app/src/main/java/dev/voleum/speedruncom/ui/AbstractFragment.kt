@@ -1,0 +1,10 @@
+package dev.voleum.speedruncom.ui
+
+import androidx.fragment.app.Fragment
+
+abstract class AbstractFragment<VM: Any, B: Any> : Fragment() {
+
+    lateinit var viewModel: VM
+    lateinit var binding: B
+
+}

@@ -1,29 +1,38 @@
 package dev.voleum.speedruncom.ui.screen
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
-import dev.voleum.speedruncom.enum.States
-import kotlinx.android.synthetic.main.fragment_tab_games.*
+import dev.voleum.speedruncom.ui.AbstractFragment
+import kotlinx.coroutines.*
 
-class GamesSeriesFragment : Fragment() {
+class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGamesSeriesBinding>() {
 
-    private lateinit var viewModel: GamesSeriesViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
+    private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Snackbar
+            .make(binding.gamesRecyclerView, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
+            .setAction(R.string.snackbar_action_retry) { load() }
+            .show()
+        swipeRefreshLayout.isRefreshing = false
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,16 +43,16 @@ class GamesSeriesFragment : Fragment() {
         arguments?.apply {
             viewModel.seriesId = getString("series", "")
         }
-        val binding: FragmentGamesSeriesBinding =
-            DataBindingUtil.inflate(inflater,
+        binding =
+            DataBindingUtil.inflate(
+                inflater,
                 R.layout.fragment_games_series,
                 null,
-                false)
+                false
+            )
         binding.viewModel = viewModel
         val root = binding.root
         val recyclerView = binding.gamesRecyclerView
-        val layoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
 
         viewModel.adapter.onEntryClickListener =
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
@@ -55,50 +64,53 @@ class GamesSeriesFragment : Fragment() {
                 }
             }
 
+//        val layoutManager =
+//            GridLayoutManager(context, resources.getInteger(R.integer.games_columns))
+
+        val layoutManager =
+            StaggeredGridLayoutManager(
+                resources.getInteger(R.integer.games_columns),
+                StaggeredGridLayoutManager.VERTICAL
+            )
+
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.gamesSwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener { load() }
         val fab = binding.gamesFab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                viewModel.state = States.PROGRESS
                 Log.d("tag", "onScrolled()")
                 viewModel.loadMore()
             }
         }
         recyclerView.addOnScrollListener(onScrollListener)
-        checkData()
+
+        if (!viewModel.isLoaded) load()
+
         return root
     }
 
-    private fun checkData() {
-//        if (view == null) return
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        newConfig.screenLayout = R.layout.fragment_tab_games
+//        (binding.gamesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+        (binding.gamesRecyclerView.layoutManager as StaggeredGridLayoutManager).spanCount =
+            resources.getInteger(R.integer.games_columns)
+    }
 
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setListener { checkData() }
-                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-//                gamesViewModel.load()
-            }
-            States.LOADED -> {
-                swipeRefreshLayout.isRefreshing = false
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
+
+    fun load() {
+        scope.launch {
+            viewModel.load()
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 }

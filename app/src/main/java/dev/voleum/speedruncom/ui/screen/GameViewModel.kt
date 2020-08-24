@@ -1,48 +1,32 @@
 package dev.voleum.speedruncom.ui.screen
 
-import android.util.Log
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
-import dev.voleum.speedruncom.enum.States
-import dev.voleum.speedruncom.model.*
+import dev.voleum.speedruncom.model.Assets
+import dev.voleum.speedruncom.model.CategoryEmbed
+import dev.voleum.speedruncom.model.DataGameEmbed
+import dev.voleum.speedruncom.model.GameEmbed
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class GameViewModel : ViewModelObservable() {
 
     lateinit var id: String
 
-    lateinit var loadInfoListener: () -> Unit
-    lateinit var loadCategoriesListener: () -> Unit
-
-    var stateInfo = States.CREATED
-    var stateCategories = States.CREATED
+    var isLoaded = false
 
     val backgroundUrl: String
         get() = game?.assets?.background?.uri ?: ""
 
     val trophyAssets: Assets
         get() = game!!.assets
-//        get() = listOf(game?.assets?.trophyFirst?.uri ?: "",
-//            game?.assets?.trophySecond?.uri ?: "",
-//            game?.assets?.trophyThird?.uri ?: "",
-//            game?.assets?.trophyForth?.uri ?: "")
 
-//    var trophy1: String = ""
-//        get() = game?.assets?.trophyFirst?.uri ?: ""
-//
-//    var trophy2: String = ""
-//        get() = game?.assets?.trophySecond?.uri ?: ""
-//
-//    var trophy3: String = ""
-//        get() = game?.assets?.trophyThird?.uri ?: ""
-//
-//    var trophy4: String = ""
-//        get() = game?.assets?.trophyForth?.uri ?: ""
-
-    var game: Game? = null
+    var game: GameEmbed? = null
         @Bindable get
         @Bindable set
 
@@ -56,65 +40,37 @@ class GameViewModel : ViewModelObservable() {
 
     var platforms: String = ""
         @Bindable get() {
-            return if (game != null) {
-                var platforms = ""
-                game?.platforms?.forEach { platforms += "$it, " }
-                platforms.removeSuffix(", ")
-            } else ""
+            var platforms = ""
+            game?.platforms?.data?.forEach { platforms += "${it.name}, " }
+            return platforms.removeSuffix(", ")
         }
         @Bindable set
 
-    var categories: List<Category> = mutableListOf()
-        @Bindable get
+    var categories: List<CategoryEmbed> = mutableListOf()
+        @Bindable get() = game!!.categories.data
         @Bindable set
 
-    fun setInfoListener(loadListener: () -> Unit) {
-        this.loadInfoListener = loadListener
-    }
+    suspend fun load() {
+        suspendCoroutine<Unit> {
+            API.gameEmbed(id, "platforms,categories,categories.variables").enqueue(object : Callback<DataGameEmbed> {
 
-    fun setCategoriesListener(loadListener: () -> Unit) {
-        this.loadCategoriesListener = loadListener
-    }
+                override fun onResponse(call: Call<DataGameEmbed>, response: Response<DataGameEmbed>) {
+                    try {
+                        game = response.body()!!.data
+                        notifyChange()
+                        isLoaded = true
+                        it.resume(Unit)
+                    } catch (e: Exception) {
+                        onFailure(call, e)
+                    }
+                }
 
-    fun loadInfo() {
-        API.games(id).enqueue(object : Callback<DataGame> {
-            override fun onResponse(call: Call<DataGame>, response: Response<DataGame>) {
-                game = response.body()!!.data
-                notifyChange()
-                //TODO: exception if game not founded
-                stateInfo = States.LOADED
-                Log.d("tag", "load onResponse()")
-                loadInfoListener()
-            }
-
-            override fun onFailure(call: Call<DataGame>, t: Throwable) {
-                t.stackTrace
-                t.message
-                stateInfo = States.ERROR
-                Log.d("tag", "load onError()")
-                loadInfoListener()
-            }
-        })
-    }
-
-    fun loadCategories() {
-        API.categories(id).enqueue(object : Callback<CategoryList> {
-            override fun onResponse(call: Call<CategoryList>, response: Response<CategoryList>) {
-                categories = response.body()!!.data
-                notifyChange()
-                //TODO: exception if game not founded
-                stateCategories = States.LOADED
-                Log.d("tag", "load onResponse()")
-                loadCategoriesListener()
-            }
-
-            override fun onFailure(call: Call<CategoryList>, t: Throwable) {
-                t.stackTrace
-                t.message
-                stateCategories = States.ERROR
-                Log.d("tag", "load onError()")
-                loadCategoriesListener()
-            }
-        })
+                override fun onFailure(call: Call<DataGameEmbed>, t: Throwable) {
+                    t.stackTrace
+                    t.message
+                    it.resumeWithException(t)
+                }
+            })
+        }
     }
 }

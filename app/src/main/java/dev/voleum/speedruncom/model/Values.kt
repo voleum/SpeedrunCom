@@ -1,4 +1,6 @@
 package dev.voleum.speedruncom.model
 
-data class Values(val values: List<Map<String, CategoryValues>>,
-                  val default: String)
+import java.io.Serializable
+
+data class Values(val values: Map<String, CategoryValues>,
+                  val default: String) : Serializable

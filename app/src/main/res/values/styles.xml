@@ -19,6 +19,11 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.ActionBar.Primary" />
 
+    <style name="Widget.SpeedrunCom.TabLayout.NoIndicator" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabIndicatorColor">@android:color/transparent</item>
+        <item name="elevation">@dimen/recycler_view_elevation</item>
+    </style>
+
     <style name="Widget.SpeedrunCom.TabLayout.PrimarySurface" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
         <item name="elevation">@dimen/recycler_view_elevation</item>
     </style>
