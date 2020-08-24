@@ -38,9 +38,7 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        holder.binding.game =
-            GamesItemViewModel(items[position])
-        holder.loadImage((holder.binding.game as GamesItemViewModel).imageUrl)
+        holder.bind(position)
     }
 
     override fun getItemId(position: Int): Long =
@@ -67,6 +65,12 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
         }
 
         private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_game_image)
+
+        fun bind(position: Int) {
+            binding.game =
+                GamesItemViewModel(items[position])
+            loadImage((binding.game as GamesItemViewModel).imageUrl)
+        }
 
         fun loadImage(url: String) =
             GlideApp.with(itemView)

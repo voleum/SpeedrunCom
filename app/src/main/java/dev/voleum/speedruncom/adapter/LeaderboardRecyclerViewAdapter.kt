@@ -51,52 +51,7 @@ class LeaderboardRecyclerViewAdapter :
         holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder,
         position: Int
     ) {
-        val viewModel =
-            LeaderboardItemViewModel(
-                leaderboard!!.runs[position],
-                leaderboard!!.players.data.find {
-                    it.id == leaderboard!!.runs[position].run.players[0].id
-                }
-            )
-        holder.binding.viewModel = viewModel
-
-        val place = viewModel.placeValue
-        if (place in 1..4) {
-            holder.loadImage(
-                when (place) {
-                    1 -> trophyAssets.trophyFirst
-                    2 -> trophyAssets.trophySecond
-                    3 -> trophyAssets.trophyThird
-                    else -> trophyAssets.trophyForth
-                }
-            )
-        }
-        else holder.clearImage()
-        holder.binding.holderLeaderboardConstraint.setBackgroundColor(
-            if (position % 2 == 0) SpeedrunCom.instance.resources.getColor(android.R.color.transparent)
-            else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
-        )
-        when (viewModel.user?.nameStyle?.style) {
-            UserNameStyles.SOLID.style -> holder.binding.holderLeaderboardPlayer.setTextColor(
-                Color.parseColor(viewModel.user.nameStyle.color.light)
-            )
-            UserNameStyles.GRADIENT.style -> {
-                val tileMode = Shader.TileMode.CLAMP
-                val linearGradient = LinearGradient(
-                    0.0F,
-                    0.0F,
-                    holder.binding.holderLeaderboardPlayer.width.toFloat(),
-                    holder.binding.holderLeaderboardPlayer.textSize,
-                    Color.parseColor(viewModel.user.nameStyle.colorFrom.light),
-                    Color.parseColor(viewModel.user.nameStyle.colorTo.light),
-                    tileMode
-                )
-                holder.binding.holderLeaderboardPlayer.paint.shader = linearGradient
-            }
-        }
-        val countryCode = viewModel.user?.location?.country?.code ?: ""
-        if (countryCode.isNotEmpty())
-            holder.setFlag(countryCode)
+        holder.bind(position)
     }
 
     override fun getItemId(position: Int): Long =
@@ -116,6 +71,56 @@ class LeaderboardRecyclerViewAdapter :
 
         private val flag: AppCompatImageView =
             binding.root.findViewById(R.id.holder_leaderboard_flag)
+
+        fun bind(position: Int) {
+
+            val viewModel =
+                LeaderboardItemViewModel(
+                    leaderboard!!.runs[position],
+                    leaderboard!!.players.data.find {
+                        it.id == leaderboard!!.runs[position].run.players[0].id
+                    }
+                )
+            binding.viewModel = viewModel
+
+            val place = viewModel.placeValue
+            if (place in 1..4) {
+                loadImage(
+                    when (place) {
+                        1 -> trophyAssets.trophyFirst
+                        2 -> trophyAssets.trophySecond
+                        3 -> trophyAssets.trophyThird
+                        else -> trophyAssets.trophyForth
+                    }
+                )
+            }
+            else clearImage()
+            binding.holderLeaderboardConstraint.setBackgroundColor(
+                if (position % 2 == 0) SpeedrunCom.instance.resources.getColor(android.R.color.transparent)
+                else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
+            )
+            when (viewModel.user?.nameStyle?.style) {
+                UserNameStyles.SOLID.style -> binding.holderLeaderboardPlayer.setTextColor(
+                    Color.parseColor(viewModel.user.nameStyle.color.light)
+                )
+                UserNameStyles.GRADIENT.style -> {
+                    val tileMode = Shader.TileMode.CLAMP
+                    val linearGradient = LinearGradient(
+                        0.0F,
+                        0.0F,
+                        binding.holderLeaderboardPlayer.width.toFloat(),
+                        binding.holderLeaderboardPlayer.textSize,
+                        Color.parseColor(viewModel.user.nameStyle.colorFrom.light),
+                        Color.parseColor(viewModel.user.nameStyle.colorTo.light),
+                        tileMode
+                    )
+                    binding.holderLeaderboardPlayer.paint.shader = linearGradient
+                }
+            }
+            val countryCode = viewModel.user?.location?.country?.code ?: ""
+            if (countryCode.isNotEmpty())
+                setFlag(countryCode)
+        }
 
         fun loadImage(asset: Asset?) {
             if (asset != null) {
