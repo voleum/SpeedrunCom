@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,13 +12,20 @@ import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.LeaderboardRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentLeaderboardBinding
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.model.Assets
-import kotlinx.android.synthetic.main.fragment_leaderboard.*
+import dev.voleum.speedruncom.ui.AbstractFragment
+import kotlinx.coroutines.*
 
-class LeaderboardFragment : Fragment() {
+class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeaderboardBinding>() {
 
-    private lateinit var viewModel: LeaderboardViewModel
+    val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Snackbar
+            .make(binding.leaderboardRecyclerView, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
+            .setAction(R.string.snackbar_action_retry) { load() }
+            .show()
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +33,7 @@ class LeaderboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(LeaderboardViewModel::class.java)
-        val binding: FragmentLeaderboardBinding =
+        binding =
             DataBindingUtil.inflate(inflater,
                 R.layout.fragment_leaderboard,
                 null,
@@ -35,6 +41,8 @@ class LeaderboardFragment : Fragment() {
         arguments?.apply {
             viewModel.gameId = getString("game", "")
             viewModel.categoryId = getString("category", "")
+            viewModel.subcategoryId = getString("subcategory", "")
+            viewModel.variableId = getString("variable", "")
             viewModel.trophyAssets = getSerializable("trophyAssets") as Assets
         }
         binding.viewModel = viewModel
@@ -53,34 +61,13 @@ class LeaderboardFragment : Fragment() {
             }
 
         recyclerView.layoutManager = layoutManager
-        checkData()
+
+        if (!viewModel.isLoaded) load()
+
         return root
     }
 
-    private fun checkData() {
-//        if (view == null) return
-
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setListener { checkData() }
-                Snackbar.make(leaderboard_recycler_view, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-//                viewModel.load()
-            }
-            States.LOADED -> {
-
-            }
-        }
+    fun load() {
+        scope.launch { viewModel.load() }
     }
 }

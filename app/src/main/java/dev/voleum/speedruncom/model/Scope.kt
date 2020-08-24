@@ -1,3 +1,5 @@
 package dev.voleum.speedruncom.model
 
-data class Scope(val type: String)
+import java.io.Serializable
+
+data class Scope(val type: String) : Serializable
