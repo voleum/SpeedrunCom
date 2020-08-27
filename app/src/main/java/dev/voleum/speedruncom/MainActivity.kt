@@ -28,8 +28,9 @@ class MainActivity : AppCompatActivity(),
 
     private val indexToPage = mapOf(
         0 to R.id.navigation_home,
-        1 to R.id.navigation_games,
-        2 to R.id.navigation_more
+        1 to R.id.navigation_search,
+        2 to R.id.navigation_games,
+        3 to R.id.navigation_more
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,23 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph_games"
-    app:startDestination="@id/games_destination">
+    android:id="@+id/nav_graph_search"
+    app:startDestination="@id/search_destination">
 
     <fragment
-        android:id="@+id/games_destination"
-        android:name="dev.voleum.speedruncom.ui.nav.games.GamesFragment"
+        android:id="@+id/search_destination"
+        android:name="dev.voleum.speedruncom.ui.nav.search.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_games">
-
-<!--        <action-->
-<!--            android:id="@+id/action_game"-->
-<!--            app:destination="@id/game_destination" />-->
-
-<!--        <action-->
-<!--            android:id="@+id/action_games_series"-->
-<!--            app:destination="@id/games_series_destination" />-->
-
-    </fragment>
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
