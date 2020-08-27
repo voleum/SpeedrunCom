@@ -5,7 +5,7 @@ import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.ui.ViewModelObservable
 
-class SearchItemViewModel(val item: Game) : ViewModelObservable() {
+class SearchItemGameViewModel(private val item: Game) : ViewModelObservable() {
 
     val name: String
         @Bindable get() = item.names.international

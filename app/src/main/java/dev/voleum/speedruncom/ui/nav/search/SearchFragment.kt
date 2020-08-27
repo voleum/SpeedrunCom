@@ -17,6 +17,9 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.SearchRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentSearchBinding
 import dev.voleum.speedruncom.model.Game
+import dev.voleum.speedruncom.model.Series
+import dev.voleum.speedruncom.model.TYPE_GAME
+import dev.voleum.speedruncom.model.TYPE_SERIES
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.coroutines.*
 
@@ -60,10 +63,20 @@ class SearchFragment :
         viewModel.adapter.onEntryClickListener =
             object : SearchRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
-                    val bundle = Bundle().apply {
-                        putString("game", (viewModel.data[position] as Game).id)
+                    when (viewModel.adapter.searchResult.getType(position)) {
+                        TYPE_SERIES -> {
+                            val bundle = Bundle().apply {
+                                putString("series", (viewModel.data[position] as Series).id)
+                            }
+                            findNavController().navigate(R.id.action_series, bundle)
+                        }
+                        TYPE_GAME -> {
+                            val bundle = Bundle().apply {
+                                putString("game", (viewModel.data[position] as Game).id)
+                            }
+                            findNavController().navigate(R.id.action_game, bundle)
+                        }
                     }
-                    findNavController().navigate(R.id.action_game, bundle)
                 }
             }
 
@@ -91,7 +104,8 @@ class SearchFragment :
         Log.d("tag", "onQueryTextSubmit: $query")
         viewModel.searchString = query!!
         search()
-        val ime = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val ime =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         ime.hideSoftInputFromWindow(requireView().windowToken, 0)
         requireActivity().currentFocus?.clearFocus()
         return true
@@ -103,7 +117,9 @@ class SearchFragment :
     }
 
     fun search() {
+        viewModel.adapter.clearResult()
         scope.launch {
+            viewModel.findSeries()
             viewModel.findGames()
         }
     }
