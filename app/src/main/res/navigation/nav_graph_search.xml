@@ -9,6 +9,30 @@
         android:id="@+id/search_destination"
         android:name="dev.voleum.speedruncom.ui.nav.search.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+
+        <action
+            android:id="@+id/action_game"
+            app:destination="@id/game_destination" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/game_destination"
+        android:name="dev.voleum.speedruncom.ui.screen.GameFragment"
+        android:label="Game"
+        tools:layout="@layout/fragment_game">
+
+        <action
+            android:id="@+id/action_run"
+            app:destination="@id/run_destination" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/run_destination"
+        android:name="dev.voleum.speedruncom.ui.screen.RunFragment"
+        android:label="Run"
+        tools:layout="@layout/fragment_run" />
 
 </navigation>
