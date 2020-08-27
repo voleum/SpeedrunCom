@@ -132,6 +132,10 @@ interface SpeedrunComApi {
     @GET("series")
     fun series(): Call<SeriesList>
 
+
+    @GET("series")
+    fun series(@Query("name") name: String): Call<SeriesList>
+
     /**
      * This will return a list of all series using pagination.
      */

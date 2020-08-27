@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="dev.voleum.speedruncom.ui.nav.search.SearchItemViewModel" />
+            type="dev.voleum.speedruncom.ui.nav.search.SearchItemSeriesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -12,6 +12,22 @@
         tools:layout="@layout/fragment_search">
 
         <action
+            android:id="@+id/action_series"
+            app:destination="@id/series_destination" />
+
+        <action
+            android:id="@+id/action_game"
+            app:destination="@id/game_destination" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/series_destination"
+        android:name="dev.voleum.speedruncom.ui.screen.GamesSeriesFragment"
+        android:label="Series"
+        tools:layout="@layout/fragment_games_series">
+
+        <action
             android:id="@+id/action_game"
             app:destination="@id/game_destination" />
 
