@@ -13,27 +13,27 @@
         android:id="@+id/holder_search_constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="5dp">
+        android:layout_margin="8dp"
+        android:padding="10dp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/holder_search_image"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
             android:layout_margin="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/holder_leaderboard_place"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="3dp"-->
-<!--            android:text="@{viewModel.place}"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toEndOf="@id/holder_leaderboard_image"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <TextView
+            android:id="@+id/holder_leaderboard_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@{viewModel.name}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/holder_search_image"
+            app:layout_constraintTop_toTopOf="parent" />
 
 <!--        <androidx.appcompat.widget.AppCompatImageView-->
 <!--            android:id="@+id/holder_leaderboard_flag"-->
