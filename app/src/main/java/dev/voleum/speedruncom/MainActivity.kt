@@ -21,14 +21,16 @@ class MainActivity : AppCompatActivity(),
 
     private val fragments = listOf(
         BaseFragment.newInstance(R.layout.content_home, R.id.toolbar_home, R.id.nav_host_home),
+        BaseFragment.newInstance(R.layout.content_search, R.id.toolbar_search, R.id.nav_host_search),
         BaseFragment.newInstance(R.layout.content_games, R.id.toolbar_games, R.id.nav_host_games),
         BaseFragment.newInstance(R.layout.content_more, R.id.toolbar_more, R.id.nav_host_more)
     )
 
     private val indexToPage = mapOf(
         0 to R.id.navigation_home,
-        1 to R.id.navigation_games,
-        2 to R.id.navigation_more
+        1 to R.id.navigation_search,
+        2 to R.id.navigation_games,
+        3 to R.id.navigation_more
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

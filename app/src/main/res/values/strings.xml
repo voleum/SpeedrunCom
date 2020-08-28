@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Speedrun.com</string>
     <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
     <string name="title_games">Games</string>
     <string name="title_more">More</string>
     <string name="snackbar_unable_to_load">Unable to load</string>

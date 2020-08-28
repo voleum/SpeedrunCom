@@ -40,6 +40,10 @@ interface SpeedrunComApi {
     @GET("games")
     fun games(@Query("offset") offset: Int): Call<GameList>
 
+
+    @GET("games")
+    fun games(@Query("name") name: String): Call<GameList>
+
     /**
      * This will retrieve a single game, identified by its ID.
      * Instead of the game's ID, you can also specify the game's abbreviation.
@@ -127,6 +131,10 @@ interface SpeedrunComApi {
      */
     @GET("series")
     fun series(): Call<SeriesList>
+
+
+    @GET("series")
+    fun series(@Query("name") name: String): Call<SeriesList>
 
     /**
      * This will return a list of all series using pagination.
