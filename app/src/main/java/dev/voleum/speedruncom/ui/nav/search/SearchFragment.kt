@@ -119,8 +119,8 @@ class SearchFragment :
     fun search() {
         viewModel.adapter.clearResult()
         scope.launch {
-            viewModel.findSeries()
-            viewModel.findGames()
+            launch { viewModel.findSeries() }
+            launch { viewModel.findGames() }
         }
     }
 }
