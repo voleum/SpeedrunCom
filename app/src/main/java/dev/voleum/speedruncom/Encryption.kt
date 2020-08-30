@@ -17,12 +17,12 @@ const val AES_MODE = "AES/GCM/NoPadding"
 const val KEY_ALIAS = "ApiKey"
 const val FIXED_IV = "SSSPPPDDRRNN"
 
-val keyStore = KeyStore.getInstance(AndroidKeyStore)
+val keyStore: KeyStore = KeyStore.getInstance(AndroidKeyStore)
 
 @RequiresApi(Build.VERSION_CODES.M)
-fun createKey() {
+private fun createKey() {
     keyStore.load(null)
-    if (!keyStore.containsAlias(KEY_ALIAS)) {
+//    if (!keyStore.containsAlias(KEY_ALIAS)) {
         val keyGenerator =
             KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, AndroidKeyStore)
         val keyGenParameterSpec = KeyGenParameterSpec.Builder(
@@ -35,18 +35,18 @@ fun createKey() {
             .build()
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
-    }
+//    }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 fun encrypt(data: String): String {
     keyStore.load(null)
     val cipher = Cipher.getInstance(AES_MODE)
     cipher.init(
         Cipher.ENCRYPT_MODE,
         getSecretKey(),
-//            GCMParameterSpec(128, FIXED_IV.toByteArray())
+        GCMParameterSpec(128, FIXED_IV.toByteArray())
     )
-//    val apiKey = "kvi61jbeg2urceby3z7t2jufv"
     val base64bytes = Base64.encode(data.toByteArray(), Base64.DEFAULT)
     val encodedBytes = cipher.doFinal(Base64.decode(base64bytes, Base64.DEFAULT))
     val encryptedBase64Encoded = Base64.encodeToString(encodedBytes, Base64.DEFAULT)
@@ -54,6 +54,7 @@ fun encrypt(data: String): String {
     return encryptedBase64Encoded
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 fun decrypt(encrypted: String): ByteArray {
     keyStore.load(null)
     val cipher = Cipher.getInstance(AES_MODE)
@@ -68,4 +69,8 @@ fun decrypt(encrypted: String): ByteArray {
     return decodedBytes
 }
 
-fun getSecretKey(): Key = keyStore.getKey(KEY_ALIAS, null)
+@RequiresApi(Build.VERSION_CODES.M)
+fun getSecretKey(): Key {
+    if (!keyStore.containsAlias(KEY_ALIAS)) createKey()
+    return keyStore.getKey(KEY_ALIAS, null)
+}
