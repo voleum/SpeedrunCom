@@ -24,10 +24,25 @@ class ExistedProfileViewModel : ViewModelObservable() {
         @Bindable get() = user?.names?.international ?: ""
 
     val country: String
-        @Bindable get() = user?.location?.country?.names?.international ?: ""
+        get() = user?.location?.country?.code ?: ""
 
-    val region: String
-        @Bindable get() = user?.location?.region?.names?.international ?: ""
+//    val region: String
+//        @Bindable get() = user?.location?.region?.names?.international ?: ""
+
+    val twitchLink: String
+        @Bindable get() = user?.twitch?.uri ?: ""
+
+    val hitboxLink: String
+        @Bindable get() = user?.hitbox?.uri ?: ""
+
+    val youtubeLink: String
+        @Bindable get() = user?.youtube?.uri ?: ""
+
+    val twitterLink: String
+        @Bindable get() = user?.twitter?.uri ?: ""
+
+    val speedrunsliveLink: String
+        @Bindable get() = user?.speedrunslive?.uri ?: ""
 
     suspend fun load(apiKey: String) {
         suspendCoroutine<Unit> {
@@ -36,6 +51,7 @@ class ExistedProfileViewModel : ViewModelObservable() {
                 override fun onResponse(call: Call<DataUser>, response: Response<DataUser>) {
                     try {
                         user = response.body()!!.data
+                        isLoaded = true
                         notifyChange()
                         it.resume(Unit)
                     }
