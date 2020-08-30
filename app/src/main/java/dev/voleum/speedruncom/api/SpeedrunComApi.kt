@@ -2,10 +2,7 @@ package dev.voleum.speedruncom.api
 
 import dev.voleum.speedruncom.model.*
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 
 interface SpeedrunComApi {
 
@@ -105,8 +102,8 @@ interface SpeedrunComApi {
     @GET("platforms/{id}")
     fun platform(@Path("id") id: String): Call<DataPlatform>
 
-//    @GET("profile")
-//    fun profile(): Call<User>
+    @GET("profile")
+    fun profile(@Header("X-API-Key") key: String): Call<DataUser>
 
     /**
      * This will retrieve a single region, identified by its ID.

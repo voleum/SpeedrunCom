@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class User(val id: String,
                 val names: Names,
@@ -14,4 +15,4 @@ data class User(val id: String,
                 val youtube: Link?,
                 val twitter: Link?,
                 val speedrunslive: Link?,
-                val links: List<Link>)
+                val links: List<Link>) : Serializable
