@@ -64,7 +64,7 @@ class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentN
             val job = launch { viewModel.load() }
             job.join()
             val badge = requireActivity().nav_view.getOrCreateBadge(R.id.navigation_notifications)
-            val count = viewModel.data.size
+            val count = viewModel.data.filter { it.status == "unread" }.size
             if (count > 0) {
                 badge.isVisible = true
                 badge.number = count
