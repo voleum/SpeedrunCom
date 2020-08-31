@@ -1,9 +1,24 @@
 <resources>
+
     <string name="app_name">Speedrun.com</string>
+
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_games">Games</string>
-    <string name="title_more">More</string>
+    <string name="title_profile">Profile</string>
+
     <string name="snackbar_unable_to_load">Unable to load</string>
     <string name="snackbar_action_retry">Retry</string>
+
+    <string name="button_open_auth_page">Open auth page</string>
+    <string name="button_auth">Authenticate</string>
+    <string name="button_logout">Logout</string>
+
+    <string name="text_input_layout_hint">API Key</string>
+    <string name="text_input_edit_text_hint">Put your API key here</string>
+
+    <string name="authentication_description_title">Login</string>
+    <string name="authentication_description_body">For authentication you have to login on the specific page on www.speedrun.com and copy&amp;paste your API key.
+    Now click the "OPEN AUTH PAGE" button and follow instructions.</string>
+
 </resources>
