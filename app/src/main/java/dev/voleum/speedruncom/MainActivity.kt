@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(),
         BaseFragment.newInstance(R.layout.content_home, R.id.toolbar_home, R.id.nav_host_home),
         BaseFragment.newInstance(R.layout.content_search, R.id.toolbar_search, R.id.nav_host_search),
         BaseFragment.newInstance(R.layout.content_games, R.id.toolbar_games, R.id.nav_host_games),
+        BaseFragment.newInstance(R.layout.content_notifications, R.id.toolbar_notifications, R.id.nav_host_notifications),
         BaseFragment.newInstance(R.layout.content_profile, R.id.toolbar_profile, R.id.nav_host_profile)
     )
 
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity(),
         0 to R.id.navigation_home,
         1 to R.id.navigation_search,
         2 to R.id.navigation_games,
-        3 to R.id.navigation_profile
+        3 to R.id.navigation_notifications,
+        4 to R.id.navigation_profile
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
