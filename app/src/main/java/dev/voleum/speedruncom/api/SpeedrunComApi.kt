@@ -97,6 +97,19 @@ interface SpeedrunComApi {
                                   @Query("embed") embed: String): Call<DataLeaderboardEmbed>
 
     /**
+     * This will retrieve the notifications for the currently authenticated user.
+     */
+    @GET("notifications")
+    fun notifications(@Header("X-API-Key") key: String): Call<NotificationList>
+
+    /**
+     * This will retrieve the notifications for the currently authenticated user using pagination.
+     */
+    @GET("notifications")
+    fun notifications(@Header("X-API-Key") key: String,
+                      @Query("offset") offset: Int): Call<NotificationList>
+
+    /**
      * This will retrieve a single platform, identified by its ID.
      */
     @GET("platforms/{id}")
