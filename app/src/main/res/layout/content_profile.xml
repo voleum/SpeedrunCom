@@ -4,20 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <include-->
-<!--        android:id="@+id/toolbar_more"-->
-<!--        layout="@layout/toolbar"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_profile"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_profile"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_profile"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <fragment
         android:id="@+id/nav_host_profile"
@@ -28,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_profile"
+        app:layout_constraintTop_toBottomOf="@id/appbar_profile"
         app:navGraph="@navigation/nav_graph_profile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
