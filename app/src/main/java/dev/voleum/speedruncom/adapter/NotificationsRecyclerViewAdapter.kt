@@ -31,6 +31,11 @@ class NotificationsRecyclerViewAdapter :
     override fun getItemId(position: Int): Long =
         items[position].hashCode().toLong()
 
+    fun addItems(items: List<Notification>, positionStart: Int, itemCount: Int) {
+        this.items.addAll(items)
+        notifyItemRangeInserted(positionStart, itemCount)
+    }
+
     fun replaceItems(items: List<Notification>) {
         this.items.clear()
         this.items.addAll(items)

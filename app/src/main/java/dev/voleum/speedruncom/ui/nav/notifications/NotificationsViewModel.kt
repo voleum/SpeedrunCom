@@ -8,6 +8,7 @@ import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.decrypt
 import dev.voleum.speedruncom.model.Notification
 import dev.voleum.speedruncom.model.NotificationList
+import dev.voleum.speedruncom.model.Pagination
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,6 +22,8 @@ class NotificationsViewModel : ViewModelObservable() {
     lateinit var apiKeyEncrypted: String
 
     var isLoaded = false
+
+    lateinit var pagination: Pagination
 
     var adapter = NotificationsRecyclerViewAdapter()
         @Bindable get
@@ -44,6 +47,7 @@ class NotificationsViewModel : ViewModelObservable() {
                 ) {
                     try {
                         adapter.replaceItems(response.body()!!.data)
+                        pagination = response.body()!!.pagination
                         isLoaded = true
                         it.resume(Unit)
                     }
@@ -57,5 +61,30 @@ class NotificationsViewModel : ViewModelObservable() {
                 }
             })
         }
+    }
+
+    fun loadMore() {
+        API.notifications(String(decrypt(apiKeyEncrypted)),
+            pagination.offset + pagination.size).enqueue(object : Callback<NotificationList> {
+
+            override fun onResponse(
+                call: Call<NotificationList>,
+                response: Response<NotificationList>
+            ) {
+                try {
+                    pagination = response.body()!!.pagination
+                    adapter.addItems(response.body()!!.data, pagination.offset, pagination.size)
+                }
+                catch (e: Exception) {
+                    onFailure(call, e)
+                }
+            }
+
+            override fun onFailure(call: Call<NotificationList>, t: Throwable) {
+                t.stackTrace
+                t.message
+                //TODO: do something
+            }
+        })
     }
 }

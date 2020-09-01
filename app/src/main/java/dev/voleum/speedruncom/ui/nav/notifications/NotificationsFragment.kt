@@ -2,6 +2,7 @@ package dev.voleum.speedruncom.ui.nav.notifications
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentNotificationsBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
@@ -51,6 +54,15 @@ class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentN
             recyclerView.context,
             layoutManager.orientation
         ))
+
+        val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                Log.d("tag", "onScrolled()")
+                viewModel.loadMore()
+            }
+        }
+        recyclerView.addOnScrollListener(onScrollListener)
 
         if (!viewModel.isLoaded) load()
 
