@@ -5,17 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentRunBinding
-import dev.voleum.speedruncom.enum.States
 import dev.voleum.speedruncom.ui.AbstractFragment
-import kotlinx.android.synthetic.main.fragment_tab_games.*
+import kotlinx.coroutines.*
 
 class RunFragment : AbstractFragment<RunViewModel, FragmentRunBinding>() {
+
+    val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+
+    }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,34 +41,13 @@ class RunFragment : AbstractFragment<RunViewModel, FragmentRunBinding>() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
-        checkData()
+        if (!viewModel.isLoaded) load()
         return binding.root
     }
 
-    private fun checkData() {
-//        if (view == null) return
-
-        when (viewModel.state) {
-            States.CREATED -> {
-                viewModel.setListener { checkData() }
-                viewModel.load()
-            }
-            States.PROGRESS -> {
-                viewModel.setListener { checkData() }
-            }
-            States.ERROR -> {
-                viewModel.setListener { checkData() }
-//                swipeRefreshLayout.isRefreshing = false
-                Snackbar.make(games_swipe_refresh_layout, "Unable to load", Snackbar.LENGTH_LONG)
-                    .setAction("Retry") {
-                        viewModel.state = States.PROGRESS
-                        viewModel.load()
-                    }
-                    .show()
-            }
-            States.LOADED -> {
-
-            }
+    private fun load() {
+        scope.launch {
+            viewModel.load()
         }
     }
 }

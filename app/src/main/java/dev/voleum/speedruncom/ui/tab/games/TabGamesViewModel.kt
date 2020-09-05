@@ -1,6 +1,5 @@
 package dev.voleum.speedruncom.ui.tab.games
 
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +9,7 @@ import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.model.GameList
 import dev.voleum.speedruncom.model.Pagination
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +17,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-open class TabGamesViewModel : ViewModelObservable() {
+open class TabGamesViewModel : AbstractViewModel() {
 
     companion object {
         @JvmStatic
@@ -31,9 +30,6 @@ open class TabGamesViewModel : ViewModelObservable() {
             }
         }
     }
-
-    var isLoaded = false
-        @Bindable get
 
     lateinit var pagination: Pagination
 

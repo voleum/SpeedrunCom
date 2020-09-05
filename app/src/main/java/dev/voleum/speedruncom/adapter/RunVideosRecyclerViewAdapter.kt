@@ -49,7 +49,7 @@ class RunVideosRecyclerViewAdapter : RecyclerView.Adapter<RunVideosRecyclerViewA
     fun replaceItems(items: List<Link>) {
         this.items.clear()
         this.items.addAll(items)
-//        notifyDataSetChanged()
+        notifyDataSetChanged()
     }
 
     fun getYouTubeVideoId(link: String): String {

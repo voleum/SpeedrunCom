@@ -28,9 +28,9 @@
     <dev.voleum.speedruncom.ui.NonSwipingViewPager
         android:id="@+id/main_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_anchor="@id/main_pager"
-        app:layout_anchorGravity="top"/>
+        android:layout_height="wrap_content"
+        app:layout_anchorGravity="top"
+        app:layout_anchor="@id/nav_view"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

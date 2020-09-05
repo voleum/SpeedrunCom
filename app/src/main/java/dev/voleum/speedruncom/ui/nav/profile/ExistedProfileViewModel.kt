@@ -4,7 +4,7 @@ import androidx.databinding.Bindable
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.DataUser
 import dev.voleum.speedruncom.model.User
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,9 +12,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class ExistedProfileViewModel : ViewModelObservable() {
-
-    var isLoaded = false
+class ExistedProfileViewModel : AbstractViewModel() {
 
     var user: User? = null
         @Bindable get

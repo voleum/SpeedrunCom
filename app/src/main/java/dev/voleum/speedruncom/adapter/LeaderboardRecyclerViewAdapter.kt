@@ -20,6 +20,7 @@ import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.LeaderboardEmbed
 import dev.voleum.speedruncom.ui.screen.LeaderboardItemViewModel
+import kotlin.time.ExperimentalTime
 
 class LeaderboardRecyclerViewAdapter :
     RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.LeaderboardViewHolder>() {
@@ -72,10 +73,12 @@ class LeaderboardRecyclerViewAdapter :
         private val flag: AppCompatImageView =
             binding.root.findViewById(R.id.holder_leaderboard_flag)
 
+        @OptIn(ExperimentalTime::class)
         fun bind(position: Int) {
 
             val viewModel =
                 LeaderboardItemViewModel(
+                    leaderboard!!.game.data.ruleset,
                     leaderboard!!.runs[position],
                     leaderboard!!.players.data.find {
                         it.id == leaderboard!!.runs[position].run.players[0].id

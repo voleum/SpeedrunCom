@@ -2,12 +2,22 @@ package dev.voleum.speedruncom.ui.screen
 
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.enum.PlayerTypes
+import dev.voleum.speedruncom.model.GameRuleset
 import dev.voleum.speedruncom.model.RunLeaderboard
 import dev.voleum.speedruncom.model.User
 import dev.voleum.speedruncom.ui.ViewModelObservable
-import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
+import kotlin.time.ExperimentalTime
+import kotlin.time.hours
+import kotlin.time.minutes
+import kotlin.time.seconds
 
-class LeaderboardItemViewModel(record: RunLeaderboard, val user: User?) : ViewModelObservable() {
+@ExperimentalTime
+class LeaderboardItemViewModel(
+    val ruleset: GameRuleset,
+    val record: RunLeaderboard,
+    val user: User?
+) : ViewModelObservable() {
 
     val placeValue = record.place
 
@@ -18,25 +28,34 @@ class LeaderboardItemViewModel(record: RunLeaderboard, val user: User?) : ViewMo
         @Bindable set
 
     var player: String =
+        //TODO multiply players
         if (record.run.players[0].rel == PlayerTypes.USER.type)
             user?.names?.international ?: record.run.players[0].id
-        else record.run.players[0].name //TODO: multiply players
+        else record.run.players[0].name
         @Bindable get
         @Bindable set
 
     var time: String =
+        //TODO multiply times maybe
         String.format(
             "%02d:%02d:%02d",
-            TimeUnit.SECONDS.toHours(record.run.times.primary_t.toLong()),
-            TimeUnit.SECONDS.toMinutes(record.run.times.primary_t.toLong()) -
-                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(record.run.times.primary_t.toLong())),
-            TimeUnit.SECONDS.toSeconds(record.run.times.primary_t.toLong()) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(record.run.times.primary_t.toLong()))
-        ) //TODO: multiply times maybe
+            record.run.times.primary_t.seconds.inHours.toInt(),
+            record.run.times.primary_t.seconds.inMinutes.toInt() -
+                    record.run.times.primary_t.seconds.inHours.toInt().hours.inMinutes.toInt(),
+            record.run.times.primary_t.toInt() -
+                    record.run.times.primary_t.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
+        ) + addMilliseconds()
         @Bindable get
         @Bindable set
 
     var date: String = record.run.date
         @Bindable get
         @Bindable set
+
+    private fun addMilliseconds() =
+        if (ruleset.showMilliseconds)
+            ".${((record.run.times.primary_t.seconds.inSeconds -
+                        record.run.times.primary_t.seconds.inSeconds.toInt())
+                            * 1000).roundToInt()}"
+        else ""
 }
