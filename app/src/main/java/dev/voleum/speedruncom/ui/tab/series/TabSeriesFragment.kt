@@ -18,6 +18,7 @@ import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeriesBinding>() {
@@ -74,7 +75,7 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
         recyclerView.itemAnimator!!.changeDuration = 0
         swipeRefreshLayout = binding.seriesSwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener { load() }
-        val fab = binding.gamesFab
+        val fab = requireActivity().main_fab
         fab.setOnClickListener { recyclerView.smoothScrollToPosition(0) }
 
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
