@@ -9,7 +9,7 @@ import dev.voleum.speedruncom.decrypt
 import dev.voleum.speedruncom.model.Notification
 import dev.voleum.speedruncom.model.NotificationList
 import dev.voleum.speedruncom.model.Pagination
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,11 +17,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class NotificationsViewModel : ViewModelObservable() {
+class NotificationsViewModel : AbstractViewModel() {
 
     lateinit var apiKeyEncrypted: String
-
-    var isLoaded = false
 
     lateinit var pagination: Pagination
 

@@ -1,6 +1,5 @@
 package dev.voleum.speedruncom.ui.tab.series
 
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +9,7 @@ import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Pagination
 import dev.voleum.speedruncom.model.Series
 import dev.voleum.speedruncom.model.SeriesList
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +17,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class TabSeriesViewModel : ViewModelObservable() {
+class TabSeriesViewModel : AbstractViewModel() {
 
     companion object {
         @JvmStatic
@@ -31,9 +30,6 @@ class TabSeriesViewModel : ViewModelObservable() {
             }
         }
     }
-
-    var isSeriesLoaded = false
-        @Bindable get
 
     lateinit var pagination: Pagination
 
@@ -51,8 +47,8 @@ class TabSeriesViewModel : ViewModelObservable() {
                     try {
                         adapter.replaceItems(response.body()!!.data)
                         pagination = response.body()!!.pagination
-                        isSeriesLoaded = true
-                        notifyPropertyChanged(BR.seriesLoaded)
+                        isLoaded = true
+                        notifyPropertyChanged(BR.loaded)
                         it.resume(Unit)
                     } catch (e: Exception) {
                         onFailure(call, e)

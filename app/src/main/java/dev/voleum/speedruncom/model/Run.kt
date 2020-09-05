@@ -12,7 +12,7 @@ data class Run(val id: String,
                val date: String,
                val submitted: String,
                val times: Times,
-               val gameSystem: GameSystem,
+               val system: GameSystem,
                val splits: Link,
                val values: Map<String, String>,
                val links: List<Link>)

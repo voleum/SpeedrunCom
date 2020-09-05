@@ -21,10 +21,7 @@ import kotlinx.coroutines.*
 class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentNotificationsBinding>() {
 
     val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
-//        Snackbar
-//            .make(binding.leaderboardRecyclerView, R.string.snackbar_unable_to_load, Snackbar.LENGTH_LONG)
-//            .setAction(R.string.snackbar_action_retry) { load() }
-//            .show()
+
     }
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)

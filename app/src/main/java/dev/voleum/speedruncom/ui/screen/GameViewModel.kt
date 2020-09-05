@@ -6,7 +6,7 @@ import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.CategoryEmbed
 import dev.voleum.speedruncom.model.DataGameEmbed
 import dev.voleum.speedruncom.model.GameEmbed
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,11 +14,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class GameViewModel : ViewModelObservable() {
+class GameViewModel : AbstractViewModel() {
 
     lateinit var id: String
-
-    var isLoaded = false
 
     val backgroundUrl: String
         get() = game?.assets?.background?.uri ?: ""

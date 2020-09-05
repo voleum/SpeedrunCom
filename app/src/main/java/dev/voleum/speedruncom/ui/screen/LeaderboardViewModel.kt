@@ -1,6 +1,5 @@
 package dev.voleum.speedruncom.ui.screen
 
-import android.util.Log
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +8,7 @@ import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.DataLeaderboardEmbed
 import dev.voleum.speedruncom.model.RunLeaderboard
-import dev.voleum.speedruncom.ui.ViewModelObservable
+import dev.voleum.speedruncom.ui.AbstractViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,7 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LeaderboardViewModel : ViewModelObservable() {
+class LeaderboardViewModel : AbstractViewModel() {
 
     companion object {
         @JvmStatic
@@ -30,8 +29,6 @@ class LeaderboardViewModel : ViewModelObservable() {
     lateinit var variableId: String
     lateinit var subcategoryId: String
     lateinit var trophyAssets: Assets
-
-    var isLoaded = false
 
     var adapter = LeaderboardRecyclerViewAdapter()
         @Bindable get
@@ -47,15 +44,21 @@ class LeaderboardViewModel : ViewModelObservable() {
 
     suspend fun load() {
         suspendCoroutine<Unit> {
-            API.leaderboardsCategoryEmbed(gameId, categoryId, getSubcategoryQueryMap(), "players").enqueue(object : Callback<DataLeaderboardEmbed> {
+
+            API.leaderboardsCategoryEmbed(
+                gameId,
+                categoryId,
+                getSubcategoryQueryMap(),
+                "game,players"
+            ).enqueue(object : Callback<DataLeaderboardEmbed> {
 
                 override fun onResponse(call: Call<DataLeaderboardEmbed>, response: Response<DataLeaderboardEmbed>) {
                     try {
                         adapter.leaderboard = response.body()!!.data
                         adapter.trophyAssets = trophyAssets
                         data = adapter.leaderboard!!.runs
-                        notifyChange()
                         isLoaded = true
+                        notifyChange()
                         it.resume(Unit)
                     } catch (e: Exception) {
                         onFailure(call, e)
@@ -64,7 +67,6 @@ class LeaderboardViewModel : ViewModelObservable() {
 
                 override fun onFailure(call: Call<DataLeaderboardEmbed>, t: Throwable) {
                     t.stackTrace
-                    t.message
                     it.resumeWithException(t)
                 }
             })

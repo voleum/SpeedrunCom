@@ -42,7 +42,7 @@ class NotificationsRecyclerViewAdapter :
         notifyDataSetChanged()
     }
 
-    inner class NotificationViewHolder(var view: View) :
+    inner class NotificationViewHolder(val view: View) :
         RecyclerView.ViewHolder(view) {
 
         fun bind(position: Int) {

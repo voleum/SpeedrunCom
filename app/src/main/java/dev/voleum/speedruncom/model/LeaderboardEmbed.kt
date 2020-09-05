@@ -3,7 +3,7 @@ package dev.voleum.speedruncom.model
 import com.google.gson.annotations.SerializedName
 
 data class LeaderboardEmbed(val weblink: String,
-                            val game: String,
+                            val game: DataGame,
                             val category: String,
                             val level: String,
                             val platform: String,
