@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class PlayerUserGuest(val rel: String,
-                           val id: String,
-                           val names: Names,
+                           val id: String?,
+                           val name: String?,
+                           val names: Names?,
                            val weblink: String,
                            @SerializedName("name-style") val nameStyle: NameStyle,
                            val role: String,

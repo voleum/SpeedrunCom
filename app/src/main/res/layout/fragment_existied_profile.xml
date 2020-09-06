@@ -17,7 +17,7 @@
             android:id="@+id/profile_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:padding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -28,14 +28,26 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.name}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/profile_flag"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toStartOf="@id/button_logout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/button_logout"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_exit_to_app_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -78,32 +90,6 @@
             android:text="@{viewModel.speedrunsliveLink}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/profile_country"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="@{viewModel.country}"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/profile_header"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/profile_region"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="@{viewModel.region}"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/profile_country"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_logout"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_logout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
