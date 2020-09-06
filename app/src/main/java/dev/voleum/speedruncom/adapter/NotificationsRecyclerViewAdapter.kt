@@ -16,6 +16,7 @@ class NotificationsRecyclerViewAdapter :
         setHasStableIds(true)
     }
 
+    lateinit var onEntryClickListener: OnEntryClickListener
     val items = mutableListOf<Notification>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder =
@@ -45,6 +46,12 @@ class NotificationsRecyclerViewAdapter :
     inner class NotificationViewHolder(val view: View) :
         RecyclerView.ViewHolder(view) {
 
+        init {
+            itemView.setOnClickListener { v ->
+                onEntryClickListener.onEntryClick(v, layoutPosition)
+            }
+        }
+
         fun bind(position: Int) {
 //            binding.viewModel = NotificationsItemViewModel(items[position])
             val textView = view.holder_notification_text_view
@@ -59,5 +66,9 @@ class NotificationsRecyclerViewAdapter :
                         .replace("</span>", "</b>")
                 )
         }
+    }
+
+    interface OnEntryClickListener {
+        fun onEntryClick(view: View?, position: Int)
     }
 }
