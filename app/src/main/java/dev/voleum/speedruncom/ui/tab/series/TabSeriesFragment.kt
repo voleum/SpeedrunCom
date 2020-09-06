@@ -49,7 +49,7 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
                 false
             )
         binding.viewModel = viewModel
-        val root = binding.root
+
         val recyclerView = binding.seriesRecyclerView
 
         viewModel.adapter.onEntryClickListener =
@@ -89,7 +89,7 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
 
         if (!viewModel.isLoaded) load()
 
-        return root
+        return binding.root
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

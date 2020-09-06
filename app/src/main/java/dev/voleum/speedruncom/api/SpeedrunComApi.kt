@@ -37,7 +37,9 @@ interface SpeedrunComApi {
     @GET("games")
     fun games(@Query("offset") offset: Int): Call<GameList>
 
-
+    /**
+     *  This will return a list of all games by name.
+     */
     @GET("games")
     fun games(@Query("name") name: String): Call<GameList>
 
@@ -115,6 +117,9 @@ interface SpeedrunComApi {
     @GET("platforms/{id}")
     fun platform(@Path("id") id: String): Call<DataPlatform>
 
+    /**
+     * This will retrieve the current user.
+     * */
     @GET("profile")
     fun profile(@Header("X-API-Key") key: String): Call<DataUser>
 
@@ -131,6 +136,23 @@ interface SpeedrunComApi {
     fun runs(): Call<RunList>
 
     /**
+     * This will return a sorted list of all runs.
+     */
+    @GET("runs")
+    fun runsSorted(@Query("orderby") orderBy: String,
+                   @Query("direction") direction: String,
+                   @Query("embed") embed: String): Call<RunEmbedList>
+
+    /**
+     * This will return a sorted list of all runs using pagination.
+     */
+    @GET("runs")
+    fun runsSorted(@Query("orderby") orderBy: String,
+                   @Query("direction") direction: String,
+                   @Query("embed") embed: String,
+                   @Query("offset") offset: Int): Call<RunEmbedList>
+
+    /**
      * This will retrieve a single run, identified by its ID.
      */
     @GET("runs/{id}")
@@ -142,7 +164,9 @@ interface SpeedrunComApi {
     @GET("series")
     fun series(): Call<SeriesList>
 
-
+    /**
+     * This will return a list of all series by name.
+     */
     @GET("series")
     fun series(@Query("name") name: String): Call<SeriesList>
 
@@ -192,4 +216,7 @@ interface SpeedrunComApi {
      */
     @GET("categories/{category}/variables")
     fun variablesCategory(@Path("category") categoryId: String): Call<VariableList>
+
+//    @POST("runs")
+//    fun postRun(run: ): Call<>
 }

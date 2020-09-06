@@ -33,10 +33,7 @@ class LeaderboardRecyclerViewAdapter :
     lateinit var trophyAssets: Assets
     var leaderboard: LeaderboardEmbed? = null
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): LeaderboardRecyclerViewAdapter.LeaderboardViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeaderboardViewHolder =
         LeaderboardViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -46,14 +43,11 @@ class LeaderboardRecyclerViewAdapter :
             )
         )
 
-    override fun getItemCount(): Int = leaderboard?.runs?.size ?: 0
-
-    override fun onBindViewHolder(
-        holder: LeaderboardRecyclerViewAdapter.LeaderboardViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
         holder.bind(position)
     }
+
+    override fun getItemCount(): Int = leaderboard?.runs?.size ?: 0
 
     override fun getItemId(position: Int): Long =
         leaderboard!!.runs[position].hashCode().toLong()
@@ -62,16 +56,16 @@ class LeaderboardRecyclerViewAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener { v ->
+            itemView.setOnClickListener { v ->
                 onEntryClickListener.onEntryClick(v, layoutPosition)
             }
         }
 
         private val image: AppCompatImageView =
-            binding.root.findViewById(R.id.holder_leaderboard_image)
+            itemView.findViewById(R.id.holder_leaderboard_image)
 
         private val flag: AppCompatImageView =
-            binding.root.findViewById(R.id.holder_leaderboard_flag)
+            itemView.findViewById(R.id.holder_leaderboard_flag)
 
         @OptIn(ExperimentalTime::class)
         fun bind(position: Int) {
