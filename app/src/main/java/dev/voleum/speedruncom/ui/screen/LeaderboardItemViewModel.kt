@@ -35,6 +35,10 @@ class LeaderboardItemViewModel(
         @Bindable get
         @Bindable set
 
+    var date: String = record.run.date
+        @Bindable get
+        @Bindable set
+
     var time: String =
         //TODO multiply times maybe
         String.format(
@@ -45,10 +49,6 @@ class LeaderboardItemViewModel(
             record.run.times.primary_t.toInt() -
                     record.run.times.primary_t.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
         ) + addMilliseconds()
-        @Bindable get
-        @Bindable set
-
-    var date: String = record.run.date
         @Bindable get
         @Bindable set
 

@@ -70,12 +70,6 @@ class SearchRecyclerViewAdapter :
         return searchResult.getType(position)
     }
 
-//    fun replaceItems(items: List<Any>) {
-////        this.searchResult.clear()
-////        this.searchResult.addAll(items)
-//        notifyDataSetChanged()
-//    }
-
     fun clearResult() {
         searchResult.series.clear()
         searchResult.games.clear()
@@ -100,8 +94,8 @@ class SearchRecyclerViewAdapter :
             }
         }
 
-        private val image: AppCompatImageView =
-            binding.root.findViewById(R.id.holder_search_image)
+        private val cover: AppCompatImageView =
+            binding.root.findViewById(R.id.holder_search_cover)
 
         fun bind(position: Int) {
 
@@ -109,16 +103,16 @@ class SearchRecyclerViewAdapter :
                 SearchItemSeriesViewModel(searchResult[position] as Series)
             binding.viewModel = viewModel
 
-            loadImage(viewModel.imageAsset)
+            loadCover(viewModel.imageAsset)
         }
 
-        private fun loadImage(asset: Asset?) {
+        private fun loadCover(asset: Asset?) {
             if (asset != null) {
                 GlideApp.with(itemView)
                     .load(asset.uri)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .into(image)
+                    .into(cover)
             }
         }
 
@@ -133,8 +127,8 @@ class SearchRecyclerViewAdapter :
             }
         }
 
-        private val image: AppCompatImageView =
-            binding.root.findViewById(R.id.holder_search_image)
+        private val cover: AppCompatImageView =
+            binding.root.findViewById(R.id.holder_search_cover)
 
         fun bind(position: Int) {
 
@@ -142,16 +136,16 @@ class SearchRecyclerViewAdapter :
                 SearchItemGameViewModel(searchResult[position] as Game)
             binding.viewModel = viewModel
 
-            loadImage(viewModel.imageAsset)
+            loadCover(viewModel.imageAsset)
         }
 
-        private fun loadImage(asset: Asset?) {
+        private fun loadCover(asset: Asset?) {
             if (asset != null) {
                 GlideApp.with(itemView)
                     .load(asset.uri)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .into(image)
+                    .into(cover)
             }
         }
     }

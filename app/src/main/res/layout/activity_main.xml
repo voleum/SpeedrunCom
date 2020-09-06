@@ -29,8 +29,8 @@
         android:id="@+id/main_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_anchorGravity="top"
-        app:layout_anchor="@id/nav_view"/>
+        app:layout_anchor="@id/nav_view"
+        app:layout_anchorGravity="top" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+        android:visibility="gone"
         app:layout_anchor="@id/nav_view"
         app:layout_anchorGravity="top|end"
         app:useCompatPadding="true" />
