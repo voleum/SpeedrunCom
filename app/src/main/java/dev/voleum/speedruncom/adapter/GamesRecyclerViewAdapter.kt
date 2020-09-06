@@ -35,11 +35,11 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
             )
         )
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.bind(position)
     }
+
+    override fun getItemCount(): Int = items.size
 
     override fun getItemId(position: Int): Long =
         items[position].hashCode().toLong()
@@ -77,14 +77,16 @@ class GamesRecyclerViewAdapter : RecyclerView.Adapter<GamesRecyclerViewAdapter.G
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
 //                .transition(DrawableTransitionOptions.withCrossFade())
-                .transition(DrawableTransitionOptions.withCrossFade(
-                    DrawableCrossFadeFactory.Builder()
-                        .setCrossFadeEnabled(true)
-                        .build())
+                .transition(
+                    DrawableTransitionOptions.withCrossFade(
+                        DrawableCrossFadeFactory.Builder()
+                            .setCrossFadeEnabled(true)
+                            .build()
+                    )
                 )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-//                .centerCrop()
-                .dontTransform()
+                .centerCrop()
+//                .dontTransform()
                 .into(image)
     }
 

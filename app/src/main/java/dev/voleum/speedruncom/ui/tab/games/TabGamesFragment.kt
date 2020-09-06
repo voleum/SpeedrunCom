@@ -49,7 +49,7 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
                 false
             )
         binding.viewModel = viewModel
-        val root = binding.root
+
         val recyclerView = binding.gamesRecyclerView
 
         viewModel.adapter.onEntryClickListener =
@@ -89,7 +89,7 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
 
         if (!viewModel.isLoaded) load()
 
-        return root
+        return binding.root
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

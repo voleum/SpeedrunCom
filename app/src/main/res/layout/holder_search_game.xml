@@ -17,7 +17,7 @@
         android:padding="10dp">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/holder_search_image"
+            android:id="@+id/holder_search_cover"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
@@ -32,51 +32,8 @@
             android:layout_margin="5dp"
             android:text="@{viewModel.name}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/holder_search_image"
+            app:layout_constraintStart_toEndOf="@id/holder_search_cover"
             app:layout_constraintTop_toTopOf="parent" />
-
-<!--        <androidx.appcompat.widget.AppCompatImageView-->
-<!--            android:id="@+id/holder_leaderboard_flag"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:layout_margin="3dp"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/holder_leaderboard_player"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/holder_leaderboard_player"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textStyle="bold"-->
-<!--            android:text="@{viewModel.player}"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/holder_leaderboard_linear_time_date"-->
-<!--            app:layout_constraintStart_toEndOf="@id/holder_leaderboard_place"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/holder_leaderboard_linear_time_date"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="vertical"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/holder_leaderboard_time"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@{viewModel.time}" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/holder_leaderboard_date"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@{viewModel.date}" />-->
-
-<!--        </LinearLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

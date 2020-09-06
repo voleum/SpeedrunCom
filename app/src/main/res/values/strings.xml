@@ -8,6 +8,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_profile">Profile</string>
 
+    <string name="subtitle_latest_runs">Latest runs</string>
+
     <string name="snackbar_unable_to_load">Unable to load</string>
     <string name="snackbar_action_retry">Retry</string>
 
@@ -19,7 +21,9 @@
     <string name="text_input_edit_text_hint">Put your API key here</string>
 
     <string name="authentication_description_title">Login</string>
-    <string name="authentication_description_body">For authentication you have to login on the specific page on www.speedrun.com and copy&amp;paste your API key.
-    Now click the "OPEN AUTH PAGE" button and follow instructions.</string>
+    <string name="authentication_description_body">
+        For authentication you have to login on the specific page on www.speedrun.com and
+        copy&amp;paste your API key. Now click the "OPEN AUTH PAGE" button and follow instructions.
+    </string>
 
 </resources>

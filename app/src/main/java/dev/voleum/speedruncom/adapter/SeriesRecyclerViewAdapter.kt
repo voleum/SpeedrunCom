@@ -84,8 +84,8 @@ class SeriesRecyclerViewAdapter :
                         .build())
                 )
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-//                .centerCrop()
-                .dontTransform()
+                .centerCrop()
+//                .dontTransform()
                 .into(image)
     }
 
