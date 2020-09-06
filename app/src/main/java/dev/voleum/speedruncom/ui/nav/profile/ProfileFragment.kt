@@ -29,22 +29,27 @@ class ProfileFragment : Fragment() {
             transaction.add(R.id.profile_container, ExistedProfileFragment::class.java, bundle)
         }
         else {
-            childFragmentManager.setFragmentResultListener("profile", this) { key, bundle ->
-                run {
-                    childFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.profile_container,
-                            ExistedProfileFragment::class.java,
-                            bundle
-                        )
-                        .commit()
-                }
-            }
             transaction.add(R.id.profile_container, AuthFragment())
         }
 
         transaction.commit()
 
+        setFragmentResultListener()
+
         return root
+    }
+
+    fun setFragmentResultListener() {
+        childFragmentManager.setFragmentResultListener("profile", this) { key, bundle ->
+            run {
+                childFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.profile_container,
+                        ExistedProfileFragment::class.java,
+                        bundle
+                    )
+                    .commit()
+            }
+        }
     }
 }

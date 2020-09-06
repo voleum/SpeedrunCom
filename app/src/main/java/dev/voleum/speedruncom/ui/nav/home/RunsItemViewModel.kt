@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.ui.nav.home
 
 import androidx.databinding.Bindable
+import dev.voleum.speedruncom.enum.PlayerTypes
 import dev.voleum.speedruncom.model.RunEmbed
 import dev.voleum.speedruncom.ui.ViewModelObservable
 import kotlin.math.roundToInt
@@ -20,7 +21,9 @@ class RunsItemViewModel(val run: RunEmbed) : ViewModelObservable() {
 
     var player: String =
         //TODO multiply players
-        run.players.data[0].names.international
+        if (run.players.data[0].rel == PlayerTypes.USER.type)
+            run.players.data[0].names?.international ?: ""
+        else run.players.data[0].name ?: ""
         @Bindable get
 
     var date: String = run.date

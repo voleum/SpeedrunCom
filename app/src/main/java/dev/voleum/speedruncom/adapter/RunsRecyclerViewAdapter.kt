@@ -60,7 +60,8 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
         notifyDataSetChanged()
     }
 
-    inner class RunViewHolder(val binding: HolderRunBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RunViewHolder(val binding: HolderRunBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener { v ->
@@ -82,28 +83,30 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
             loadCover(viewModel.run.game.data.assets.coverMedium)
 
             val player = viewModel.run.players.data[0]
-            when (player.nameStyle.style) {
-                UserNameStyles.SOLID.style -> binding.holderRunPlayer.setTextColor(
-                    Color.parseColor(player.nameStyle.color.light)
-                )
-                UserNameStyles.GRADIENT.style -> {
-                    val tileMode = Shader.TileMode.CLAMP
-                    val linearGradient = LinearGradient(
-                        0.0F,
-                        0.0F,
-                        binding.holderRunPlayer.width.toFloat(),
-                        binding.holderRunPlayer.textSize,
-                        Color.parseColor(player.nameStyle.colorFrom.light),
-                        Color.parseColor(player.nameStyle.colorTo.light),
-                        tileMode
+            if (player.rel == "user") {
+                when (player.nameStyle.style) {
+                    UserNameStyles.SOLID.style -> binding.holderRunPlayer.setTextColor(
+                        Color.parseColor(player.nameStyle.color.light)
                     )
-                    binding.holderRunPlayer.paint.shader = linearGradient
+                    UserNameStyles.GRADIENT.style -> {
+                        val tileMode = Shader.TileMode.CLAMP
+                        val linearGradient = LinearGradient(
+                            0.0F,
+                            0.0F,
+                            binding.holderRunPlayer.width.toFloat(),
+                            binding.holderRunPlayer.textSize,
+                            Color.parseColor(player.nameStyle.colorFrom.light),
+                            Color.parseColor(player.nameStyle.colorTo.light),
+                            tileMode
+                        )
+                        binding.holderRunPlayer.paint.shader = linearGradient
+                    }
                 }
-            }
 
-            val countryCode = player.location?.country?.code ?: ""
-            if (countryCode.isNotEmpty())
-                setFlag(countryCode)
+                val countryCode = player.location?.country?.code ?: ""
+                if (countryCode.isNotEmpty())
+                    setFlag(countryCode)
+            }
         }
 
         private fun loadCover(asset: Asset?) {
