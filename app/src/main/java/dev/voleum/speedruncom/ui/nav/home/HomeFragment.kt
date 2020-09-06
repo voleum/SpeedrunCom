@@ -1,31 +1,83 @@
 package dev.voleum.speedruncom.ui.nav.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
 import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.adapter.RunsRecyclerViewAdapter
+import dev.voleum.speedruncom.databinding.FragmentHomeBinding
+import dev.voleum.speedruncom.ui.AbstractFragment
+import kotlinx.coroutines.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : AbstractFragment<HomeViewModel, FragmentHomeBinding>() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+
+    }
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + handler)
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_home,
+            container,
+            false
+        )
+        binding.viewModel = viewModel
+
+        val recyclerView = binding.homeLatestRunsRecyclerView
+
+        viewModel.adapter.onEntryClickListener =
+            object : RunsRecyclerViewAdapter.OnEntryClickListener {
+                override fun onEntryClick(view: View?, position: Int) {
+                    val bundle = Bundle().apply {
+                        putString("run", viewModel.data[position].id)
+                    }
+                    findNavController().navigate(R.id.action_run, bundle)
+                }
+            }
+
+        val layoutManager = LinearLayoutManager(requireContext())
+
+        recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+            recyclerView.context,
+            layoutManager.orientation
+        )
+        )
+        recyclerView.setHasFixedSize(true)
+
+        val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
+
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                Log.d("tag", "onScrolled()")
+                viewModel.loadMore()
+            }
+        }
+        recyclerView.addOnScrollListener(onScrollListener)
+
+        if (!viewModel.isLoaded) load()
+
+        return binding.root
+    }
+
+    fun load() {
+        scope.launch { viewModel.load() }
     }
 }
