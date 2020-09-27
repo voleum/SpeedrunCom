@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dev.voleum.speedruncom.API_KEY_ENCRYPTED_PREF_NAME
 import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.STRING_KEY_API_KEY
 
 class ProfileFragment : Fragment() {
 
@@ -25,7 +26,7 @@ class ProfileFragment : Fragment() {
         if (sharedPreferences.contains(API_KEY_ENCRYPTED_PREF_NAME)) {
             val apiKey = sharedPreferences.getString(API_KEY_ENCRYPTED_PREF_NAME, "")
             val bundle = Bundle()
-            bundle.putString("api_key", apiKey)
+            bundle.putString(STRING_KEY_API_KEY, apiKey)
             transaction.add(R.id.profile_container, ExistedProfileFragment::class.java, bundle)
         }
         else {

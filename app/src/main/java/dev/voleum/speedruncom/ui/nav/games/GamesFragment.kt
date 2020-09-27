@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GamesViewPagerAdapter
+import dev.voleum.speedruncom.adapter.viewpager.GamesViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_games.view.*
 
 class GamesFragment : Fragment() {

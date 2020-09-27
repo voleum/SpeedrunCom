@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.voleum.speedruncom.STRING_KEY_RUN
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.databinding.FragmentRunBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
@@ -27,7 +28,7 @@ class RunFragment : AbstractFragment<RunViewModel, FragmentRunBinding>() {
     ): View? {
         viewModel = ViewModelProvider(this).get(RunViewModel::class.java)
         arguments?.apply {
-            viewModel.id = getString("run", "")
+            viewModel.id = getString(STRING_KEY_RUN, "")
         }
         binding =
             DataBindingUtil.inflate(

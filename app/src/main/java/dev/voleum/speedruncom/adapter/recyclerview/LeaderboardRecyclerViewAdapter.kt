@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.recyclerview
 
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -97,10 +97,10 @@ class LeaderboardRecyclerViewAdapter :
                 else SpeedrunCom.instance.resources.getColor(R.color.colorPrimaryAlpha25)
             )
             when (viewModel.user?.nameStyle?.style) {
-                UserNameStyles.SOLID.style -> binding.holderLeaderboardPlayer.setTextColor(
+                UserNameStyles.SOLID.value -> binding.holderLeaderboardPlayer.setTextColor(
                     Color.parseColor(viewModel.user.nameStyle.color.light)
                 )
-                UserNameStyles.GRADIENT.style -> {
+                UserNameStyles.GRADIENT.value -> {
                     val tileMode = Shader.TileMode.CLAMP
                     val linearGradient = LinearGradient(
                         0.0F,

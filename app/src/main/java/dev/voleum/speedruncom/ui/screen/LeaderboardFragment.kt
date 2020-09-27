@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.LeaderboardRecyclerViewAdapter
+import dev.voleum.speedruncom.*
+import dev.voleum.speedruncom.adapter.recyclerview.LeaderboardRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentLeaderboardBinding
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.ui.AbstractFragment
@@ -39,11 +39,11 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
                 null,
                 false)
         arguments?.apply {
-            viewModel.gameId = getString("game", "")
-            viewModel.categoryId = getString("category", "")
-            viewModel.subcategoryId = getString("subcategory", "")
-            viewModel.variableId = getString("variable", "")
-            viewModel.trophyAssets = getSerializable("trophyAssets") as Assets
+            viewModel.gameId = getString(STRING_KEY_GAME, "")
+            viewModel.categoryId = getString(STRING_KEY_CATEGORY, "")
+            viewModel.subcategoryId = getString(STRING_KEY_SUBCATEGORY, "")
+            viewModel.variableId = getString(STRING_KEY_VARIABLE, "")
+            viewModel.trophyAssets = getSerializable(STRING_KEY_TROPHY_ASSETS) as Assets
         }
         binding.viewModel = viewModel
         val root = binding.root
@@ -54,7 +54,7 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
             object : LeaderboardRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("run", viewModel.data[position].run.id)
+                        putString(STRING_KEY_RUN, viewModel.data[position].run.id)
                     }
                     findNavController().navigate(R.id.action_run, bundle)
                 }

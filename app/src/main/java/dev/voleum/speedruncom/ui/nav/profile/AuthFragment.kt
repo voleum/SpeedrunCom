@@ -12,10 +12,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
-import dev.voleum.speedruncom.API_KEY_ENCRYPTED_PREF_NAME
-import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.*
 import dev.voleum.speedruncom.api.API
-import dev.voleum.speedruncom.encrypt
 import dev.voleum.speedruncom.model.DataUser
 import dev.voleum.speedruncom.model.User
 import kotlinx.android.synthetic.main.fragment_auth.view.*
@@ -31,7 +29,7 @@ import kotlin.coroutines.suspendCoroutine
 class AuthFragment : Fragment() {
 
     private val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.d("auth", "Exception: ${throwable.message}")
+        Log.d(LOG_TAG, "Exception: ${throwable.message}")
     }
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + handler)
@@ -64,7 +62,7 @@ class AuthFragment : Fragment() {
                 val authKey = root.auth_edit_text_key.text.toString()
                 val jobProfile = async { auth(authKey) }
                 val profile: User = jobProfile.await()
-                Log.d("auth", "User: ${profile.names.international}")
+                Log.d(LOG_TAG, "User: ${profile.names.international}")
                 val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
                 val encryptedApiKey = encrypt(authKey)
                 sharedPreferences
@@ -72,7 +70,7 @@ class AuthFragment : Fragment() {
                     .putString(API_KEY_ENCRYPTED_PREF_NAME, encryptedApiKey)
                     .apply()
                 val bundle = Bundle()
-                bundle.putString("api_key", encryptedApiKey)
+                bundle.putString(STRING_KEY_API_KEY, encryptedApiKey)
                 setFragmentResult("profile", bundle)
             }
         }

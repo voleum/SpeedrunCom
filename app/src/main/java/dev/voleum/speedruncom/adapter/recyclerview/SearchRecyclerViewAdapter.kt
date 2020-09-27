@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.recyclerview
 
 import android.view.LayoutInflater
 import android.view.View

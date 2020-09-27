@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
+import dev.voleum.speedruncom.STRING_KEY_GAME
+import dev.voleum.speedruncom.LOG_TAG
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentTabGamesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -56,7 +58,7 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("game", viewModel.data[position].id)
+                        putString(STRING_KEY_GAME, viewModel.data[position].id)
                     }
                     findNavController().navigate(R.id.action_game, bundle)
                 }
@@ -81,7 +83,7 @@ class TabGamesFragment : AbstractFragment<TabGamesViewModel, FragmentTabGamesBin
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                Log.d("tag", "onScrolled()")
+                Log.d(LOG_TAG, "onScrolled()")
                 viewModel.loadMore()
             }
         }

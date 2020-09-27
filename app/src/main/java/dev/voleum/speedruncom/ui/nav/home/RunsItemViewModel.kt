@@ -21,7 +21,7 @@ class RunsItemViewModel(val run: RunEmbed) : ViewModelObservable() {
 
     var player: String =
         //TODO multiply players
-        if (run.players.data[0].rel == PlayerTypes.USER.type)
+        if (run.players.data[0].rel == PlayerTypes.USER.value)
             run.players.data[0].names?.international ?: ""
         else run.players.data[0].name ?: ""
         @Bindable get

@@ -29,7 +29,7 @@ class LeaderboardItemViewModel(
 
     var player: String =
         //TODO multiply players
-        if (record.run.players[0].rel == PlayerTypes.USER.type)
+        if (record.run.players[0].rel == PlayerTypes.USER.value)
             user?.names?.international ?: record.run.players[0].id
         else record.run.players[0].name
         @Bindable get

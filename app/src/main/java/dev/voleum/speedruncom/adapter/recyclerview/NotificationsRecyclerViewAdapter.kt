@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.recyclerview
 
 import android.text.Html
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.enum.NotificationStatuses
 import dev.voleum.speedruncom.model.Notification
 import kotlinx.android.synthetic.main.holder_notification.view.*
 
@@ -56,7 +57,7 @@ class NotificationsRecyclerViewAdapter :
 //            binding.viewModel = NotificationsItemViewModel(items[position])
             val textView = view.holder_notification_text_view
             textView.alpha =
-                if (items[position].status == "read") 0.5F
+                if (items[position].status == NotificationStatuses.READ.value) 0.5F
                 else 1.0F
             textView.text =
                 Html.fromHtml(
