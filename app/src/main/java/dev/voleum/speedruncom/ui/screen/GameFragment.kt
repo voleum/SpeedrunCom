@@ -13,8 +13,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dev.voleum.speedruncom.GlideApp
+import dev.voleum.speedruncom.STRING_KEY_GAME
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GameCategoriesViewPagerAdapter
+import dev.voleum.speedruncom.adapter.viewpager.GameCategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentGameBinding
 import dev.voleum.speedruncom.enum.RunTypes
 import dev.voleum.speedruncom.ui.AbstractFragment
@@ -40,7 +41,7 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
     ): View? {
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         arguments?.apply {
-            viewModel.id = getString("game", "")
+            viewModel.id = getString(STRING_KEY_GAME, "")
         }
         binding =
             DataBindingUtil.inflate(
@@ -69,7 +70,7 @@ class GameFragment : AbstractFragment<GameViewModel, FragmentGameBinding>() {
     private fun createAdapter() {
         val adapter = GameCategoriesViewPagerAdapter(
             this,
-            viewModel.categories.filter { it.type == RunTypes.PER_GAME.type },
+            viewModel.categories.filter { it.type == RunTypes.PER_GAME.value },
             viewModel.id,
             viewModel.trophyAssets
         )

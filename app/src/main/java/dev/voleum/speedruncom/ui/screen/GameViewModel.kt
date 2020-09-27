@@ -28,21 +28,18 @@ class GameViewModel : AbstractViewModel() {
         @Bindable get
         @Bindable set
 
-    var name: String = ""
+    val name: String
         @Bindable get() = game?.names?.international ?: ""
-        @Bindable set
 
-    var releaseDate: String = ""
+    val releaseDate: String
         @Bindable get() = game?.releaseDate ?: ""
-        @Bindable set
 
-    var platforms: String = ""
+    val platforms: String
         @Bindable get() {
             var platforms = ""
             game?.platforms?.data?.forEach { platforms += "${it.name}, " }
             return platforms.removeSuffix(", ")
         }
-        @Bindable set
 
     var categories: List<CategoryEmbed> = mutableListOf()
         @Bindable get() = game!!.categories.data

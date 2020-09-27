@@ -4,7 +4,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.BR
-import dev.voleum.speedruncom.adapter.RunVideosRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.RunVideosRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.DataRun
 import dev.voleum.speedruncom.model.Link

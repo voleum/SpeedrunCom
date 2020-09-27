@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
+import dev.voleum.speedruncom.STRING_KEY_CATEGORY
+import dev.voleum.speedruncom.STRING_KEY_GAME
+import dev.voleum.speedruncom.STRING_KEY_TROPHY_ASSETS
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GameSubcategoriesViewPagerAdapter
+import dev.voleum.speedruncom.adapter.viewpager.GameSubcategoriesViewPagerAdapter
 import dev.voleum.speedruncom.databinding.FragmentSubcategoriesBinding
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.CategoryEmbed
@@ -24,9 +27,9 @@ class GameSubcategoriesFragment :
     ): View? {
         viewModel = ViewModelProvider(this).get(GameSubategoriesViewModel::class.java)
         arguments?.apply {
-            viewModel.gameId = getString("game", "")
-            viewModel.category = getSerializable("category") as CategoryEmbed
-            viewModel.trophyAssets = getSerializable("trophyAssets") as Assets
+            viewModel.gameId = getString(STRING_KEY_GAME, "")
+            viewModel.category = getSerializable(STRING_KEY_CATEGORY) as CategoryEmbed
+            viewModel.trophyAssets = getSerializable(STRING_KEY_TROPHY_ASSETS) as Assets
         }
         binding =
             DataBindingUtil.inflate(

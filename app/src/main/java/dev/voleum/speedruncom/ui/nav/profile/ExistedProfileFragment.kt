@@ -63,7 +63,7 @@ class ExistedProfileFragment : AbstractFragment<ExistedProfileViewModel, Fragmen
 
     fun load() {
         scope.launch {
-            val apiKey = decrypt(requireArguments().getString("api_key", ""))
+            val apiKey = decrypt(requireArguments().getString(STRING_KEY_API_KEY, ""))
             val job = launch { viewModel.load(String(apiKey)) }
             job.join()
             loadFlag()

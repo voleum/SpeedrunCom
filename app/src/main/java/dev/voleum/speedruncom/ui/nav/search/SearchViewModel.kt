@@ -3,7 +3,7 @@ package dev.voleum.speedruncom.ui.nav.search
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.adapter.SearchRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.SearchRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.GameList
 import dev.voleum.speedruncom.model.SeriesList

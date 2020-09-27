@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

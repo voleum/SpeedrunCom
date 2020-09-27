@@ -3,7 +3,7 @@ package dev.voleum.speedruncom.ui.screen
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.adapter.LeaderboardRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.LeaderboardRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.model.DataLeaderboardEmbed

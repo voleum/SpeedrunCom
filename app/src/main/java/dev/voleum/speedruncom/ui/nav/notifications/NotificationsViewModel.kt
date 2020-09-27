@@ -3,7 +3,7 @@ package dev.voleum.speedruncom.ui.nav.notifications
 import android.content.SharedPreferences
 import androidx.databinding.Bindable
 import dev.voleum.speedruncom.API_KEY_ENCRYPTED_PREF_NAME
-import dev.voleum.speedruncom.adapter.NotificationsRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.NotificationsRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.decrypt
 import dev.voleum.speedruncom.model.Notification

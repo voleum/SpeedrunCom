@@ -16,9 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
-import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.NotificationsRecyclerViewAdapter
+import dev.voleum.speedruncom.*
+import dev.voleum.speedruncom.adapter.recyclerview.NotificationsRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentNotificationsBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,23 +54,23 @@ class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentN
             object : NotificationsRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     when (viewModel.adapter.items[position].item.rel) {
-                        "run" -> {
-                            val link = viewModel.data[position].links.find { it.rel == "run" }
+                        STRING_KEY_RUN -> {
+                            val link = viewModel.data[position].links.find { it.rel == STRING_KEY_RUN }
                             val id = link?.uri?.substringAfterLast("https://www.speedrun.com/api/v1/runs/") ?: ""
                             val bundle = Bundle().apply {
-                                putString("run", id)
+                                putString(STRING_KEY_RUN, id)
                             }
                             findNavController().navigate(R.id.action_run, bundle)
                         }
-                        "game" -> {
-                            val link = viewModel.data[position].links.find { it.rel == "game" }
+                        STRING_KEY_GAME -> {
+                            val link = viewModel.data[position].links.find { it.rel == STRING_KEY_GAME }
                             val id = link?.uri?.substringAfterLast("https://www.speedrun.com/api/v1/games/") ?: ""
                             val bundle = Bundle().apply {
-                                putString("game", id)
+                                putString(STRING_KEY_GAME, id)
                             }
                             findNavController().navigate(R.id.action_game, bundle)
                         }
-                        "post", "guide" -> {
+                        STRING_KEY_POST, STRING_KEY_GUIDE -> {
                             val customTabsIntent =
                                 CustomTabsIntent.Builder()
                                     .setToolbarColor(resources.getColor(R.color.colorPrimary))
@@ -100,7 +99,7 @@ class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentN
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                Log.d("tag", "onScrolled()")
+                Log.d(LOG_TAG, "onScrolled()")
                 viewModel.loadMore()
                 setBadge()
             }

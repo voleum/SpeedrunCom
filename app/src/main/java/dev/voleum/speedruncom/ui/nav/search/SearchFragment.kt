@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import dev.voleum.speedruncom.STRING_KEY_GAME
+import dev.voleum.speedruncom.STRING_KEY_SERIES
+import dev.voleum.speedruncom.LOG_TAG
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.SearchRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.SearchRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentSearchBinding
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.model.Series
@@ -66,13 +69,13 @@ class SearchFragment :
                     when (viewModel.adapter.searchResult.getType(position)) {
                         TYPE_SERIES -> {
                             val bundle = Bundle().apply {
-                                putString("series", (viewModel.data[position] as Series).id)
+                                putString(STRING_KEY_SERIES, (viewModel.data[position] as Series).id)
                             }
                             findNavController().navigate(R.id.action_series, bundle)
                         }
                         TYPE_GAME -> {
                             val bundle = Bundle().apply {
-                                putString("game", (viewModel.data[position] as Game).id)
+                                putString(STRING_KEY_GAME, (viewModel.data[position] as Game).id)
                             }
                             findNavController().navigate(R.id.action_game, bundle)
                         }
@@ -101,7 +104,7 @@ class SearchFragment :
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d("tag", "onQueryTextSubmit: $query")
+        Log.d(LOG_TAG, "onQueryTextSubmit: $query")
         viewModel.searchString = query!!
         search()
         val ime =
@@ -112,7 +115,7 @@ class SearchFragment :
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d("tag", "onQueryTextChange: $newText")
+        Log.d(LOG_TAG, "onQueryTextChange: $newText")
         return true
     }
 

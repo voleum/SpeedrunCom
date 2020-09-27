@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
-import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.GamesRecyclerViewAdapter
+import dev.voleum.speedruncom.*
+import dev.voleum.speedruncom.adapter.recyclerview.GamesRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,7 +41,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
     ): View? {
         viewModel = ViewModelProvider(this).get(GamesSeriesViewModel::class.java)
         arguments?.apply {
-            viewModel.seriesId = getString("series", "")
+            viewModel.seriesId = getString(STRING_KEY_SERIES, "")
         }
         binding =
             DataBindingUtil.inflate(
@@ -59,7 +58,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
             object : GamesRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("game", viewModel.data[position].id)
+                        putString(STRING_KEY_GAME, viewModel.data[position].id)
                     }
                     findNavController().navigate(R.id.action_game, bundle)
                 }
@@ -84,7 +83,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                Log.d("tag", "onScrolled()")
+                Log.d(LOG_TAG, "onScrolled()")
                 viewModel.loadMore()
             }
         }

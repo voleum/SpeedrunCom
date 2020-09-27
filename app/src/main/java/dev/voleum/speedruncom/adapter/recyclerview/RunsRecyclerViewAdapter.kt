@@ -1,4 +1,4 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.recyclerview
 
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -15,6 +15,7 @@ import dev.voleum.speedruncom.GlideApp
 import dev.voleum.speedruncom.R
 import dev.voleum.speedruncom.SpeedrunCom
 import dev.voleum.speedruncom.databinding.HolderRunBinding
+import dev.voleum.speedruncom.enum.PlayerTypes
 import dev.voleum.speedruncom.enum.UserNameStyles
 import dev.voleum.speedruncom.model.Asset
 import dev.voleum.speedruncom.model.RunEmbed
@@ -83,12 +84,12 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
             loadCover(viewModel.run.game.data.assets.coverMedium)
 
             val player = viewModel.run.players.data[0]
-            if (player.rel == "user") {
+            if (player.rel == PlayerTypes.USER.value) {
                 when (player.nameStyle.style) {
-                    UserNameStyles.SOLID.style -> binding.holderRunPlayer.setTextColor(
+                    UserNameStyles.SOLID.value -> binding.holderRunPlayer.setTextColor(
                         Color.parseColor(player.nameStyle.color.light)
                     )
-                    UserNameStyles.GRADIENT.style -> {
+                    UserNameStyles.GRADIENT.value -> {
                         val tileMode = Shader.TileMode.CLAMP
                         val linearGradient = LinearGradient(
                             0.0F,

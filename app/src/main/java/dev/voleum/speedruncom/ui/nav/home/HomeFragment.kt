@@ -11,9 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
-import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.RunsRecyclerViewAdapter
+import dev.voleum.speedruncom.*
+import dev.voleum.speedruncom.adapter.recyclerview.RunsRecyclerViewAdapter
 import dev.voleum.speedruncom.databinding.FragmentHomeBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.coroutines.*
@@ -46,7 +45,7 @@ class HomeFragment : AbstractFragment<HomeViewModel, FragmentHomeBinding>() {
             object : RunsRecyclerViewAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
-                        putString("run", viewModel.data[position].id)
+                        putString(STRING_KEY_RUN, viewModel.data[position].id)
                     }
                     findNavController().navigate(R.id.action_run, bundle)
                 }
@@ -66,7 +65,7 @@ class HomeFragment : AbstractFragment<HomeViewModel, FragmentHomeBinding>() {
         val onScrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                Log.d("tag", "onScrolled()")
+                Log.d(LOG_TAG, "onScrolled()")
                 viewModel.loadMore()
             }
         }

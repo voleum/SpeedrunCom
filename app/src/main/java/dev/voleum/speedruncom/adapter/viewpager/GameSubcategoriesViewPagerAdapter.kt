@@ -1,8 +1,9 @@
-package dev.voleum.speedruncom.adapter
+package dev.voleum.speedruncom.adapter.viewpager
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import dev.voleum.speedruncom.*
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.ui.screen.GameSubcategoriesFragment
 import dev.voleum.speedruncom.ui.screen.LeaderboardFragment
@@ -19,11 +20,11 @@ class GameSubcategoriesViewPagerAdapter(fragment: GameSubcategoriesFragment,
     override fun createFragment(position: Int): Fragment =
         LeaderboardFragment().apply {
             arguments = Bundle().apply {
-                putString("game", gameId)
-                putString("category", categoryId)
-                putString("variable", variableId)
-                putString("subcategory", subcategoriesIds[position])
-                putSerializable("trophyAssets", trophyAssets)
+                putString(STRING_KEY_GAME, gameId)
+                putString(STRING_KEY_CATEGORY, categoryId)
+                putString(STRING_KEY_VARIABLE, variableId)
+                putString(STRING_KEY_SUBCATEGORY, subcategoriesIds[position])
+                putSerializable(STRING_KEY_TROPHY_ASSETS, trophyAssets)
             }
         }
 }

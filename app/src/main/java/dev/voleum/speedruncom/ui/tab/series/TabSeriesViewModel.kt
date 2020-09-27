@@ -4,7 +4,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.BR
-import dev.voleum.speedruncom.adapter.SeriesRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.SeriesRecyclerViewAdapter
 import dev.voleum.speedruncom.api.API
 import dev.voleum.speedruncom.model.Pagination
 import dev.voleum.speedruncom.model.Series
