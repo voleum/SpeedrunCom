@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.*
-import dev.voleum.speedruncom.adapter.recyclerview.GamesRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentGamesSeriesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,7 +55,7 @@ class GamesSeriesFragment : AbstractFragment<GamesSeriesViewModel, FragmentGames
         val recyclerView = binding.gamesRecyclerView
 
         viewModel.adapter.onEntryClickListener =
-            object : GamesRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
                         putString(STRING_KEY_GAME, viewModel.data[position].id)

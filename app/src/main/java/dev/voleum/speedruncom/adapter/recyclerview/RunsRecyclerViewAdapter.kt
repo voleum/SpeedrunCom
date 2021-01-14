@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -65,9 +64,7 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            itemView.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
         private val cover: AppCompatImageView =
@@ -105,8 +102,7 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
                 }
 
                 val countryCode = player.location?.country?.code ?: ""
-                if (countryCode.isNotEmpty())
-                    setFlag(countryCode)
+                if (countryCode.isNotEmpty()) setFlag(countryCode)
             }
         }
 
@@ -121,7 +117,7 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
             }
         }
 
-        fun setFlag(code: String) {
+        private fun setFlag(code: String) {
             GlideApp.with(itemView)
                 .load(
                     SpeedrunCom.instance.resources.getIdentifier(
@@ -132,9 +128,5 @@ class RunsRecyclerViewAdapter : RecyclerView.Adapter<RunsRecyclerViewAdapter.Run
                 )
                 .into(flag)
         }
-    }
-
-    interface OnEntryClickListener {
-        fun onEntryClick(view: View?, position: Int)
     }
 }

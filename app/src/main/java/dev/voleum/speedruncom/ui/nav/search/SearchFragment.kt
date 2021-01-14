@@ -13,11 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import dev.voleum.speedruncom.STRING_KEY_GAME
-import dev.voleum.speedruncom.STRING_KEY_SERIES
 import dev.voleum.speedruncom.LOG_TAG
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.recyclerview.SearchRecyclerViewAdapter
+import dev.voleum.speedruncom.STRING_KEY_GAME
+import dev.voleum.speedruncom.STRING_KEY_SERIES
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentSearchBinding
 import dev.voleum.speedruncom.model.Game
 import dev.voleum.speedruncom.model.Series
@@ -64,7 +64,7 @@ class SearchFragment :
         val recyclerView = binding.searchRecyclerView
 
         viewModel.adapter.onEntryClickListener =
-            object : SearchRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     when (viewModel.adapter.searchResult.getType(position)) {
                         TYPE_SERIES -> {

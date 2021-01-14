@@ -43,19 +43,19 @@ class LeaderboardItemViewModel(
         //TODO multiply times maybe
         String.format(
             "%02d:%02d:%02d",
-            record.run.times.primary_t.seconds.inHours.toInt(),
-            record.run.times.primary_t.seconds.inMinutes.toInt() -
-                    record.run.times.primary_t.seconds.inHours.toInt().hours.inMinutes.toInt(),
-            record.run.times.primary_t.toInt() -
-                    record.run.times.primary_t.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
+            record.run.times.primaryT.seconds.inHours.toInt(),
+            record.run.times.primaryT.seconds.inMinutes.toInt() -
+                    record.run.times.primaryT.seconds.inHours.toInt().hours.inMinutes.toInt(),
+            record.run.times.primaryT.toInt() -
+                    record.run.times.primaryT.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
         ) + addMilliseconds()
         @Bindable get
         @Bindable set
 
     private fun addMilliseconds() =
         if (ruleset.showMilliseconds)
-            ".${((record.run.times.primary_t.seconds.inSeconds -
-                        record.run.times.primary_t.seconds.inSeconds.toInt())
+            ".${((record.run.times.primaryT.seconds.inSeconds -
+                        record.run.times.primaryT.seconds.inSeconds.toInt())
                             * 1000).roundToInt()}"
         else ""
 }

@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -56,9 +55,7 @@ class LeaderboardRecyclerViewAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            itemView.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
         private val image: AppCompatImageView =
@@ -119,7 +116,7 @@ class LeaderboardRecyclerViewAdapter :
                 setFlag(countryCode)
         }
 
-        fun loadImage(asset: Asset?) {
+        private fun loadImage(asset: Asset?) {
             if (asset != null) {
                 GlideApp.with(itemView)
                     .load(asset.uri)
@@ -130,12 +127,12 @@ class LeaderboardRecyclerViewAdapter :
             }
         }
 
-        fun clearImage() {
+        private fun clearImage() {
             GlideApp.with(itemView)
                 .clear(image)
         }
 
-        fun setFlag(code: String) {
+        private fun setFlag(code: String) {
             GlideApp.with(itemView)
                 .load(
                     SpeedrunCom.instance.resources.getIdentifier(
@@ -146,9 +143,5 @@ class LeaderboardRecyclerViewAdapter :
                 )
                 .into(flag)
         }
-    }
-
-    interface OnEntryClickListener {
-        fun onEntryClick(view: View?, position: Int)
     }
 }

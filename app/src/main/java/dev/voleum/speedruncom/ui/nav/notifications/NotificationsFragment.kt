@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.*
-import dev.voleum.speedruncom.adapter.recyclerview.NotificationsRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentNotificationsBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,7 +51,7 @@ class NotificationsFragment : AbstractFragment<NotificationsViewModel, FragmentN
         val recyclerView = binding.notificationsRecyclerView
 
         viewModel.adapter.onEntryClickListener =
-            object : NotificationsRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     when (viewModel.adapter.items[position].item.rel) {
                         STRING_KEY_RUN -> {
