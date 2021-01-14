@@ -33,18 +33,18 @@ class RunsItemViewModel(val run: RunEmbed) : ViewModelObservable() {
         //TODO multiply times maybe
         String.format(
             "%02d:%02d:%02d",
-            run.times.primary_t.seconds.inHours.toInt(),
-            run.times.primary_t.seconds.inMinutes.toInt() -
-                    run.times.primary_t.seconds.inHours.toInt().hours.inMinutes.toInt(),
-            run.times.primary_t.toInt() -
-                    run.times.primary_t.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
+            run.times.primaryT.seconds.inHours.toInt(),
+            run.times.primaryT.seconds.inMinutes.toInt() -
+                    run.times.primaryT.seconds.inHours.toInt().hours.inMinutes.toInt(),
+            run.times.primaryT.toInt() -
+                    run.times.primaryT.toInt().seconds.inMinutes.toInt().minutes.inSeconds.toInt()
         ) + addMilliseconds()
         @Bindable get
 
     private fun addMilliseconds() =
         if (run.game.data.ruleset.showMilliseconds)
-            ".${((run.times.primary_t.seconds.inSeconds -
-                    run.times.primary_t.seconds.inSeconds.toInt())
+            ".${((run.times.primaryT.seconds.inSeconds -
+                    run.times.primaryT.seconds.inSeconds.toInt())
                     * 1000).roundToInt()}"
         else ""
 }

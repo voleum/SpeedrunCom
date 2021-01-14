@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
-import dev.voleum.speedruncom.STRING_KEY_SERIES
 import dev.voleum.speedruncom.LOG_TAG
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.adapter.recyclerview.SeriesRecyclerViewAdapter
+import dev.voleum.speedruncom.STRING_KEY_SERIES
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentTabSeriesBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,7 +55,7 @@ class TabSeriesFragment : AbstractFragment<TabSeriesViewModel, FragmentTabSeries
         val recyclerView = binding.seriesRecyclerView
 
         viewModel.adapter.onEntryClickListener =
-            object : SeriesRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
                         putString(STRING_KEY_SERIES, viewModel.data[position].id)

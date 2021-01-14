@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dev.voleum.speedruncom.*
-import dev.voleum.speedruncom.adapter.recyclerview.LeaderboardRecyclerViewAdapter
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentLeaderboardBinding
 import dev.voleum.speedruncom.model.Assets
 import dev.voleum.speedruncom.ui.AbstractFragment
@@ -51,7 +51,7 @@ class LeaderboardFragment : AbstractFragment<LeaderboardViewModel, FragmentLeade
         val layoutManager = LinearLayoutManager(context)
 
         viewModel.adapter.onEntryClickListener =
-            object : LeaderboardRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
                         putString(STRING_KEY_RUN, viewModel.data[position].run.id)

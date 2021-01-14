@@ -31,7 +31,7 @@ class SearchResult {
     }
 
     private fun indexToType(): Map<IntRange, Int> {
-        var next: Int
+        val next: Int
         val series = Pair(0 until this.series.size, TYPE_SERIES)
         next = series.first.last + 1
         val games = Pair(next until next + this.games.size, TYPE_GAME)

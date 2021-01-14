@@ -60,20 +60,17 @@ class SeriesRecyclerViewAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            binding.root.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
         private val image: AppCompatImageView = binding.root.findViewById(R.id.holder_series_image)
 
         fun bind(position: Int) {
-            binding.series =
-                SeriesItemViewModel(items[position])
+            binding.series = SeriesItemViewModel(items[position])
             loadImage((binding.series as SeriesItemViewModel).imageUrl)
         }
 
-        fun loadImage(url: String) =
+        private fun loadImage(url: String) =
             GlideApp.with(itemView)
                 .load(url)
                 .placeholder(R.drawable.ic_baseline_image_200)
@@ -87,9 +84,5 @@ class SeriesRecyclerViewAdapter :
                 .centerCrop()
 //                .dontTransform()
                 .into(image)
-    }
-
-    interface OnEntryClickListener {
-        fun onEntryClick(view: View?, position: Int)
     }
 }
