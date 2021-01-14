@@ -48,9 +48,7 @@ class NotificationsRecyclerViewAdapter :
         RecyclerView.ViewHolder(view) {
 
         init {
-            itemView.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            itemView.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
         fun bind(position: Int) {
@@ -67,9 +65,5 @@ class NotificationsRecyclerViewAdapter :
                         .replace("</span>", "</b>")
                 )
         }
-    }
-
-    interface OnEntryClickListener {
-        fun onEntryClick(view: View?, position: Int)
     }
 }

@@ -16,8 +16,7 @@ import dev.voleum.speedruncom.model.*
 import dev.voleum.speedruncom.ui.nav.search.SearchItemGameViewModel
 import dev.voleum.speedruncom.ui.nav.search.SearchItemSeriesViewModel
 
-class SearchRecyclerViewAdapter :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
         setHasStableIds(true)
@@ -40,6 +39,7 @@ class SearchRecyclerViewAdapter :
                         false
                     )
                 )
+            // TODO refactor else to TYPE_GAME
             else ->
                 SearchGameViewHolder(
                     DataBindingUtil.inflate(
@@ -89,20 +89,15 @@ class SearchRecyclerViewAdapter :
     inner class SearchSeriesViewHolder(val binding: HolderSearchSeriesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            binding.root.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
         private val cover: AppCompatImageView =
             binding.root.findViewById(R.id.holder_search_cover)
 
         fun bind(position: Int) {
-
-            val viewModel =
-                SearchItemSeriesViewModel(searchResult[position] as Series)
+            val viewModel = SearchItemSeriesViewModel(searchResult[position] as Series)
             binding.viewModel = viewModel
-
             loadCover(viewModel.imageAsset)
         }
 
@@ -122,20 +117,14 @@ class SearchRecyclerViewAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener { v ->
-                onEntryClickListener.onEntryClick(v, layoutPosition)
-            }
+            binding.root.setOnClickListener { onEntryClickListener.onEntryClick(it, layoutPosition) }
         }
 
-        private val cover: AppCompatImageView =
-            binding.root.findViewById(R.id.holder_search_cover)
+        private val cover: AppCompatImageView = binding.root.findViewById(R.id.holder_search_cover)
 
         fun bind(position: Int) {
-
-            val viewModel =
-                SearchItemGameViewModel(searchResult[position] as Game)
+            val viewModel = SearchItemGameViewModel(searchResult[position] as Game)
             binding.viewModel = viewModel
-
             loadCover(viewModel.imageAsset)
         }
 
@@ -148,9 +137,5 @@ class SearchRecyclerViewAdapter :
                     .into(cover)
             }
         }
-    }
-
-    interface OnEntryClickListener {
-        fun onEntryClick(view: View?, position: Int)
     }
 }

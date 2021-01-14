@@ -57,8 +57,10 @@ interface SpeedrunComApi {
      * When an abbreviation was found, the API will respond with a redirect the the ID-based URL.
      */
     @GET("games/{id}")
-    fun gameEmbed(@Path("id") id: String,
-                  @Query("embed") embed: String): Call<DataGameEmbed>
+    fun gameEmbed(
+        @Path("id") id: String,
+        @Query("embed") embed: String,
+    ): Call<DataGameEmbed>
 
 //    @GET("guests")
 //    fun guests(): Call<Guests>
@@ -75,17 +77,21 @@ interface SpeedrunComApi {
      * The game and category can be either IDs or the respective abbreviations.
      */
     @GET("leaderboards/{game}/category/{category}")
-    fun leaderboardsCategory(@Path("game") gameId: String,
-                             @Path("category") categoryId: String): Call<DataLeaderboard>
+    fun leaderboardsCategory(
+        @Path("game") gameId: String,
+        @Path("category") categoryId: String,
+    ): Call<DataLeaderboard>
 
     /**
      * This will return a full-game leaderboard with embedding related resources by variable parameter.
      * The game and category can be either IDs or the respective abbreviations.
      */
     @GET("leaderboards/{game}/category/{category}")
-    fun leaderboardsCategory(@Path("game") gameId: String,
-                             @Path("category") categoryId: String,
-                             @QueryMap variable: Map<String, String>?): Call<DataLeaderboard>
+    fun leaderboardsCategory(
+        @Path("game") gameId: String,
+        @Path("category") categoryId: String,
+        @QueryMap variable: Map<String, String>?,
+    ): Call<DataLeaderboard>
 
     /**
      * This will return a full-game leaderboard by variable parameter.
@@ -93,10 +99,12 @@ interface SpeedrunComApi {
      * The query string parameter named var-[variable ID here] for using the value ID as the value.
      */
     @GET("leaderboards/{game}/category/{category}")
-    fun leaderboardsCategoryEmbed(@Path("game") gameId: String,
-                                  @Path("category") categoryId: String,
-                                  @QueryMap variable: Map<String, String>?,
-                                  @Query("embed") embed: String): Call<DataLeaderboardEmbed>
+    fun leaderboardsCategoryEmbed(
+        @Path("game") gameId: String,
+        @Path("category") categoryId: String,
+        @QueryMap variable: Map<String, String>?,
+        @Query("embed") embed: String,
+    ): Call<DataLeaderboardEmbed>
 
     /**
      * This will retrieve the notifications for the currently authenticated user.
@@ -108,8 +116,10 @@ interface SpeedrunComApi {
      * This will retrieve the notifications for the currently authenticated user using pagination.
      */
     @GET("notifications")
-    fun notifications(@Header("X-API-Key") key: String,
-                      @Query("offset") offset: Int): Call<NotificationList>
+    fun notifications(
+        @Header("X-API-Key") key: String,
+        @Query("offset") offset: Int,
+    ): Call<NotificationList>
 
     /**
      * This will retrieve a single platform, identified by its ID.
@@ -139,23 +149,27 @@ interface SpeedrunComApi {
      * This will return a sorted list of all runs.
      */
     @GET("runs")
-    fun runsSorted(@Query("orderby") orderBy: String,
-                   @Query("direction") direction: String,
-                   @Query("embed") embed: String): Call<RunEmbedList>
+    fun runsSorted(
+        @Query("orderby") orderBy: String,
+        @Query("direction") direction: String,
+        @Query("embed") embed: String,
+    ): Call<RunEmbedList>
 
     /**
      * This will return a sorted list of all runs using pagination.
      */
     @GET("runs")
-    fun runsSorted(@Query("orderby") orderBy: String,
-                   @Query("direction") direction: String,
-                   @Query("embed") embed: String,
-                   @Query("offset") offset: Int): Call<RunEmbedList>
+    fun runsSorted(
+        @Query("orderby") orderBy: String,
+        @Query("direction") direction: String,
+        @Query("embed") embed: String,
+        @Query("offset") offset: Int,
+    ): Call<RunEmbedList>
 
     /**
      * This will retrieve a single run, identified by its ID.
      */
-    @GET("runs/{id}")
+    @GET("/runs/{id}")
     fun runs(@Path("id") id: String): Call<DataRun>
 
     /**
@@ -188,8 +202,10 @@ interface SpeedrunComApi {
      * Еhe ID can be either the actual series ID or its abbreviation.
      */
     @GET("series/{id}/games")
-    fun gamesSeries(@Path("id") id: String,
-                    @Query("offset") offset: Int): Call<GameList>
+    fun gamesSeries(
+        @Path("id") id: String,
+        @Query("offset") offset: Int,
+    ): Call<GameList>
 
     /**
      * This will return a list of users.

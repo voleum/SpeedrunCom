@@ -7,7 +7,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.recyclerview.widget.RecyclerView
 import dev.voleum.speedruncom.R
-import dev.voleum.speedruncom.WebViewClientModified
+//import dev.voleum.speedruncom.WebViewClientModified
 import dev.voleum.speedruncom.model.Link
 import kotlinx.android.synthetic.main.holder_run_video.view.*
 
@@ -68,12 +68,12 @@ class RunVideosRecyclerViewAdapter :
     //    inner class RunVideoViewHolder(val binding: HolderRunVideoBinding) : RecyclerView.ViewHolder(binding.root) {
     inner class RunVideoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val videoWeb: WebView = view.holder_run_web_view
+        private val videoWeb: WebView = view.holder_run_web_view
 
         init {
             videoWeb.settings.javaScriptEnabled = true
             videoWeb.webChromeClient = WebChromeClient()
-            videoWeb.webViewClient = WebViewClientModified()
+//            videoWeb.webViewClient = WebViewClientModified()
         }
 
         fun bind(position: Int) {
@@ -94,7 +94,7 @@ class RunVideosRecyclerViewAdapter :
             }
         }
 
-        fun loadData(src: String) {
+        private fun loadData(src: String) {
             videoWeb.loadData(
                 "<body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"$src\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>",
                 "text/html",

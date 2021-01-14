@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dev.voleum.speedruncom.databinding.ActivityMainBinding
 import dev.voleum.speedruncom.ui.BaseFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemReselectedListener {
 
     private val backStack = Stack<Int>()
+//    private lateinit var binding: ActivityMainBinding
 
     private val fragments = listOf(
         BaseFragment.newInstance(R.layout.content_home, R.id.toolbar_home, R.id.nav_host_home),
@@ -39,6 +41,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+//        binding = ActivityMainBinding.inflate(layoutInflater)
 //        main_pager.registerOnPageChangeCallback(OnPageChangeCallback())
         main_pager.addOnPageChangeListener(this)
         main_pager.adapter = MainViewPagerAdapter()

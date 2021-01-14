@@ -11,8 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dev.voleum.speedruncom.*
-import dev.voleum.speedruncom.adapter.recyclerview.RunsRecyclerViewAdapter
+import dev.voleum.speedruncom.EndlessRecyclerViewScrollListener
+import dev.voleum.speedruncom.LOG_TAG
+import dev.voleum.speedruncom.R
+import dev.voleum.speedruncom.STRING_KEY_RUN
+import dev.voleum.speedruncom.adapter.recyclerview.OnEntryClickListener
 import dev.voleum.speedruncom.databinding.FragmentHomeBinding
 import dev.voleum.speedruncom.ui.AbstractFragment
 import kotlinx.coroutines.*
@@ -42,7 +45,7 @@ class HomeFragment : AbstractFragment<HomeViewModel, FragmentHomeBinding>() {
         val recyclerView = binding.homeLatestRunsRecyclerView
 
         viewModel.adapter.onEntryClickListener =
-            object : RunsRecyclerViewAdapter.OnEntryClickListener {
+            object : OnEntryClickListener {
                 override fun onEntryClick(view: View?, position: Int) {
                     val bundle = Bundle().apply {
                         putString(STRING_KEY_RUN, viewModel.data[position].id)
