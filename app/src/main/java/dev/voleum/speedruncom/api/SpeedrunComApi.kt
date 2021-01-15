@@ -1,6 +1,7 @@
 package dev.voleum.speedruncom.api
 
 import dev.voleum.speedruncom.model.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -232,6 +233,10 @@ interface SpeedrunComApi {
      */
     @GET("categories/{category}/variables")
     fun variablesCategory(@Path("category") categoryId: String): Call<VariableList>
+
+    @POST("auth")
+    @FormUrlEncoded
+    fun auth(@FieldMap params: Map<String, String>): Call<ResponseBody>
 
 //    @POST("runs")
 //    fun postRun(run: ): Call<>
