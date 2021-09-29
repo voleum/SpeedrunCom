@@ -40,17 +40,13 @@ class ProfileFragment : Fragment() {
         return root
     }
 
-    fun setFragmentResultListener() {
+    private fun setFragmentResultListener() {
         childFragmentManager.setFragmentResultListener("profile", this) { key, bundle ->
-            run {
+//            run {
                 childFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.profile_container,
-                        ExistedProfileFragment::class.java,
-                        bundle
-                    )
+                    .replace(R.id.profile_container, ExistedProfileFragment::class.java, bundle)
                     .commit()
-            }
+//            }
         }
     }
 }
